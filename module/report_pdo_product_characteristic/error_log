@@ -1,0 +1,14 @@
+[08-May-2015 08:27:01 America/New_York] PHP Notice:  Undefined index: logged in /home/armalikg/public_html/erp/libraries/lib/inclue_system_file.php on line 11
+[08-May-2015 08:27:01 America/New_York] PHP Notice:  Undefined index: user_id in /home/armalikg/public_html/erp/libraries/lib/inclue_system_file.php on line 18
+[08-May-2015 08:27:01 America/New_York] PHP Notice:  Undefined index: employee_id in /home/armalikg/public_html/erp/libraries/lib/inclue_system_file.php on line 19
+[08-May-2015 08:27:01 America/New_York] PHP Notice:  Undefined index: user_name in /home/armalikg/public_html/erp/libraries/lib/inclue_system_file.php on line 20
+[08-May-2015 08:27:01 America/New_York] PHP Warning:  mysql_result() [<a href='function.mysql-result'>function.mysql-result</a>]: Unable to jump to row 0 on MySQL result index 6 in /home/armalikg/public_html/erp/libraries/lib/database.inc.php on line 768
+[08-May-2015 08:27:01 America/New_York] PHP Warning:  mysql_result() [<a href='function.mysql-result'>function.mysql-result</a>]: Unable to jump to row 0 on MySQL result index 6 in /home/armalikg/public_html/erp/libraries/lib/database.inc.php on line 768
+[08-May-2015 08:27:01 America/New_York] PHP Warning:  mysql_result() [<a href='function.mysql-result'>function.mysql-result</a>]: Unable to jump to row 0 on MySQL result index 6 in /home/armalikg/public_html/erp/libraries/lib/database.inc.php on line 768
+[08-May-2015 08:27:01 America/New_York] PHP Notice:  Undefined index: user_id in /home/armalikg/public_html/erp/module/dashboard/header_nav.php on line 46
+[08-May-2015 08:27:01 America/New_York] PHP Notice:  Undefined index: employee_name in /home/armalikg/public_html/erp/module/dashboard/top_menu.php on line 20
+[08-May-2015 08:27:01 America/New_York] PHP Notice:  Undefined index: user_group_id in /home/armalikg/public_html/erp/module/dashboard/top_menu.php on line 21
+[08-May-2015 08:27:01 America/New_York] PHP Notice:  Undefined index: user_group_id in /home/armalikg/public_html/erp/module/dashboard/button.php on line 5
+[08-May-2015 08:27:01 America/New_York] PHP Notice:  Undefined index: user_level in /home/armalikg/public_html/erp/module/report_pdo_product_characteristic/list_frm.php on line 30
+[08-May-2015 08:27:01 America/New_York] PHP Notice:  Undefined index: employee_id in /home/armalikg/public_html/erp/module/dashboard/dashboard_rightsite_bar.php on line 13
+[09-May-2015 05:59:23 America/New_York] PHP Notice:  Undefined index: upazilla_id in /home/armalikg/public_html/erp/module/report_pdo_product_characteristic/load_show_data.php on line 58
