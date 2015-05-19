@@ -6,12 +6,37 @@ require_once("../../libraries/lib/config.inc.php");
 require_once("../../libraries/lib/functions.inc.php");
 $db = new Database();
 $tbl = _DB_PREFIX;
-
-if ($_POST['distributor_id'] != "") {
-    $distributor_id = "AND $tbl" . "distributor_credit_limit.distributor_id='" . $_POST['distributor_id'] . "'";
+if ($_POST['division_id'] != "")
+{
+    $division_id = "AND $tbl" . "zone_user_access.division_id='" . $_POST['division_id'] . "'";
+}
+else
+{
+    $division_id = "";
+}
+if ($_POST['zone_id'] != "")
+{
+    $zone_id = "AND $tbl" . "distributor_credit_limit.zone_id='" . $_POST['zone_id'] . "'";
+}
+else
+{
+    $zone_id = "";
+}
+if ($_POST['territory_id'] != "")
+{
+    $territory_id = "AND $tbl" . "distributor_credit_limit.territory_id='" . $_POST['territory_id'] . "'";
 } else {
+    $territory_id = "";
+}
+if ($_POST['distributor_id'] != "")
+{
+    $distributor_id = "AND $tbl" . "distributor_credit_limit.distributor_id='" . $_POST['distributor_id'] . "'";
+}
+else
+{
     $distributor_id = "";
 }
+
 ?>
 
 <a class="btn btn-small btn-success" data-original-title="" onclick="print_rpt()" style="float: right;">
@@ -39,10 +64,10 @@ if ($_POST['distributor_id'] != "") {
                     Bank Name
                 </th>
                 <th style="width:5%; text-align: right;">
-                    Credit Limit
+                    Credit limit (Tk)
                 </th>
                 <th style="width:5%; text-align: right;">
-                    Balance
+                    Current Balance (Tk)
                 </th>
             </tr>
         </thead>
@@ -64,15 +89,21 @@ if ($_POST['distributor_id'] != "") {
                         $tbl" . "bank_branch_info.branch_name,
                         $tbl" . "distributor_info.due_balance,
                         SUM($tbl" . "product_purchase_order_invoice.total_price) AS sales_purchase_amt,
-                        SUM($tbl" . "distributor_add_payment.amount) AS total_paid_amt
+                        SUM($tbl" . "distributor_add_payment.amount) AS total_paid_amt,
+                        $tbl" . "division_info.division_name
                     FROM
                         $tbl" . "distributor_credit_limit
+                        LEFT JOIN $tbl" . "zone_info ON $tbl" . "zone_info.zone_id = $tbl" . "distributor_credit_limit.zone_id
+                        LEFT JOIN $tbl" . "territory_info ON $tbl" . "territory_info.territory_id = $tbl" . "distributor_credit_limit.territory_id
                         LEFT JOIN $tbl" . "distributor_info ON $tbl" . "distributor_info.distributor_id = $tbl" . "distributor_credit_limit.distributor_id
                         LEFT JOIN $tbl" . "bank_info ON $tbl" . "bank_info.bank_id = $tbl" . "distributor_credit_limit.bank_id
                         LEFT JOIN $tbl" . "bank_branch_info ON $tbl" . "bank_branch_info.branch_id = $tbl" . "distributor_credit_limit.branch_id
                         LEFT JOIN $tbl" . "product_purchase_order_invoice ON $tbl" . "product_purchase_order_invoice.distributor_id = $tbl" . "distributor_credit_limit.distributor_id
-                            LEFT JOIN $tbl" . "distributor_add_payment ON $tbl" . "distributor_add_payment.distributor_id = $tbl" . "distributor_credit_limit.distributor_id
-                    WHERE $tbl" . "distributor_credit_limit.del_status='0' $distributor_id
+                        LEFT JOIN $tbl" . "distributor_add_payment ON $tbl" . "distributor_add_payment.distributor_id = $tbl" . "distributor_credit_limit.distributor_id
+                        LEFT JOIN ait_zone_user_access ON ait_zone_user_access.zone_id = ait_zone_info.zone_id
+                        LEFT JOIN ait_division_info ON ait_division_info.division_id = ait_zone_user_access.division_id
+                    WHERE $tbl" . "distributor_credit_limit.del_status='0'
+                    $division_id $zone_id $territory_id $distributor_id
                     GROUP BY $tbl" . "distributor_credit_limit.distributor_id
                         
 ";

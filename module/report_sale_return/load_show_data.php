@@ -27,6 +27,14 @@ if ($_POST['pack_size'] != "") {
 } else {
     $pack_size = "";
 }
+if ($_POST['division_id'] != "")
+{
+    $division_id = "AND $tbl"."division_info.division_id='" . $_POST['division_id'] . "'";
+}
+else
+{
+    $division_id = "";
+}
 if ($_POST['zone_id'] != "") {
     $zone_id = "AND apporcr.zone_id='" . $_POST['zone_id'] . "'";
 } else {
@@ -58,6 +66,9 @@ if ($_POST['from_date'] != "" && $_POST['to_date'] != "") {
 
         <thead>
             <tr>
+                <th style="width:5%">
+                    Division
+                </th>
                 <th style="width:5%">
                     Zone
                 </th>
@@ -108,6 +119,7 @@ if ($_POST['from_date'] != "" && $_POST['to_date'] != "") {
             $tprice = '0';
             $invoice_id = '';
             $invoice_date = '';
+            $division_name = '';
             $zone_name = '';
             $territory_name = '';
             $distributor_name = '';
@@ -138,7 +150,8 @@ if ($_POST['from_date'] != "" && $_POST['to_date'] != "") {
                             AND appob.product_type_id = apporcr.product_type_id
                             AND appob.varriety_id = apporcr.varriety_id
                             AND appob.pack_size = apporcr.pack_size
-                        ) as bonus_qantity
+                        ) as bonus_qantity,
+                        $tbl"."division_info.division_name
                     FROM
                         $tbl"."product_purchase_order_challan_return as apporcr
                         LEFT JOIN $tbl"."zone_info ON $tbl"."zone_info.zone_id = apporcr.zone_id
@@ -148,11 +161,22 @@ if ($_POST['from_date'] != "" && $_POST['to_date'] != "") {
                         LEFT JOIN $tbl"."product_type ON $tbl"."product_type.product_type_id = apporcr.product_type_id
                         LEFT JOIN $tbl"."varriety_info ON $tbl"."varriety_info.varriety_id = apporcr.varriety_id
                         LEFT JOIN $tbl"."product_pack_size ON $tbl"."product_pack_size.pack_size_id = apporcr.pack_size
+                        INNER JOIN $tbl"."zone_user_access ON $tbl"."zone_user_access.zone_id = $tbl"."zone_info.zone_id
+                        INNER JOIN $tbl"."division_info ON $tbl"."division_info.division_id = $tbl"."zone_user_access.division_id
                     WHERE
                         apporcr.del_status='0'
-                        $crop_id $product_type_id $varriety_id $pack_size $zone_id $territory_id $distributor_id $between
+                        $crop_id $product_type_id $varriety_id $pack_size
+                        $division_id $zone_id $territory_id $distributor_id $between
                         ".$db->get_zone_access("apporcr")."
+                    ORDER BY
+                            $tbl"."division_info.division_name,
+                            $tbl"."zone_info.zone_name,
+                            $tbl"."territory_info.territory_name,
+                            $tbl"."distributor_info.distributor_name,
+                            apporcr.challan_date,
+                            apporcr.invoice_id
 ";
+
             if ($db->open()) {
                 $result = $db->query($sql);
                 $i = 1;
@@ -168,6 +192,21 @@ if ($_POST['from_date'] != "" && $_POST['to_date'] != "") {
                     $tprice = $tprice + $result_array['total_price'];
                     ?>
                     <tr class="<?php echo $rowcolor; ?> pointer" id="tr_id<?php echo $i; ?>" onclick="get_rowID('<?php echo $result_array["id"] ?>', '<?php echo $i; ?>')">
+                        <td>
+                            <?php
+                            if ($division_name == '') {
+                                echo $result_array['division_name'];
+                                $division_name = $result_array['division_name'];
+                                //$currentDate = $preDate;
+                            } else if ($division_name == $result_array['division_name']) {
+                                //exit;
+                                echo "&nbsp;";
+                            } else {
+                                echo $result_array['division_name'];
+                                $division_name = $result_array['division_name'];
+                            }
+                            ?>
+                        </td>
                         <td>
                             <?php
                             if ($zone_name == '') {
@@ -259,7 +298,7 @@ if ($_POST['from_date'] != "" && $_POST['to_date'] != "") {
             ?>
         <tfoot>
             <tr>
-                <td colspan="9" style="text-align: right;">Total: </td>
+                <td colspan="10" style="text-align: right;">Total: </td>
                 <td style="text-align: right;"><?php echo number_format($price, 2) ?></td>
                 <td style="text-align: right;"><?php echo number_format($qnty, 2) ?></td>
                 <td style="text-align: right;"><?php echo number_format($bonus_qnty, 2) ?></td>

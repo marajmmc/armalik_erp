@@ -8,6 +8,14 @@ $db = new Database();
 $tbl = _DB_PREFIX;
 
 
+if ($_POST['division_id'] != "")
+{
+    $division_id = "AND $tbl" . "zone_user_access.division_id='" . $_POST['division_id'] . "'";
+}
+else
+{
+    $division_id = "";
+}
 if ($_POST['zone_id'] != "") {
     $zone_id = "AND $tbl" . "distributor_add_payment.zone_id='" . $_POST['zone_id'] . "'";
 } else {
@@ -22,6 +30,11 @@ if ($_POST['distributor_id'] != "") {
     $distributor_id = "AND $tbl" . "distributor_add_payment.distributor_id='" . $_POST['distributor_id'] . "'";
 } else {
     $distributor_id = "";
+}
+if ($_POST['bank_id'] != "") {
+    $bank_id = "AND $tbl" . "distributor_add_payment.bank_id='" . $_POST['bank_id'] . "'";
+} else {
+    $bank_id = "";
 }
 if ($_POST['from_date'] != "" && $_POST['to_date'] != "") {
     $between = "AND $tbl" . "distributor_add_payment.payment_date BETWEEN '" . $db->date_formate($_POST['from_date']) . "' AND '" . $db->date_formate($_POST['to_date']) . "'";
@@ -41,6 +54,9 @@ if ($_POST['from_date'] != "" && $_POST['to_date'] != "") {
             <tr>
                 <th style="width:5%">
                     Date
+                </th>
+                <th style="width:5%">
+                    Division
                 </th>
                 <th style="width:5%">
                     Zone
@@ -68,35 +84,43 @@ if ($_POST['from_date'] != "" && $_POST['to_date'] != "") {
         <tbody>
             <?php
             $TA = '0';
-            
             $sql = "SELECT
                         $tbl" . "distributor_add_payment.id,
                         $tbl" . "distributor_add_payment.payment_id,
                         $tbl" . "distributor_add_payment.payment_date,
                         $tbl" . "zone_info.zone_name,
                         $tbl" . "territory_info.territory_name,
-                        CONCAT_WS(' - ', $tbl" . "distributor_info.customer_code, $tbl" . "distributor_info.distributor_name) AS distributor_name,
+                        CONCAT_WS(' - ', $tbl" . "distributor_info.customer_code, $tbl" . "distributor_info.distributor_name) AS distributor_name_width_code,
+                        $tbl" . "distributor_info.distributor_name,
                         $tbl" . "distributor_add_payment.payment_type,
                         $tbl" . "distributor_add_payment.amount,
                         $tbl" . "distributor_add_payment.cheque_no,
-                        $tbl" . "bank_info.bank_name
+                        $tbl" . "bank_info.bank_name,
+                        $tbl" . "division_info.division_name
                     FROM
                         $tbl" . "distributor_add_payment
                         LEFT JOIN $tbl" . "zone_info ON $tbl" . "zone_info.zone_id = $tbl" . "distributor_add_payment.zone_id
                         LEFT JOIN $tbl" . "territory_info ON $tbl" . "territory_info.territory_id = $tbl" . "distributor_add_payment.territory_id
                         LEFT JOIN $tbl" . "distributor_info ON $tbl" . "distributor_info.distributor_id = $tbl" . "distributor_add_payment.distributor_id
                         LEFT JOIN $tbl" . "bank_info ON $tbl" . "bank_info.bank_id = $tbl" . "distributor_add_payment.bank_id
+                        LEFT JOIN ait_zone_user_access ON ait_zone_user_access.zone_id = ait_zone_info.zone_id
+                        LEFT JOIN ait_division_info ON ait_division_info.division_id = ait_zone_user_access.division_id
                     WHERE
                         $tbl" . "distributor_add_payment.del_status='0' AND $tbl" . "distributor_add_payment.status='Active'
-                        $zone_id $territory_id $distributor_id $between ".$db->get_zone_access($tbl. "distributor_info")."
+                        $zone_id $territory_id $distributor_id $between $division_id
+                        ".$db->get_zone_access($tbl. "distributor_info")."
+                        $bank_id
             ";
             if ($db->open()) {
                 $result = $db->query($sql);
                 $i = 1;
                 while ($result_array = $db->fetchAssoc()) {
-                    if ($i % 2 == 0) {
+                    if ($i % 2 == 0)
+                    {
                         $rowcolor = "gradeC";
-                    } else {
+                    }
+                    else
+                    {
                         $rowcolor = "gradeA success";
                     }
                     $TA = $TA + $result_array['amount'];
@@ -104,13 +128,14 @@ if ($_POST['from_date'] != "" && $_POST['to_date'] != "") {
                     ?>
                     <tr class="<?php echo $rowcolor; ?> pointer" id="tr_id<?php echo $i; ?>" onclick="get_rowID('<?php echo $result_array["id"] ?>', '<?php echo $i; ?>')">
                         <td><?php echo $db->date_formate($result_array['payment_date']); ?></td>
+                        <td><?php echo $result_array['division_name']; ?></td>
                         <td><?php echo $result_array['zone_name']; ?></td>
                         <td><?php echo $result_array['territory_name']; ?></td>
                         <td><?php echo $result_array['distributor_name']; ?></td>
                         <td><?php echo $result_array['payment_type']; ?></td>
                         <td><?php echo $result_array['cheque_no']; ?></td>
                         <td><?php echo $result_array['bank_name']; ?></td>
-                        <td style="text-align: right;"><?php echo $result_array['amount']; ?></td>
+                        <td style="text-align: right;"><?php echo @number_format($result_array['amount']); ?></td>
                     </tr>
                     <?php
                     ++$i;
@@ -119,8 +144,8 @@ if ($_POST['from_date'] != "" && $_POST['to_date'] != "") {
             ?>
         <tfoot>
             <tr>
-                <td colspan="7" style="text-align: right;">Total: </td>
-                <td style="text-align: right;"><?php echo number_format($TA, 2) ?></td>
+                <td colspan="8" style="text-align: right;">Total: </td>
+                <td style="text-align: right;"><?php echo @number_format($TA) ?></td>
             </tr>
             <tr>
                 <td colspan="15" style="text-align: right;">In word: <?php echo $db->number_convert_inword($TA) ?> Only</td>

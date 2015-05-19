@@ -1,5 +1,5 @@
 <?php
-session_start();
+
 ob_start();
 require_once("../../libraries/lib/database.inc.php");
 require_once("../../libraries/lib/config.inc.php");
@@ -26,11 +26,8 @@ $tbl = _DB_PREFIX;
             </div>
             <div class="widget-body">
                 <div id="dt_example" class="example_alt_pagination">
-                    <?php
-                    include_once '../../libraries/search_box/distributor_without_district_upzilla.php';
-                    include_once '../../libraries/search_box/search_button.php';
-                    ?>
-
+                    <?php require_once("../../libraries/search_box/distributor_without_district_upzilla.php") ?>
+                    <?php require_once("../../libraries/search_box/search_button.php") ?>
                     <div class="clearfix"></div>
                 </div>
             </div>
@@ -38,3 +35,9 @@ $tbl = _DB_PREFIX;
         <div id="div_show_rpt"></div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function(){
+        session_load_fnc()
+    });
+</script>

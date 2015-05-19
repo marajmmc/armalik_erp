@@ -7,29 +7,44 @@ require_once("../../libraries/lib/functions.inc.php");
 $db = new Database();
 $tbl = _DB_PREFIX;
 
-if ($_POST['crop_id'] != "") {
+if ($_POST['crop_id'] != "")
+{
     $crop_id = "AND $tbl" . "product_stock.crop_id='" . $_POST['crop_id'] . "'";
-} else {
+}
+else
+{
     $crop_id = "";
 }
-if ($_POST['product_type_id'] != "") {
+if ($_POST['product_type_id'] != "")
+{
     $product_type_id = "AND $tbl" . "product_stock.product_type_id='" . $_POST['product_type_id'] . "'";
-} else {
+}
+else
+{
     $product_type_id = "";
 }
-if ($_POST['varriety_id'] != "") {
+if ($_POST['varriety_id'] != "")
+{
     $varriety_id = "AND $tbl" . "product_stock.varriety_id='" . $_POST['varriety_id'] . "'";
-} else {
+}
+else
+{
     $varriety_id = "";
 }
-if ($_POST['pack_size'] != "") {
+if ($_POST['pack_size'] != "")
+{
     $pack_size = "AND $tbl" . "product_stock.pack_size='" . $_POST['pack_size'] . "'";
-} else {
+}
+else
+{
     $pack_size = "";
 }
-if ($_POST['warehouse_id'] != "") {
+if ($_POST['warehouse_id'] != "")
+{
     $warehouse = "AND $tbl" . "product_stock.warehouse_id='" . $_POST['warehouse_id'] . "'";
-} else {
+}
+else
+{
     $warehouse = "";
 }
 ?>

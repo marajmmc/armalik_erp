@@ -28,9 +28,20 @@ if ($_POST['pack_size'] != "") {
 } else {
     $pack_size = "";
 }
-if ($_POST['zone_id'] != "") {
+if ($_POST['division_id'] != "")
+{
+    $division_id = "AND $tbl" . "zone_user_access.division_id='" . $_POST['division_id'] . "'";
+}
+else
+{
+    $division_id = "";
+}
+if ($_POST['zone_id'] != "")
+{
     $zone_id = "AND $tbl" . "product_purchase_order_invoice.zone_id='" . $_POST['zone_id'] . "'";
-} else {
+}
+else
+{
     $zone_id = "";
 }
 if ($_POST['territory_id'] != "") {
@@ -47,6 +58,14 @@ if ($_POST['from_date'] != "" && $_POST['to_date'] != "") {
     $between = "AND $tbl" . "product_purchase_order_invoice.invoice_date BETWEEN '" . $db->date_formate($_POST['from_date']) . "' AND '" . $db->date_formate($_POST['to_date']) . "'";
 } else {
     $between = "";
+}
+if ($_POST['purchase_order_no'] != "")
+{
+    $purchase_order_no = "AND $tbl" . "product_purchase_order_invoice.purchase_order_id LIKE '%" . $_POST['purchase_order_no'] . "%'";
+}
+else
+{
+    $purchase_order_no = "";
 }
 ?>
 
@@ -67,14 +86,18 @@ if ($_POST['from_date'] != "" && $_POST['to_date'] != "") {
                         $tbl" . "product_purchase_order_invoice.price,
                         $tbl" . "product_purchase_order_invoice.quantity,
                         $tbl" . "product_purchase_order_invoice.approved_quantity,
-                        $tbl" . "product_purchase_order_invoice.total_price
+                        $tbl" . "product_purchase_order_invoice.total_price,
+                        ait_zone_user_access.division_id
                     FROM
                         $tbl" . "product_purchase_order_invoice
+                        INNER JOIN ait_zone_user_access ON ait_zone_user_access.zone_id = ait_product_purchase_order_invoice.zone_id
                     WHERE
                         $tbl" . "product_purchase_order_invoice.del_status='0'
-                        $crop_id $product_type_id $varriety_id $pack_size $zone_id $territory_id $distributor_id $between
+                        $crop_id $product_type_id $varriety_id $pack_size
+                        $division_id $zone_id $territory_id $distributor_id
+                        $between $purchase_order_no
                         " . $db->get_zone_access($tbl . "product_purchase_order_invoice") . "
-                    GROUP BY purchase_order_id
+                    GROUP BY $tbl" . "product_purchase_order_invoice.purchase_order_id
 ";
         if ($dbM->open()) {
             $resultM = $dbM->query($sqlM);
@@ -86,7 +109,7 @@ if ($_POST['from_date'] != "" && $_POST['to_date'] != "") {
                     <tr>
                         <th style="width:5%">
                             <?php
-                            echo $slno . ". Purchase order no: <span style='color: red'>" . $po_id . "</span> Purchase order date: " . $dbM->date_formate($rowM['invoice_date']);
+                            echo $slno . ". Purchase order no: <span style='color: red'>" . $po_id . "</span> <span style='color: blue'>(Invoice: ".$invoice_id." )</span> Purchase order date: " . $dbM->date_formate($rowM['invoice_date']);
                             ?>
                         </th>
                     </tr>
@@ -109,7 +132,7 @@ if ($_POST['from_date'] != "" && $_POST['to_date'] != "") {
                                 Territory
                             </th>
                             <th style="width:5%">
-                                Distributor
+                                Customer
                             </th>
                             <th style="width:5%">
                                 Crop
@@ -123,18 +146,18 @@ if ($_POST['from_date'] != "" && $_POST['to_date'] != "") {
                             <th style="width:5%">
                                 Pack Size(gm)
                             </th>
+                            <!--                            <th style="width:5%; text-align: right">-->
+                            <!--                                Order Qty(pieces)-->
+                            <!--                            </th>-->
                             <th style="width:5%; text-align: right">
-                                Order Qty(pieces)
-                            </th>
-                            <th style="width:5%; text-align: right">
-                                Approved Qty(pieces)
+                                Qty(pieces)
                             </th>
                             <th style="width:5%; text-align: right;">
                                 Price/Pack
                             </th>
-                            <th style="width:5%; text-align: right;">
-                                Qty(pieces)
-                            </th>
+                            <!--                            <th style="width:5%; text-align: right;">-->
+                            <!--                                Qty(pieces)-->
+                            <!--                            </th>-->
                             <th style="width:5%; text-align: right">
                                 Bonus Qty(pieces)
                             </th>
@@ -164,7 +187,8 @@ if ($_POST['from_date'] != "" && $_POST['to_date'] != "") {
                                     $tbl" . "product_purchase_order_invoice.total_price,
                                     $tbl" . "zone_info.zone_name,
                                     $tbl" . "territory_info.territory_name,
-                                    CONCAT_WS(' - ', $tbl" . "distributor_info.customer_code, $tbl" . "distributor_info.distributor_name) AS distributor_name,
+                                    CONCAT_WS(' - ', $tbl" . "distributor_info.customer_code, $tbl" . "distributor_info.distributor_name) AS distributor_name_with_code,
+                                    $tbl" . "distributor_info.distributor_name,
                                     $tbl" . "crop_info.crop_name,
                                     $tbl" . "product_type.product_type,
                                     $tbl" . "varriety_info.varriety_name,
@@ -277,10 +301,10 @@ if ($_POST['from_date'] != "" && $_POST['to_date'] != "") {
                                     <td><?php echo $result_array['product_type']; ?></td>
                                     <td><?php echo $result_array['varriety_name']; ?></td>
                                     <td><?php echo $result_array['pack_size_name']; ?></td>
-                                    <td style="text-align: right;"><?php echo $result_array['quantity']; ?></td>
+                                    <!--<td style="text-align: right;">--><?php //echo $result_array['quantity']; ?><!--</td>-->
                                     <td style="text-align: right;"><?php echo $result_array['approved_quantity']; ?></td>
                                     <td style="text-align: right;"><?php echo $result_array['price']; ?></td>
-                                    <td style="text-align: right;"><?php echo $result_array['approved_quantity']; ?></td>
+                                    <!--<td style="text-align: right;">--><?php //echo $result_array['approved_quantity']; ?><!--</td>-->
                                     <td style="text-align: right;">0</td>
                                     <td style="text-align: right;"><?php echo $result_array['total_price']; ?></td>
                                 </tr>
@@ -293,6 +317,7 @@ if ($_POST['from_date'] != "" && $_POST['to_date'] != "") {
                         $bqnty = '0';
                         $sqlb = "SELECT
                             $tbl" . "product_purchase_order_bonus.invoice_id,
+                            $tbl" . "product_purchase_order_bonus.id,
                             $tbl" . "zone_info.zone_name,
                             $tbl" . "territory_info.territory_name,
                             $tbl" . "distributor_info.distributor_name,
@@ -356,9 +381,9 @@ if ($_POST['from_date'] != "" && $_POST['to_date'] != "") {
                                     <td><?php echo $rowb['varriety_name']; ?></td>
                                     <td><?php echo $rowb['pack_size_name']; ?></td>
                                     <td style="text-align: right;">0</td>
+                                    <!--<td style="text-align: right;">0</td>-->
                                     <td style="text-align: right;">0</td>
-                                    <td style="text-align: right;">0</td>
-                                    <td style="text-align: right;">0</td>
+                                    <!--<td style="text-align: right;">0</td>-->
                                     <td style="text-align: right;"><?php echo $rowb['quantity']; ?></td>
                                     <td style="text-align: right;">0</td>
                                 </tr>
@@ -369,16 +394,16 @@ if ($_POST['from_date'] != "" && $_POST['to_date'] != "") {
                         ?>
                     <tfoot>
                         <tr>
-                            <td colspan="8" style="text-align: right;">Total: </td>
-                            <td style="text-align: right;"><?php echo number_format($qnty, 2) ?></td>
-                            <td style="text-align: right;"><?php echo number_format($price, 2); ?></td>
-                            <td style="text-align: right;"><?php echo number_format($aqnty, 2) ?></td>
-                            <td style="text-align: right;"><?php echo number_format($bqnty, 2) ?></td>
-                            <td style="text-align: right;"><?php echo number_format($tprice, 2) ?></td>
+                            <td colspan="7" style="text-align: right;">Total: </td>
+                            <td style="text-align: right;"><?php echo $aqnty; ?></td>
+                            <td style="text-align: right;"><?php echo $price; ?></td>
+                            <!--<td style="text-align: right;">--><?php //echo number_format($aqnty, 2) ?><!--</td>-->
+                            <td style="text-align: right;"><?php echo $bqnty ?></td>
+                            <td style="text-align: right;"><?php echo $tprice ?></td>
                         </tr>
-        <!--                <tr>
-                            <td colspan="15" style="text-align: right;">In word: <?php // echo $db->number_convert_inword($tprice)           ?> Only</td>
-                        </tr>-->
+                        <!--                <tr>
+                                            <td colspan="15" style="text-align: right;">In word: <?php // echo $db->number_convert_inword($tprice)           ?> Only</td>
+                                        </tr>-->
                     </tfoot>
                     </tbody>
                 </table>

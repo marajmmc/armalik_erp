@@ -26,74 +26,116 @@ $tbl = _DB_PREFIX;
             </div>
             <div class="widget-body">
                 <div id="dt_example" class="example_alt_pagination">
-
-                    <table class="table table-condensed table-striped table-hover table-bordered pull-left" id="data-table">
+                    <?php require_once("../../libraries/search_box/distributor_without_district_upzilla.php") ?>
+                    <?php require_once("../../libraries/search_box/from_to_date.php") ?>
+                    <table class="table table-condensed table-striped table-hover table-bordered pull-left" id="data-table" style="width: 25%">
                         <thead>
-                            <tr>
-                                <th style="width:10%">
-                                    Zone
-                                </th>
-                                <th style="width:10%">
-                                    Territory
-                                </th>
-                                <th style="width:10%">
-                                    Distributor
-                                </th>
-                                <th style="width:10%">
-                                    F. Date
-                                </th>
-                                <th style="width:10%">
-                                    T. Date
-                                </th>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <select id="zone_id" name="zone_id" class="span12" placeholder="Zone" onchange="load_territory_fnc()">
-                                        <option value="">Select</option>
-                                        <?php
-                                        $sql_uesr_group = "select zone_id as fieldkey, zone_name as fieldtext from $tbl" . "zone_info WHERE status='Active' AND del_status='0' ".$db->get_zone_access($tbl. "zone_info")."";
-                                        echo $db->SelectList($sql_uesr_group);
-                                        ?>
-                                    </select>
-                                </td>
-                                <td>
-                                    <select id="territory_id" name="territory_id" class="span12" placeholder="Territory" onchange="load_distributor_fnc()" >
-                                        <option value="">Select</option>
-
-                                    </select>
-                                </td>
-                                <td>
-                                    <select id="distributor_id" name="distributor_id" class="span12" placeholder="Distributor" validate="Require" onchange="load_dealer_fnc()">
-                                        <option value="">Select</option>
-
-                                    </select>
-                                </td>
-                                <td>
-                                    <div class="input-append">
-                                        <input type="text" name="from_date" id="from_date" class="span9" placeholder="From Date" value="<?php // echo $db->date_formate($db->ToDayDate())  ?>"  />
-                                        <span class="add-on" id="calcbtn_from_date">
-                                            <i class="icon-calendar"></i>
-                                        </span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="input-append">
-                                        <input type="text" name="to_date" id="to_date" class="span9" placeholder="To Date" value="<?php // echo $db->date_formate($db->ToDayDate())  ?>"  />
-                                        <span class="add-on" id="calcbtn_to_date">
-                                            <i class="icon-calendar"></i>
-                                        </span>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="12" style="text-align: right;">
-                                    <a class="btn btn-small btn-success" data-original-title="" onclick="show_report_fnc()">
-                                        <i class="icon-print" data-original-title="Share"> </i> View
-                                    </a>
-                                </td>
-                            </tr>
+                        <tr>
+                            <th style="width:10%">
+                                Bank Name
+                            </th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <select id="bank_id" name="bank_id" class="span12" placeholder="Zone" >
+                                    <?php
+                                    require_once("../../libraries/ajax_load_file/load_bank.php")
+                                    ?>
+                                </select>
+                            </td>
+                        </tr>
                         </thead>
                     </table>
+                    <?php require_once("../../libraries/search_box/search_button.php") ?>
+                <!--                    <table class="table table-condensed table-striped table-hover table-bordered pull-left" id="data-table">-->
+                <!--                        <thead>-->
+                <!--                            <tr>-->
+                <!--                                <th style="width:10%">-->
+                <!--                                    Division-->
+                <!--                                </th>-->
+                <!--                                <th style="width:10%">-->
+                <!--                                    Zone-->
+                <!--                                </th>-->
+                <!--                                <th style="width:10%">-->
+                <!--                                    Territory-->
+                <!--                                </th>-->
+                <!--                                <th style="width:10%">-->
+                <!--                                    Distributor-->
+                <!--                                </th>-->
+                <!--                                <th style="width:10%">-->
+                <!--                                    Bank Name-->
+                <!--                                </th>-->
+                <!--                                <th style="width:10%">-->
+                <!--                                    From Date-->
+                <!--                                </th>-->
+                <!--                                <th style="width:10%">-->
+                <!--                                    To Date-->
+                <!--                                </th>-->
+                <!--                            </tr>-->
+                <!--                            <tr>-->
+                <!--                                <td>-->
+                <!--                                    <select id="division_id" name="division_id" class="span12" placeholder="Division" onchange="load_zone()" >-->
+                <!--                                        --><?php
+                //                                        include_once '../../libraries/ajax_load_file/load_division.php';
+                //                                        ?>
+                <!--                                    </select>-->
+                <!--                                </td>-->
+                <!--                                <td>-->
+                <!--                                    <select id="zone_id" name="zone_id" class="span12" placeholder="Zone" onchange="load_territory_fnc()">-->
+                <!--                                        <option value="">Select</option>-->
+                <!--                                        --><?php
+                //                                        //$sql_uesr_group = "select zone_id as fieldkey, zone_name as fieldtext from $tbl" . "zone_info WHERE status='Active' AND del_status='0' ".$db->get_zone_access($tbl. "zone_info")."";
+                //                                        //echo $db->SelectList($sql_uesr_group);
+                //                                        ?>
+                <!--                                    </select>-->
+                <!--                                </td>-->
+                <!--                                <td>-->
+                <!--                                    <select id="territory_id" name="territory_id" class="span12" placeholder="Territory" onchange="load_distributor_fnc()" >-->
+                <!--                                        <option value="">Select</option>-->
+                <!---->
+                <!--                                    </select>-->
+                <!--                                </td>-->
+                <!--                                <td>-->
+                <!--                                    <select id="distributor_id" name="distributor_id" class="span12" placeholder="Distributor" validate="Require" onchange="load_dealer_fnc()">-->
+                <!--                                        <option value="">Select</option>-->
+                <!---->
+                <!--                                    </select>-->
+                <!--                                </td>-->
+                <!--                                <td>-->
+                <!--                                    <select id="bank_id" name="bank_id" class="span12" placeholder="Zone" >-->
+                <!--                                        <option value="">Select</option>-->
+                <!--                                        --><?php
+                //                                        $sql_uesr_group = "select bank_id as fieldkey, bank_name as fieldtext from $tbl" . "bank_info WHERE status='Active' AND del_status='0'";
+                //                                        echo $db->SelectList($sql_uesr_group);
+                //                                        ?>
+                <!--                                    </select>-->
+                <!--                                </td>-->
+                <!--                                <td>-->
+                <!--                                    <div class="input-append">-->
+                <!--                                        <input type="text" name="from_date" id="from_date" class="span9" placeholder="From Date" value="--><?php //// echo $db->date_formate($db->ToDayDate())  ?><!--"  />-->
+                <!--                                        <span class="add-on" id="calcbtn_from_date">-->
+                <!--                                            <i class="icon-calendar"></i>-->
+                <!--                                        </span>-->
+                <!--                                    </div>-->
+                <!--                                </td>-->
+                <!--                                <td>-->
+                <!--                                    <div class="input-append">-->
+                <!--                                        <input type="text" name="to_date" id="to_date" class="span9" placeholder="To Date" value="--><?php //// echo $db->date_formate($db->ToDayDate())  ?><!--"  />-->
+                <!--                                        <span class="add-on" id="calcbtn_to_date">-->
+                <!--                                            <i class="icon-calendar"></i>-->
+                <!--                                        </span>-->
+                <!--                                    </div>-->
+                <!--                                </td>-->
+                <!--                            </tr>-->
+                <!--                            <tr>-->
+                <!--                                <td colspan="12" style="text-align: right;">-->
+                <!--                                    <a class="btn btn-small btn-success" data-original-title="" onclick="show_report_fnc()">-->
+                <!--                                        <i class="icon-print" data-original-title="Share"> </i> View-->
+                <!--                                    </a>-->
+                <!--                                </td>-->
+                <!--                            </tr>-->
+                <!--                        </thead>-->
+                <!--                    </table>-->
                     <div class="clearfix"></div>
                 </div>
             </div>

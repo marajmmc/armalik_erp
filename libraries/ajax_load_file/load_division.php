@@ -1,4 +1,5 @@
 <?php
+@session_start();
 require_once("../../libraries/lib/database.inc.php");
 require_once("../../libraries/lib/config.inc.php");
 require_once("../../libraries/lib/functions.inc.php");
