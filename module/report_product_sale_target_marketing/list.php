@@ -26,103 +26,106 @@ $tbl = _DB_PREFIX;
             </div>
             <div class="widget-body">
                 <div id="dt_example" class="example_alt_pagination">
-
-                    <table class="table table-condensed table-striped table-hover table-bordered pull-left" id="data-table">
-                        <thead>
-                            <tr>
-                                <th style="width:10%">
-                                    Division
-                                </th>
-                                <th style="width:10%">
-                                    Zone
-                                </th>
-                                <th style="width:10%">
-                                    From Date
-                                </th>
-                                <th style="width:10%">
-                                    To Date
-                                </th>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <select id="division_id" name="division_id" class="span12" placeholder="Division" onchange="load_zone()" >
-                                        <option value="">Select</option>
-                                        <?php
-                                        $sql_uesr_group = "select division_id as fieldkey, division_name as fieldtext from $tbl" . "division_info WHERE status='Active' AND del_status='0'";
-                                        echo $db->SelectList($sql_uesr_group);
-                                        ?>
-                                    </select>
-                                </td>
-                                <td>
-                                    <select id="zone_id" name="zone_id" class="span12" placeholder="Zone" >
-                                        <option value="">Select</option>
-                                        <?php
-                                        //                                        $sql_uesr_group = "select zone_id as fieldkey, zone_name as fieldtext from $tbl" . "zone_info WHERE status='Active' AND del_status='0'" . $db->get_zone_access($tbl . "zone_info") . "";
-                                        //                                        echo $db->SelectList($sql_uesr_group);
-                                        ?>
-                                    </select>
-                                </td>
-                                <td>
-                                    <div class="input-append">
-                                        <input type="text" name="from_date" id="from_date" class="span9" placeholder="From Date" value="<?php //echo "01-".date('m-Y') ?>"  />
-                                        <span class="add-on" id="calcbtn_from_date">
-                                            <i class="icon-calendar"></i>
-                                        </span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="input-append">
-                                        <input type="text" name="to_date" id="to_date" class="span9" placeholder="From Date" value="<?php //echo $db->date_formate($db->todaydate()) ?>"  />
-                                        <span class="add-on" id="calcbtn_to_date">
-                                            <i class="icon-calendar"></i>
-                                        </span>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th style="width:10%">
-                                    Crop
-                                </th>
-                                <th style="width:10%">
-                                    Product Type 
-                                </th>
-                                <th style="width:10%">
-                                    Variety
-                                </th>
-                                <th style="width:10%">
-
-                                </th>
-
-                            </tr>
-                            <tr>
-                                <td>
-                                    <select id="crop_id" name="crop_id" class="span12" placeholder="Select Crop" validate="Require" onchange="load_product_type()">
-                                        <?php
-                                        include_once '../../libraries/ajax_load_file/load_crop.php';
-                                        ?>
-                                    </select>
-                                </td>
-                                <td>
-                                    <select id="product_type_id" name="product_type_id" class="span12" placeholder="Product Type" onchange="load_varriety_fnc()" validate="Require">
-                                        <option value="">Select</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <select id="varriety_id" name="varriety_id" class="span12" placeholder="Select Variety" onchange="load_pack_size_fnc()">
-                                        <option value="">Select</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <a class="btn btn-small btn-success" data-original-title="" onclick="show_report_fnc()">
-                                        <i class="icon-print" data-original-title="Share"> </i> View
-                                    </a>
-                                </td>
-
-                            </tr>
-
-
-                        </thead>
-                    </table>
+                    <?php require_once("../../libraries/search_box/distributor_without_district_upzilla.php") ?>
+                    <?php require_once("../../libraries/search_box/crop_type_variety_pack_size.php") ?>
+                    <?php require_once("../../libraries/search_box/from_to_date.php") ?>
+                    <?php require_once("../../libraries/search_box/search_button.php") ?>
+                    <!--                    <table class="table table-condensed table-striped table-hover table-bordered pull-left" id="data-table">-->
+                    <!--                        <thead>-->
+                    <!--                            <tr>-->
+                    <!--                                <th style="width:10%">-->
+                    <!--                                    Division-->
+                    <!--                                </th>-->
+                    <!--                                <th style="width:10%">-->
+                    <!--                                    Zone-->
+                    <!--                                </th>-->
+                    <!--                                <th style="width:10%">-->
+                    <!--                                    From Date-->
+                    <!--                                </th>-->
+                    <!--                                <th style="width:10%">-->
+                    <!--                                    To Date-->
+                    <!--                                </th>-->
+                    <!--                            </tr>-->
+                    <!--                            <tr>-->
+                    <!--                                <td>-->
+                    <!--                                    <select id="division_id" name="division_id" class="span12" placeholder="Division" onchange="load_zone()" >-->
+                    <!--                                        <option value="">Select</option>-->
+                    <!--                                        --><?php
+                    //                                        $sql_uesr_group = "select division_id as fieldkey, division_name as fieldtext from $tbl" . "division_info WHERE status='Active' AND del_status='0'";
+                    //                                        echo $db->SelectList($sql_uesr_group);
+                    //                                        ?>
+                    <!--                                    </select>-->
+                    <!--                                </td>-->
+                    <!--                                <td>-->
+                    <!--                                    <select id="zone_id" name="zone_id" class="span12" placeholder="Zone" >-->
+                    <!--                                        <option value="">Select</option>-->
+                    <!--                                        --><?php
+                    //                                        //                                        $sql_uesr_group = "select zone_id as fieldkey, zone_name as fieldtext from $tbl" . "zone_info WHERE status='Active' AND del_status='0'" . $db->get_zone_access($tbl . "zone_info") . "";
+                    //                                        //                                        echo $db->SelectList($sql_uesr_group);
+                    //                                        ?>
+                    <!--                                    </select>-->
+                    <!--                                </td>-->
+                    <!--                                <td>-->
+                    <!--                                    <div class="input-append">-->
+                    <!--                                        <input type="text" name="from_date" id="from_date" class="span9" placeholder="From Date" value="--><?php ////echo "01-".date('m-Y') ?><!--"  />-->
+                    <!--                                        <span class="add-on" id="calcbtn_from_date">-->
+                    <!--                                            <i class="icon-calendar"></i>-->
+                    <!--                                        </span>-->
+                    <!--                                    </div>-->
+                    <!--                                </td>-->
+                    <!--                                <td>-->
+                    <!--                                    <div class="input-append">-->
+                    <!--                                        <input type="text" name="to_date" id="to_date" class="span9" placeholder="To Date" value="--><?php ////echo $db->date_formate($db->todaydate()) ?><!--"  />-->
+                    <!--                                        <span class="add-on" id="calcbtn_to_date">-->
+                    <!--                                            <i class="icon-calendar"></i>-->
+                    <!--                                        </span>-->
+                    <!--                                    </div>-->
+                    <!--                                </td>-->
+                    <!--                            </tr>-->
+                    <!--                            <tr>-->
+                    <!--                                <th style="width:10%">-->
+                    <!--                                    Crop-->
+                    <!--                                </th>-->
+                    <!--                                <th style="width:10%">-->
+                    <!--                                    Product Type -->
+                    <!--                                </th>-->
+                    <!--                                <th style="width:10%">-->
+                    <!--                                    Variety-->
+                    <!--                                </th>-->
+                    <!--                                <th style="width:10%">-->
+                    <!---->
+                    <!--                                </th>-->
+                    <!---->
+                    <!--                            </tr>-->
+                    <!--                            <tr>-->
+                    <!--                                <td>-->
+                    <!--                                    <select id="crop_id" name="crop_id" class="span12" placeholder="Select Crop" validate="Require" onchange="load_product_type()">-->
+                    <!--                                        --><?php
+                    //                                        include_once '../../libraries/ajax_load_file/load_crop.php';
+                    //                                        ?>
+                    <!--                                    </select>-->
+                    <!--                                </td>-->
+                    <!--                                <td>-->
+                    <!--                                    <select id="product_type_id" name="product_type_id" class="span12" placeholder="Product Type" onchange="load_varriety_fnc()" validate="Require">-->
+                    <!--                                        <option value="">Select</option>-->
+                    <!--                                    </select>-->
+                    <!--                                </td>-->
+                    <!--                                <td>-->
+                    <!--                                    <select id="varriety_id" name="varriety_id" class="span12" placeholder="Select Variety" onchange="load_pack_size_fnc()">-->
+                    <!--                                        <option value="">Select</option>-->
+                    <!--                                    </select>-->
+                    <!--                                </td>-->
+                    <!--                                <td>-->
+                    <!--                                    <a class="btn btn-small btn-success" data-original-title="" onclick="show_report_fnc()">-->
+                    <!--                                        <i class="icon-print" data-original-title="Share"> </i> View-->
+                    <!--                                    </a>-->
+                    <!--                                </td>-->
+                    <!---->
+                    <!--                            </tr>-->
+                    <!---->
+                    <!---->
+                    <!--                        </thead>-->
+                    <!--                    </table>-->
                     <div class="clearfix"></div>
                 </div>
             </div>
@@ -132,16 +135,24 @@ $tbl = _DB_PREFIX;
 </div>
 
 <script>
-    $(document).ready(function(){
-        session_load_fnc()
+    $(document).ready(function()
+    {
+        session_load_fnc();
+
+        $("#varriety_id").attr('onchange','');
+        $("#zone_id").attr('onchange','');
+
+        $("#pack_size_th_caption").hide();
+        $("#pack_size_td_elm").hide();
+
+        $("#territory_th_caption").hide();
+        $("#distributor_th_caption").hide();
+
+        $("#territory_td_elm").hide();
+        $("#distributor_td_elm").hide();
+
     });
     
-    var cal = Calendar.setup({
-        onSelect: function(cal) { cal.hide() },
-        fdow :0,
-        minuteStep:1
-    });
-    cal.manageFields("calcbtn_from_date", "from_date", "%d-%m-%Y");
-    cal.manageFields("calcbtn_to_date", "to_date", "%d-%m-%Y");
+
     
 </script>

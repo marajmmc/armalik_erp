@@ -20,7 +20,8 @@ $sqli = "SELECT
             LEFT JOIN $tbl" . "product_purchase_order_request ON $tbl" . "product_purchase_order_request.invoice_id = $tbl" . "product_purchase_order_invoice.invoice_id
             LEFT JOIN $tbl" . "user_login ON $tbl" . "user_login.user_id = $tbl" . "product_purchase_order_request.entry_by
             LEFT JOIN $tbl" . "employee_basic_info ON $tbl" . "employee_basic_info.employee_id = $tbl" . "user_login.employee_id
-        WHERE $tbl" . "product_purchase_order_invoice.purchase_order_id LIKE '%" . $_POST['invoice_id'] . "'
+        WHERE
+        $tbl" . "product_purchase_order_invoice.invoice_id LIKE '%" . $_POST['invoice_id'] . "'
         GROUP BY $tbl" . "product_purchase_order_invoice.invoice_id";
 if ($db->open()) {
     $resulti = $db->query($sqli);
@@ -262,8 +263,8 @@ if ($rowi['invoice_id'] == "") {
 
             <tfoot>
                 <tr>
-                    <td colspan="6" style="text-align: right;">Total: </td>
-                    <td style="text-align: right;"><?php echo number_format($price, 2); ?></td>
+                    <td colspan="7" style="text-align: right;">Total: </td>
+                    <!--<td style="text-align: right;">--><?php //echo number_format($price, 2); ?><!--</td>-->
                     <td style="text-align: right;"><?php echo number_format($qnty, 2) ?></td>
                     <td style="text-align: right;"><?php echo number_format($bqnty, 2) ?></td>
                     <td style="text-align: right;">BDT. <b><?php echo number_format($tprice, 2) ?></b></td>

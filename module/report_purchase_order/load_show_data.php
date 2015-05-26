@@ -150,7 +150,7 @@ else
                             <!--                                Order Qty(pieces)-->
                             <!--                            </th>-->
                             <th style="width:5%; text-align: right">
-                                Qty(pieces)
+                                Approved Qty(pieces)
                             </th>
                             <th style="width:5%; text-align: right;">
                                 Price/Pack
@@ -396,7 +396,7 @@ else
                         <tr>
                             <td colspan="7" style="text-align: right;">Total: </td>
                             <td style="text-align: right;"><?php echo $aqnty; ?></td>
-                            <td style="text-align: right;"><?php echo $price; ?></td>
+                            <td style="text-align: right;"><?php //echo $price; ?> &nbsp;</td>
                             <!--<td style="text-align: right;">--><?php //echo number_format($aqnty, 2) ?><!--</td>-->
                             <td style="text-align: right;"><?php echo $bqnty ?></td>
                             <td style="text-align: right;"><?php echo $tprice ?></td>

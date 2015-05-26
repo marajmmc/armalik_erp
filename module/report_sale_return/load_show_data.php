@@ -82,7 +82,8 @@ if ($_POST['from_date'] != "" && $_POST['to_date'] != "") {
                     Date
                 </th>
                 <th style="width:5%">
-                    Inv No
+                    Inv No/
+                    PO No
                 </th>
                 <th style="width:5%">
                     Crop
@@ -126,6 +127,7 @@ if ($_POST['from_date'] != "" && $_POST['to_date'] != "") {
             $sql = "SELECT
                         apporcr.id,
                         apporcr.invoice_id,
+                        apporcr.purchase_order_id,
                         apporcr.challan_date,
                         apporcr.price,
                         apporcr.return_quantity,
@@ -270,14 +272,14 @@ if ($_POST['from_date'] != "" && $_POST['to_date'] != "") {
                         <td>
                             <?php
                             if ($invoice_id == '') {
-                                echo $result_array['invoice_id'];
+                                echo $result_array['invoice_id']."<br />".$result_array['purchase_order_id'];
                                 $invoice_id = $result_array['invoice_id'];
                                 //$currentDate = $preDate;
                             } else if ($invoice_id == $result_array['invoice_id']) {
                                 //exit;
                                 echo "&nbsp;";
                             } else {
-                                echo $result_array['invoice_id'];
+                                echo $result_array['invoice_id']."<br />".$result_array['purchase_order_id'];
                                 $invoice_id = $result_array['invoice_id'];
                             }
                             ?>
@@ -298,8 +300,8 @@ if ($_POST['from_date'] != "" && $_POST['to_date'] != "") {
             ?>
         <tfoot>
             <tr>
-                <td colspan="10" style="text-align: right;">Total: </td>
-                <td style="text-align: right;"><?php echo number_format($price, 2) ?></td>
+                <td colspan="11" style="text-align: right;">Total: </td>
+                <!--<td style="text-align: right;">--><?php //echo number_format($price, 2) ?><!--</td>-->
                 <td style="text-align: right;"><?php echo number_format($qnty, 2) ?></td>
                 <td style="text-align: right;"><?php echo number_format($bonus_qnty, 2) ?></td>
                 <td style="text-align: right;"><?php echo number_format($tprice, 2) ?></td>

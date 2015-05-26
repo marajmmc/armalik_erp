@@ -6,19 +6,26 @@ require_once("../../libraries/lib/config.inc.php");
 require_once("../../libraries/lib/functions.inc.php");
 $db = new Database();
 $tbl = _DB_PREFIX;
-if ($_SESSION['user_level'] == "Zone") {
+if ($_SESSION['user_level'] == "Zone")
+{
     $zone_id = "AND $tbl" . "product_purchase_order_invoice.zone_id='" . $_SESSION['zone_id'] . "'";
     $territory = '';
     $distributor = '';
-} else if ($_SESSION['user_level'] == "Territory") {
+}
+else if ($_SESSION['user_level'] == "Territory")
+{
     $zone_id = "AND $tbl" . "product_purchase_order_invoice.zone_id='" . $_SESSION['zone_id'] . "'";
     $territory = "AND $tbl" . "product_purchase_order_invoice.territory_id='" . $_SESSION['territory_id'] . "'";
     $distributor = '';
-} else if ($_SESSION['user_level'] == "Distributor") {
+}
+else if ($_SESSION['user_level'] == "Distributor")
+{
     $zone_id = "AND $tbl" . "product_purchase_order_invoice.zone_id='" . $_SESSION['zone_id'] . "'";
     $territory = "AND $tbl" . "product_purchase_order_invoice.territory_id='" . $_SESSION['territory_id'] . "'";
     $distributor = "AND $tbl" . "product_purchase_order_invoice.distributor_id='" . $_SESSION['employee_id'] . "'";
-} else {
+}
+else
+{
     $zone_id = '';
     $territory = '';
     $distributor = '';
@@ -45,7 +52,6 @@ if ($_SESSION['user_level'] == "Zone") {
             <div class="widget-body">
                 <div id="dt_example" class="example_alt_pagination">
                     <table class="table table-condensed table-striped table-hover table-bordered pull-left" id="data-table">
-
                         <thead>
                             <tr>
                                 <th style="width:5%">
@@ -126,8 +132,8 @@ if ($_SESSION['user_level'] == "Zone") {
             </div>
         </div>
     </div>
-
 </div>
+
 <script type="text/javascript">
     //Data Tables
     $(document).ready(function () {

@@ -196,6 +196,7 @@ else
             $sql="SELECT
                         appoi.id,
                         appoi.invoice_date,
+                        appoi.purchase_order_id,
                         appoi.zone_id,
                         appoi.territory_id,
                         appoi.distributor_id,
@@ -345,15 +346,20 @@ else
                         </td>
                         <td>
                             <?php
-                            if ($invoice_id == '') {
-                                echo $result_array['invoice_id'];
+                            if ($invoice_id == '')
+                            {
+                                echo $result_array['invoice_id']."<br />".$result_array['purchase_order_id'];
                                 $invoice_id = $result_array['invoice_id'];
                                 //$currentDate = $preDate;
-                            } else if ($invoice_id == $result_array['invoice_id']) {
+                            }
+                            else if ($invoice_id == $result_array['invoice_id'])
+                            {
                                 //exit;
                                 echo "&nbsp;";
-                            } else {
-                                echo $result_array['invoice_id'];
+                            }
+                            else
+                            {
+                                echo $result_array['invoice_id']."<br />".$result_array['purchase_order_id'];
                                 $invoice_id = $result_array['invoice_id'];
                             }
                             ?>

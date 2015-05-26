@@ -175,17 +175,25 @@ function load_pack_size_fnc(){
 }
 
 function show_report_fnc(){
-    if($("#invoice_id").val()==""){
+    if($("#invoice_id").val()=="")
+    {
         reset();
         alertify.set({
             delay: 3000
         });
         alertify.error("Please input invoice no! try again.");
         return false;
-    }else{
+    }
+    else
+    {
+        $(".icon-print").append("<div id='div_loader'><img src='../../system_images/fb_loader.gif' /></div>");
+        $(".icon-print").attr('disable', 'disable');
         $('#div_show_rpt').html('');
         $.post('load_show_data.php', $("#frm_area").serialize(), function(result){
-            if(result){
+            if(result)
+            {
+                $('#div_loader').remove();
+                $(".icon-print").attr('disable', '');
                 $('#div_show_rpt').html(result);
             }
         })

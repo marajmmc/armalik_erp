@@ -289,14 +289,17 @@ $tbl = _DB_PREFIX;
     var ExId=0;
     function RowIncrement_bonus() 
     {
-        if($("#warehouse_id").val()==""){
+        if($("#warehouse_id").val()=="")
+        {
             reset();
             alertify.set({
                 delay: 3000
             });
             alertify.error("Please select warehouse.");
             return false;
-        }else{
+        }
+        else
+        {
             if($("#userLevel").val()=="Marketing"){
                 var ElmReadonly="";
             }else{
@@ -311,14 +314,14 @@ $tbl = _DB_PREFIX;
             row.className="tableHover";
             //alert(row.id);
             var cell1 = row.insertCell(0);
-            cell1.innerHTML = "<select id='bonus_crop_id"+ExId+"' name='bonus_crop_id[]' class='span12' placeholder='Crop' onchange='bonus_load_product_type("+ExId+")' validate='Require'>\n\
-<?php
-echo "<option value=''>Select</option>";
-$sql_uesr_group = "select crop_id as fieldkey, crop_name as fieldtext from $tbl" . "crop_info where status='Active' AND crop_id IN (select crop_id from $tbl" . "product_pricing where status='Active')";
-echo $db->SelectList($sql_uesr_group);
-?>\n\
-    </select>\n\
-    <input type='hidden' id='bonus_id[]' name='bonus_id[]' value=''/>";
+            cell1.innerHTML = "<select id='bonus_crop_id["+ExId+"]' name='bonus_crop_id[]' class='span12' placeholder='Crop' onchange='bonus_load_product_type("+ExId+")' validate='Require'>\n\
+                <?php
+                echo "<option value=''>Select</option>";
+                $sql_uesr_group = "select crop_id as fieldkey, crop_name as fieldtext from $tbl" . "crop_info where status='Active' AND crop_id IN (select crop_id from $tbl" . "product_pricing where status='Active')";
+                echo $db->SelectList($sql_uesr_group);
+                ?>\n\
+                </select>\n\
+                <input type='hidden' id='bonus_id[]' name='bonus_id[]' value=''/>";
                                         
                 cell1 = row.insertCell(1);
                 cell1.innerHTML = "<select id='bonus_product_type_id"+ExId+"' name='bonus_product_type_id[]' class='span12' placeholder='Zone' onchange='bonus_load_varriety_fnc("+ExId+")' validate='Require'>\n\

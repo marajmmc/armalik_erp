@@ -11,6 +11,13 @@ $tbl = _DB_PREFIX;
 //} else {
 //    $session_id = "";
 //}
+
+if(empty($_POST['year_id']) || empty($_POST['from_date']) || empty($_POST['to_date']))
+{
+    echo "<h4 style='text-align: center; color: red;'>Please select year, from date & to date...</h4>";
+    die();
+}
+
 if ($_POST['crop_id'] != "") {
     $crop_id = "AND $tbl" . "product_purchase_order_invoice.crop_id='" . $_POST['crop_id'] . "'";
 } else {
