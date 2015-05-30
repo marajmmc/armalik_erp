@@ -54,7 +54,7 @@ if ($_SESSION['user_level'] == "Zone") {
                                     Payment Date
                                 </th>
                                 <th style="width:20%">
-                                    Distributor
+                                    Customer
                                 </th>
                                 <th style="width:20%">
                                     Bank Name

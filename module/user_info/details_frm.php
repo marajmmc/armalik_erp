@@ -115,7 +115,7 @@ if ($db->open()) {
                                         if ($result_array['user_level'] == "Distributor") {
                                             echo "selected='selected'";
                                         }
-                                    ?> >Distributor</option>
+                                    ?> >Customer</option>
                                 </select>
                             </div>
                         </div>

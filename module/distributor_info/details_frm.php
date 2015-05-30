@@ -56,10 +56,10 @@ $editrow = $db->single_data($tbl . "distributor_info", "*", "distributor_id", $_
                     </div>
                     <div class="control-group">
                         <label class="control-label" for="distributor_name">
-                            Distributor
+                            Customer
                         </label>
                         <div class="controls">
-                            <input class="span9" type="text" name="distributor_name" id="distributor_name" disabled="" value="<?php echo $editrow['distributor_name'] ?>" placeholder="Distributor Name" validate="Require">
+                            <input class="span9" type="text" name="distributor_name" id="distributor_name" disabled="" value="<?php echo $editrow['distributor_name'] ?>" placeholder="Customer Name" validate="Require">
                             <span class="help-inline">
                                 *
                             </span>

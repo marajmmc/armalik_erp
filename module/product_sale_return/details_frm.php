@@ -117,10 +117,10 @@ if ($db->open()) {
                     </div>
                     <div class="control-group">
                         <label class="control-label" for="distributor_id">
-                             Distributor
+                            Customer
                         </label>
                         <div class="controls">
-                            <select disabled="" id="distributor_id" name="distributor_id" class="span5" placeholder="Distributor" validate="Require">
+                            <select disabled="" id="distributor_id" name="distributor_id" class="span5" placeholder="Customer" validate="Require">
                                 <?php
                                 $sql_uesr_group = "select distributor_id as fieldkey, CONCAT_WS(' - ', $tbl" . "distributor_info.customer_code, $tbl" . "distributor_info.distributor_name) as fieldtext from $tbl" . "distributor_info where status='Active' AND del_status='0' AND distributor_id='$distributor_id'";
                                 echo $db->SelectList($sql_uesr_group);
@@ -221,7 +221,7 @@ if ($db->open()) {
                                         <select disabled="" id='crop_id_<?php echo $i; ?>' name='crop_id[]' class='span12' placeholder='Crop' onchange='load_varriety_fnc_("<?php echo $i; ?>")'>
                                             <?php
                                             echo "<option value=''>Select</option>";
-                                            $sql_uesr_group = "select crop_id as fieldkey, crop_name as fieldtext from $tbl" . "crop_info where status='Active'";
+                                            $sql_uesr_group = "select crop_id as fieldkey, crop_name as fieldtext from $tbl" . "crop_info where status='Active' ORDER BY $tbl" . "crop_info.order_crop";
                                             echo $db->SelectList($sql_uesr_group, $crop_id[$i]);
                                             ?>
                                         </select>

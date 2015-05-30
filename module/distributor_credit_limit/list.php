@@ -51,7 +51,7 @@ if ($_SESSION['user_level'] == "Zone") {
                                     Sl No
                                 </th>
                                 <th style="width:15%">
-                                    Distributor
+                                    Customer
                                 </th>
                                 <th style="width:10%">
                                     Credit Limit

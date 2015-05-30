@@ -34,7 +34,7 @@ $editrow = $db->single_data($tbl . "pdo_variety_video_upload", "*", "vvu_id", $_
                             <select id="crop_id" name="crop_id" class="span5" placeholder="Crop" validate="Require" onchange="load_product_type()">
                                 <?php
                                 echo "<option value=''>Select</option>";
-                                $sql_uesr_group = "select crop_id as fieldkey, crop_name as fieldtext from $tbl" . "crop_info where status='Active' AND del_status='0' order by crop_name";
+                                $sql_uesr_group = "select crop_id as fieldkey, crop_name as fieldtext from $tbl" . "crop_info where status='Active' AND del_status='0'  ORDER BY $tbl" . "crop_info.order_crop";
                                 echo $db->SelectList($sql_uesr_group, $editrow['crop_id']);
                                 ?>
                             </select>

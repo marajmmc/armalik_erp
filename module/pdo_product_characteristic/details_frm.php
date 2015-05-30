@@ -113,7 +113,7 @@ if($db->open())
         <select disabled id="crop_id" name="crop_id" class="span5" placeholder="Select Crop" validate="Require" onchange="load_product_type()">
             <?php
             echo "<option value=''>Select</option>";
-            $sql_uesr_group = "select crop_id as fieldkey, crop_name as fieldtext from $tbl" . "crop_info where status='Active'";
+            $sql_uesr_group = "select crop_id as fieldkey, crop_name as fieldtext from $tbl" . "crop_info where status='Active' ORDER BY $tbl" . "crop_info.order_crop";
             echo $db->SelectList($sql_uesr_group, $editrow['crop_id']);
             ?>
         </select>
@@ -204,7 +204,7 @@ if($db->open())
         District
     </label>
     <div class="controls">
-        <select disabled id="district_id" name="district_id" class="span5" placeholder="Distributor" validate="Require" onchange="load_upazilla_fnc()">
+        <select disabled id="district_id" name="district_id" class="span5" placeholder="Customer" validate="Require" onchange="load_upazilla_fnc()">
             <?php
             if($_SESSION['user_level']=="Zone")
             {
@@ -238,7 +238,7 @@ if($db->open())
         Upazila
     </label>
     <div class="controls">
-        <select disabled id="upazilla_id" name="upazilla_id" class="span5" placeholder="Distributor" validate="Require">
+        <select disabled id="upazilla_id" name="upazilla_id" class="span5" placeholder="" validate="Require">
             <?php
             echo "<option value=''>Select</option>";
             echo $sql_uesr_group = "select upazilla_id as fieldkey, upazilla_name as fieldtext from $tbl" . "upazilla_new where   zilla_id='" . $editrow['district_id'] . "' ORDER BY upazilla_name";

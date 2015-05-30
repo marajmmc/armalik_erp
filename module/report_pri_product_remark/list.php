@@ -122,7 +122,7 @@ $tbl = _DB_PREFIX;
                             </tr>
                             <tr>
                                 <td>
-                                    <select id="district_id" name="district_id" class="span12" placeholder="Distributor" validate="Require" onchange="load_upazilla_fnc()">
+                                    <select id="district_id" name="district_id" class="span12" placeholder="Customer" validate="Require" onchange="load_upazilla_fnc()">
                                         <option value="">Select</option>
 
                                     </select>

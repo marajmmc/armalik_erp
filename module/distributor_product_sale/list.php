@@ -57,7 +57,7 @@ if ($_SESSION['user_level'] == "Zone") {
                                     Date
                                 </th>
                                 <th style="width:5%">
-                                    Distributor
+                                    Customer
                                 </th>
                                 <th style="width:5%">
                                     Dealer

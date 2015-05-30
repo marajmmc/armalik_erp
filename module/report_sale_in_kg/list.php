@@ -61,7 +61,7 @@ $tbl = _DB_PREFIX;
                     <!--                                    Territory-->
                     <!--                                </th>-->
                     <!--                                <th style="width:10%">-->
-                    <!--                                    Distributor-->
+                    <!--                                    Customer-->
                     <!--                                </th>-->
                     <!--                                <th style="width:10%">-->
                     <!--                                    F. Date-->
@@ -87,7 +87,7 @@ $tbl = _DB_PREFIX;
                     <!--                                    </select>-->
                     <!--                                </td>-->
                     <!--                                <td>-->
-                    <!--                                    <select id="distributor_id" name="distributor_id" class="span12" placeholder="Distributor" validate="Require" onchange="load_dealer_fnc()">-->
+                    <!--                                    <select id="distributor_id" name="distributor_id" class="span12" placeholder="Customer" validate="Require" onchange="load_dealer_fnc()">-->
                     <!--                                        <option value="">Select</option>-->
                     <!---->
                     <!--                                    </select>-->

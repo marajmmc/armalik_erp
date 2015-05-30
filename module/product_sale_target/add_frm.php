@@ -58,10 +58,10 @@ $tbl = _DB_PREFIX;
                     </div>
                     <div class="control-group">
                         <label class="control-label" for="distributor_id">
-                            Distributor
+                            Customer
                         </label>
                         <div class="controls">
-                            <select id="distributor_id" name="distributor_id" class="span5" placeholder="Distributor" validate="Require">
+                            <select id="distributor_id" name="distributor_id" class="span5" placeholder="Customer" validate="Require">
                                 <option value="">Select</option>
 
                             </select>
@@ -189,9 +189,10 @@ $tbl = _DB_PREFIX;
         var cell1 = row.insertCell(0);
         cell1.innerHTML = "<select id='crop_id"+ExId+"' name='crop_id[]' class='span12' placeholder='Crop' onchange='load_product_type("+ExId+")' validate='Require' >\n\
 <?php
-echo "<option value=''>Select</option>";
-$sql_uesr_group = "select crop_id as fieldkey, crop_name as fieldtext from $tbl" . "crop_info where status='Active'";
-echo $db->SelectList($sql_uesr_group);
+require_once '../../libraries/ajax_load_file/load_crop.php';
+//echo "<option value=''>Select</option>";
+//$sql_uesr_group = "select crop_id as fieldkey, crop_name as fieldtext from $tbl" . "crop_info where status='Active' ORDER BY $tbl" . "crop_info.order_crop";
+//echo $db->SelectList($sql_uesr_group);
 ?>\n\
 </select>\n\
     <input type='hidden' id='id[]' name='id[]' value=''/>";

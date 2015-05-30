@@ -51,7 +51,7 @@ if ($_SESSION['user_level'] == "Zone") {
                                     Sl No
                                 </th>
                                 <th style="width:10%">
-                                    Distributor
+                                    Customer
                                 </th>
                                 <th style="width:10%">
                                     Target(Kg)

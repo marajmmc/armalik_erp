@@ -78,7 +78,7 @@ $tbl = _DB_PREFIX;
                             District
                         </label>
                         <div class="controls">
-                            <select id="district_id" name="district_id" class="span5" placeholder="Distributor" validate="Require" onchange="load_upazilla_fnc()">
+                            <select id="district_id" name="district_id" class="span5" placeholder="Customer" validate="Require" onchange="load_upazilla_fnc()">
                                 <option value="">Select</option>
 
                             </select>
@@ -92,7 +92,7 @@ $tbl = _DB_PREFIX;
                             Upazilla
                         </label>
                         <div class="controls">
-                            <select id="upazilla_id" name="upazilla_id" class="span5" placeholder="Distributor" validate="Require">
+                            <select id="upazilla_id" name="upazilla_id" class="span5" placeholder="" validate="Require">
                                 <option value="">Select</option>
 
                             </select>

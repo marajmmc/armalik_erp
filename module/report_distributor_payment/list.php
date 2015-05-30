@@ -60,7 +60,7 @@ $tbl = _DB_PREFIX;
                 <!--                                    Territory-->
                 <!--                                </th>-->
                 <!--                                <th style="width:10%">-->
-                <!--                                    Distributor-->
+                <!--                                    Customer-->
                 <!--                                </th>-->
                 <!--                                <th style="width:10%">-->
                 <!--                                    Bank Name-->

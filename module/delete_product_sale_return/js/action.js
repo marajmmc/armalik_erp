@@ -92,19 +92,24 @@ function edit_form(){
         });
     }
 }
-function details_form(){
-    if($("#rowID").val()==""){
+function details_form()
+{
+    if($("#rowID").val()=="")
+    {
         alertify.set({
             delay: 3000
         });
         alertify.error("Please Select Any Row In The Table");
         return false;
-    }else{
+    }
+    else
+    {
         hide_div();
         $("#details_rec").show();
         loader_start();
         $.post("details_frm.php",$("#frm_area").serialize(), function(result){
-            if (result){
+            if (result)
+            {
                 SaveStatus=2;
                 $("#details_rec").html(result);
                 $(".mini-title").html('View Detials From');
@@ -148,13 +153,10 @@ function delete_sales_return(challan_return_no)
             },
             function(result)
             {
-                if(result=="Success")
-                {
-                    $("#tr_id"+serial).fadeOut();
-                }
-                else
+                if(result)
                 {
                     alert(result);
+                    list();
                 }
             })
         }

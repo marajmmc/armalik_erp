@@ -19,7 +19,7 @@
         </td>
         <td>
             <div class="input-append">
-                <input type="text" name="to_date" id="to_date" class="span9" placeholder="From Date" value="<?php // echo $db->date_formate($db->ToDayDate())  ?>"  />
+                <input type="text" name="to_date" id="to_date" class="span9" placeholder="To Date" value="<?php // echo $db->date_formate($db->ToDayDate())  ?>"  />
                 <span class="add-on" id="calcbtn_to_date">
                     <i class="icon-calendar"></i>
                 </span>

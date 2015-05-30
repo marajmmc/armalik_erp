@@ -64,6 +64,9 @@ $user_id= $_SESSION['user_id'];
                                     $tbl"."pdo_variety_setting.farmer_id,
                                     $tbl"."pdo_variety_setting.crop_id,
                                     $tbl"."pdo_variety_setting.product_type_id
+                                ORDER BY
+                                $tbl" . "crop_info.order_crop,
+                                $tbl" . "product_type.crop_type
                         ";
 
                         if ($db->open()) {

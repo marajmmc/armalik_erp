@@ -57,7 +57,7 @@ if ($_SESSION['warehouse_id'] == "") {
                                     </select>
                                 </td>
                                 <td>
-                                    <select id="district_id" name="district_id" class="span12" placeholder="Distributor" validate="Require" onchange="load_upazilla_fnc()">
+                                    <select id="district_id" name="district_id" class="span12" placeholder="" validate="Require" onchange="load_upazilla_fnc()">
                                         <option value="">Select</option>
                                         <?php
                                         //                                        $sql_uesr_group = "select zillaid as fieldkey, zillanameeng as fieldtext from $tbl" . "zilla ORDER BY zillanameeng";
@@ -66,7 +66,7 @@ if ($_SESSION['warehouse_id'] == "") {
                                     </select>
                                 </td>
                                 <td>
-                                    <select id="upazilla_id" name="upazilla_id" class="span12" placeholder="Distributor" validate="Require">
+                                    <select id="upazilla_id" name="upazilla_id" class="span12" placeholder="" validate="Require">
                                         <option value="">Select</option>
 
                                     </select>
@@ -89,7 +89,7 @@ if ($_SESSION['warehouse_id'] == "") {
                                     <select id="crop_id" name="crop_id" class="span12" placeholder="Select Crop" validate="Require" onchange="load_product_type()">
                                         <?php
                                         echo "<option value=''>Select</option>";
-                                        $sql_uesr_group = "select crop_id as fieldkey, crop_name as fieldtext from $tbl" . "crop_info where status='Active'  " . $db->get_zone_access($tbl . "zone_info") . "";
+                                        $sql_uesr_group = "select crop_id as fieldkey, crop_name as fieldtext from $tbl" . "crop_info where status='Active'  " . $db->get_zone_access($tbl . "zone_info") . " ORDER BY $tbl" . "crop_info.order_crop";
                                         echo $db->SelectList($sql_uesr_group);
                                         ?>
                                     </select>

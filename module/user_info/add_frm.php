@@ -87,7 +87,7 @@ $tbl = _DB_PREFIX;
                                 <option value="Division">Division</option>
                                 <option value="Zone">Zone</option>
                                 <option value="Territory">Territory</option>
-                                <option value="Distributor">Distributor</option>
+                                <option value="Distributor">Customer</option>
                             </select>
                             <span class="help-inline">
                                 *

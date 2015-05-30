@@ -23,6 +23,7 @@ if($_POST['event']=="Add")
                     $tbl" . "crop_info
                 WHERE
                     del_status=0 $where
+                ORDER BY $tbl" . "crop_info.order_crop
                     ";
 }
 if($_POST['event']=="Edit")
@@ -34,6 +35,7 @@ if($_POST['event']=="Edit")
                     $tbl" . "crop_info
                 WHERE
                     del_status=0 $where
+                ORDER BY $tbl" . "crop_info.order_crop
                     ";
 }
 

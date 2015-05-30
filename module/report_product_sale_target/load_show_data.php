@@ -85,7 +85,7 @@ $fdate = $_POST['from_date'] . "-01-01";
                     Territory
                 </th>
                 <th style="width:5%">
-                    Distributor
+                    Customer
                 </th>
                 <th style="width:5%">
                     Crop

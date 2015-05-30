@@ -8,33 +8,35 @@ $db = new Database();
 $tbl = _DB_PREFIX;
 $ttotal_price = "";
 $sql = "SELECT
-            $tbl" . "product_purchase_order_invoice.id,
-            $tbl" . "product_purchase_order_invoice.invoice_id,
-            $tbl" . "product_purchase_order_invoice.purchase_order_id,
-            $tbl" . "product_purchase_order_invoice.invoice_date,
-            $tbl" . "product_purchase_order_invoice.zone_id,
-            $tbl" . "product_purchase_order_invoice.territory_id,
-            $tbl" . "product_purchase_order_invoice.distributor_id,
-            $tbl" . "product_purchase_order_invoice.crop_id,
-            $tbl" . "product_purchase_order_invoice.product_type_id,
-            $tbl" . "product_purchase_order_invoice.varriety_id,
-            $tbl" . "product_purchase_order_invoice.pack_size,
-            $tbl" . "product_purchase_order_invoice.price,
-            $tbl" . "product_purchase_order_invoice.quantity,
-            $tbl" . "product_purchase_order_invoice.approved_quantity,
-            $tbl" . "product_purchase_order_invoice.total_price,
-            $tbl" . "product_purchase_order_invoice.`status`
-        FROM `$tbl" . "product_purchase_order_invoice`
-        WHERE $tbl" . "product_purchase_order_invoice.invoice_id='" . $_POST['rowID'] . "' AND $tbl" . "product_purchase_order_invoice.del_status='0'
+            $tbl" . "product_purchase_order_challan_return.id,
+            $tbl" . "product_purchase_order_challan_return.return_challan_id,
+            $tbl" . "product_purchase_order_challan_return.invoice_id,
+            $tbl" . "product_purchase_order_challan_return.purchase_order_id,
+            $tbl" . "product_purchase_order_challan_return.challan_date,
+            $tbl" . "product_purchase_order_challan_return.zone_id,
+            $tbl" . "product_purchase_order_challan_return.territory_id,
+            $tbl" . "product_purchase_order_challan_return.distributor_id,
+            $tbl" . "product_purchase_order_challan_return.crop_id,
+            $tbl" . "product_purchase_order_challan_return.product_type_id,
+            $tbl" . "product_purchase_order_challan_return.varriety_id,
+            $tbl" . "product_purchase_order_challan_return.pack_size,
+            $tbl" . "product_purchase_order_challan_return.price,
+            $tbl" . "product_purchase_order_challan_return.quantity,
+            $tbl" . "product_purchase_order_challan_return.return_quantity,
+            $tbl" . "product_purchase_order_challan_return.total_price,
+            $tbl" . "product_purchase_order_challan_return.`status`
+        FROM `$tbl" . "product_purchase_order_challan_return`
+        WHERE $tbl" . "product_purchase_order_challan_return.return_challan_id='" . $_POST['rowID'] . "' AND $tbl" . "product_purchase_order_challan_return.del_status='0'
 ";
 if ($db->open()) {
     $result = $db->query($sql);
-    while ($row = $db->fetchAssoc($result)) {
+    while ($row = $db->fetchAssoc($result))
+    {
         $elm_id[] = $row['id'];
         $invoice_id = $row['invoice_id'];
         $purchase_order_id = $row['purchase_order_id'];
         $status = $row['status'];
-        $invoice_date = $row['invoice_date'];
+        $invoice_date = $row['challan_date'];
         $zone_id = $row['zone_id'];
         $territory_id = $row['territory_id'];
         $distributor_id = $row['distributor_id'];
@@ -44,7 +46,7 @@ if ($db->open()) {
         $pack_size[] = $row['pack_size'];
         $price[] = $row['price'];
         $quantity[] = $row['quantity'];
-        $approved_quantity[] = $row['approved_quantity'];
+        $approved_quantity[] = $row['return_quantity'];
         $total_price[] = $row['total_price'];
         $ttotal_price = $ttotal_price + $row['total_price'];
     }
@@ -70,7 +72,7 @@ if ($db->open()) {
                 <div class="widget-body">
                     <div class="control-group">
                         <label class="control-label" for="invoice_date">
-                            Date of invoice
+                            Return Date
                         </label>
                         <div class="controls">
                             <div class="input-append">
@@ -101,7 +103,7 @@ if ($db->open()) {
                     </div>
                     <div class="control-group">
                         <label class="control-label" for="territory_id">
-                            Territory
+                             Territory
                         </label>
                         <div class="controls">
                             <select disabled="" id="territory_id" name="territory_id" class="span5" placeholder="Territory" onchange="load_distributor_fnc()" validate="Require">
@@ -122,7 +124,7 @@ if ($db->open()) {
                         <div class="controls">
                             <select disabled="" id="distributor_id" name="distributor_id" class="span5" placeholder="Customer" validate="Require">
                                 <?php
-                                $sql_uesr_group = "select distributor_id as fieldkey, distributor_name as fieldtext from $tbl" . "distributor_info where status='Active' AND del_status='0' AND distributor_id='$distributor_id'";
+                                $sql_uesr_group = "select distributor_id as fieldkey, CONCAT_WS(' - ', $tbl" . "distributor_info.customer_code, $tbl" . "distributor_info.distributor_name) as fieldtext from $tbl" . "distributor_info where status='Active' AND del_status='0' AND distributor_id='$distributor_id'";
                                 echo $db->SelectList($sql_uesr_group);
                                 ?>
                             </select>
@@ -136,7 +138,7 @@ if ($db->open()) {
                                                     Approved/Reject
                                                 </label>
                                                 <div class="controls">
-                                                    <select id="approved_status" name="approved_status" class="span5" placeholder="Customer" validate="Require">
+                                                    <select id="approved_status" name="approved_status" class="span5" placeholder="Distributor" validate="Require">
                                                         <option value="Approved"> Approved </option>
                                                         <option value="Reject"> Reject </option>
                                                     </select>
@@ -188,13 +190,7 @@ if ($db->open()) {
                                         Price/Pack
                                     </th>
                                     <th style="width:10%">
-                                        Qty(gm)
-                                    </th>
-<!--                                        <th style="width:10%">
-                                        App. Qnty
-                                    </th>-->
-                                    <th style="width:10%">
-                                        Stock
+                                        Qty(pieces)
                                     </th>
                                     <th style="width:10%">
                                         Total Value
@@ -213,18 +209,16 @@ if ($db->open()) {
                                 } else {
                                     $rowcolor = "gradeA success";
                                 }
-                                echo "<script>
-                                            load_current_stock_fnc('$crop_id[$i]','$product_type_id[$i]','$varriety_id[$i]','$pack_size[$i]','$i')
-                                            </script>";
+
                                 $tprice = $tprice + $price[$i];
-                                $tquantity = $tquantity + $quantity[$i];
+                                $tquantity = $tquantity + $approved_quantity[$i];
                                 ?>
                                 <tr class='<?php echo $rowcolor; ?>' id="tr_elm_id<?php echo $i; ?>">
                                     <td>
                                         <select disabled="" id='crop_id_<?php echo $i; ?>' name='crop_id[]' class='span12' placeholder='Crop' onchange='load_varriety_fnc_("<?php echo $i; ?>")'>
                                             <?php
                                             echo "<option value=''>Select</option>";
-                                            $sql_uesr_group = "select crop_id as fieldkey, crop_name as fieldtext from $tbl" . "crop_info where status='Active'";
+                                            $sql_uesr_group = "select crop_id as fieldkey, crop_name as fieldtext from $tbl" . "crop_info where status='Active' ORDER BY $tbl" . "crop_info.order_crop";
                                             echo $db->SelectList($sql_uesr_group, $crop_id[$i]);
                                             ?>
                                         </select>
@@ -254,12 +248,6 @@ if ($db->open()) {
                                     <td>
                                         <input disabled="" type='text' name='quantity[]' id='quantity_<?php echo $i; ?>' class='span12' value='<?php echo $approved_quantity[$i]; ?>' readonly="" />
                                     </td>
-    <!--                                        <td>
-                                        <input type='text' name='approved_quantity[]' id='approved_quantity_<?php // echo $i;        ?>' class='span12' <?php // echo $bgclr;             ?> value='<?php // echo $approved_quantity[$i];        ?>' onblur='load_product_total_price_("<?php // echo $i;        ?>"); sum_value()' />
-                                    </td>-->
-                                    <td>
-                                        <input disabled="" type='text' name='current_stock[]' id='current_stock_<?php echo $i; ?>' class='span12' value='0' />
-                                    </td>
                                     <td>
                                         <input disabled="" type='text' name='total_price[]' id='total_price_<?php echo $i; ?>' class='span12' readonly="" value='<?php echo $total_price[$i]; ?>' />
                                     </td>
@@ -268,18 +256,9 @@ if ($db->open()) {
                             }
                             ?>
                             <tfoot>
-                            <td colspan="3"></td>
-                            <td>
-                                <input type='text' name='tprice[]' class='span12' value='<?php echo $tprice; ?>' readonly="" />
-                            </td>
+                            <td colspan="4" style="text-align: right;">Total: </td>
                             <td>
                                 <input type='text' name='tquantity[]' class='span12' value='<?php echo $tquantity; ?>' readonly="" />
-                            </td>
-<!--                                <td>
-                                <input type='text' name='total_approve_qunty[]' id='total_approve_qunty' class='span12' value='<?php // echo $tquantity;        ?>' readonly="" />
-                            </td>-->
-                            <td>
-                                <input type='text' name='total_current_stock[]' id='total_current_stock' class='span12' value='' readonly="" />
                             </td>
                             <td>
                                 <input type='text' name='ground_total_price[]' id='ground_total_price' class='span12' value='<?php echo $ttotal_price; ?>' readonly="" />
@@ -307,7 +286,7 @@ if ($db->open()) {
                                         Pack Size(gm)
                                     </th>
                                     <th style="width:10%">
-                                        Qty(gm)
+                                        Qty(pieces)
                                     </th>
                                 </tr>
                                 <?php
@@ -356,8 +335,8 @@ if ($db->open()) {
 
 <script>
                                         
-    $(document).ready(function(){
-        setTimeout(function(){sum_value()},1000);            
-    });
+    //    $(document).ready(function(){
+    //        //setTimeout(function(){sum_value()},1000);
+    //    });
                                         
 </script>

@@ -61,7 +61,7 @@ else
                                 Return No
                             </th>
                             <th style="width:5%">
-                                Purchase Order No
+                                PO No
                             </th>
                             <th style="width:5%">
                                 Invoice No
@@ -70,7 +70,7 @@ else
                                 Return Date
                             </th>
                             <th style="width:10%">
-                                Distributor
+                                Customer
                             </th>
                             <th style="width:5%">
                                 Return Qty(pieces)

@@ -15,10 +15,10 @@ $tbl = _DB_PREFIX;
         <th style="width:10%">
             Zone
         </th>
-        <th style="width:10%">
+        <th style="width:10%" id="territory_th_caption">
             Territory
         </th>
-        <th style="width:10%">
+        <th style="width:10%" id="distributor_th_caption">
             Customer
         </th>
     </tr>
@@ -39,13 +39,13 @@ $tbl = _DB_PREFIX;
                 ?>
             </select>
         </td>
-        <td>
+        <td id="territory_td_elm">
             <select id="territory_id" name="territory_id" class="span12" placeholder="Territory" onchange="load_distributor_fnc()" >
                 <option value="">Select</option>
 
             </select>
         </td>
-        <td>
+        <td id="distributor_td_elm">
             <select id="distributor_id" name="distributor_id" class="span12" placeholder="Distributor" validate="Require" onchange="load_dealer_fnc()">
                 <option value="">Select</option>
 

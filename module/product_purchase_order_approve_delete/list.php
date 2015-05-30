@@ -58,7 +58,7 @@ if ($_SESSION['user_level'] == "Zone") {
                                     Date
                                 </th>
                                 <th style="width:10%">
-                                    Distributor
+                                    Customer
                                 </th>
                                 <th style="width:5%">
                                     Total Qty(pieces) 

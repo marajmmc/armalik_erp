@@ -87,7 +87,7 @@ $editrow = $dbrow->single_data($tbl . "pdo_variety_setting", "*", "vs_id", $_POS
                             <select disabled id="crop_id" name="crop_id" class="span5" placeholder="Select Crop" validate="Require" onchange="load_product_type()">
                                 <?php
                                 //echo "<option value=''>Select</option>";
-                                $sql_uesr_group = "select crop_id as fieldkey, crop_name as fieldtext from $tbl" . "crop_info where status='Active' AND crop_id='".$editrow['crop_id']."'";
+                                $sql_uesr_group = "select crop_id as fieldkey, crop_name as fieldtext from $tbl" . "crop_info where status='Active' AND crop_id='".$editrow['crop_id']."' ORDER BY $tbl" . "crop_info.order_crop";
                                 echo $db->SelectList($sql_uesr_group, $editrow['crop_id']);
                                 ?>
                             </select>

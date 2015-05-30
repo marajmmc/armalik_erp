@@ -8,7 +8,8 @@ function list(){
     loader_start();
     $.post("list.php", function(result){
         //        alert (result)
-        if (result){
+        if (result)
+        {
             SaveStatus=0;
             $("#list_rec").html(result);
             $(".mini-title").html('List');
@@ -22,9 +23,11 @@ function Save_Rec()
     validateResult=true;
     formValidate();
     if(validateResult){
-        if (SaveStatus==1){
+        if (SaveStatus==1)
+        {
             $.post("save.php",$("#frm_area").serialize(), function(result){
-                if (result){
+                if (result)
+                {
                     //                    $("#new_rec").html(result);
                     list();
                     loader_close();
@@ -36,10 +39,14 @@ function Save_Rec()
                     return false;
                 }
             });
-        }else if(SaveStatus==2){
-            $.post("update.php",$("#frm_area").serialize(), function(result){
+        }
+        else if(SaveStatus==2)
+        {
+            $.post("update.php",$("#frm_area").serialize(), function(result)
+            {
             
-                if (result){
+                if (result)
+                {
                     //                    $("#edit_rec").html(result);
                     list();
                     loader_close();
@@ -180,26 +187,31 @@ function session_load_distributor(){
     });
 }
 
-function load_varriety_fnc(serial){
-    $("#varriety_id"+serial).html('');
+function load_varriety_fnc(){
+    $("#varriety_id").html('');
     $.post("../../libraries/ajax_load_file/load_varriety.php",{
-        crop_id:$("#crop_id"+serial).val(),
-        product_type_id:$("#product_type_id"+serial).val()
-    }, function(result){
+        crop_id:$("#crop_id").val(),
+        product_type_id:$("#product_type_id").val()
+    }, function(result)
+    {
         //        alert (result)
-        if (result){
-            $("#varriety_id"+serial).append(result);
+        if (result)
+        {
+            $("#varriety_id").append(result);
         }
     });
 }
 
-function load_product_type(serial){
-    $("#product_type_id"+serial).html('');
+function load_product_type()
+{
+    $("#product_type_id").html('');
     $.post("../../libraries/ajax_load_file/load_product_type.php", {
-        crop_id: $("#crop_id"+serial).val()
-    }, function(result){
-        if(result){
-            $("#product_type_id"+serial).append(result);
+        crop_id: $("#crop_id").val()
+    }, function(result)
+    {
+        if(result)
+        {
+            $("#product_type_id").append(result);
         }
     })
 }
@@ -291,3 +303,29 @@ function del_product(serial,elm_id){
 }
 
 ////////// START EDIT DUPLICATE FUNCTINON ///////////
+
+function load_product()
+{
+    $("#div_show_product").html('');
+    $.post("load_product.php",{
+        rowID:$("#rowID").val()
+    }, function(result)
+    {
+        if (result)
+        {
+            $("#div_show_product").html(result);
+        }
+    });
+}
+
+function add_product()
+{
+    $.post("update.php",$("#frm_area").serialize(), function(result)
+    {
+        if (result)
+        {
+            alert (result)
+            load_product()
+        }
+    });
+}

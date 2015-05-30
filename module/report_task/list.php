@@ -37,15 +37,15 @@ $tbl = _DB_PREFIX;
                                     Status
                                 </th>
                                 <th style="width:10%">
-                                    F. Date
+                                    From Date
                                 </th>
                                 <th style="width:10%">
-                                    T. Date
+                                    To Date
                                 </th>
                             </tr>
                             <tr>
                                 <td>
-                                    <select id="employee_id" name="employee_id" class="span12" placeholder="Distributor" validate="Require" onchange="load_dealer_fnc()">
+                                    <select id="employee_id" name="employee_id" class="span12" placeholder="" validate="Require" onchange="load_dealer_fnc()">
                                         <option value="">Select</option>
                                         <?php
                                         $sql_uesr_group = "select employee_id as fieldkey, employee_name as fieldtext from $tbl" . "employee_basic_info WHERE status='Active' AND del_status='0' AND ($tbl" . "employee_basic_info.user_level='Zone' or $tbl" . "employee_basic_info.user_level='Territory')";

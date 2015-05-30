@@ -137,10 +137,10 @@ if ($status != "Pending") {
                         </div>
                         <div class="control-group">
                             <label class="control-label" for="distributor_id">
-                                Distributor
+                                Customer
                             </label>
                             <div class="controls">
-                                <select id="distributor_id" name="distributor_id" class="span5" placeholder="Distributor" validate="Require">
+                                <select id="distributor_id" name="distributor_id" class="span5" placeholder="Customer" validate="Require">
                                     <?php
                                     $sql_uesr_group = "select distributor_id as fieldkey, CONCAT_WS(' - ', $tbl" . "distributor_info.customer_code, $tbl" . "distributor_info.distributor_name) as fieldtext from $tbl" . "distributor_info where status='Active' AND del_status='0' AND distributor_id='$distributor_id'";
                                     echo $db->SelectList($sql_uesr_group);
@@ -173,7 +173,7 @@ if ($status != "Pending") {
                                                         Approved/Reject
                                                     </label>
                                                     <div class="controls">
-                                                        <select id="approved_status" name="approved_status" class="span5" placeholder="Distributor" validate="Require">
+                                                        <select id="approved_status" name="approved_status" class="span5" placeholder="" validate="Require">
                                                             <option value="Approved"> Approved </option>
                                                             <option value="Reject"> Reject </option>
                                                         </select>

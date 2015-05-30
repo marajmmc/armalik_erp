@@ -153,7 +153,7 @@ if($dbws_details->open())
             District
         </label>
         <div class="controls">
-            <select disabled id="district_id" name="district_id" class="span5" placeholder="Distributor" validate="Require" onchange="load_upazilla_fnc()">
+            <select disabled id="district_id" name="district_id" class="span5" placeholder="" validate="Require" onchange="load_upazilla_fnc()">
                 <?php
                 $sql_district_group = "SELECT
                                                         $tbl" . "zilla.zillaid as fieldkey,
@@ -181,7 +181,7 @@ if($dbws_details->open())
             Upazilla
         </label>
         <div class="controls">
-            <select disabled id="upazilla_id" name="upazilla_id" class="span5" placeholder="Distributor" validate="Require">
+            <select disabled id="upazilla_id" name="upazilla_id" class="span5" placeholder="" validate="Require">
                 <?php
                 $sql_uesr_group = "select upazilla_id as fieldkey, upazilla_name as fieldtext from $tbl" . "upazilla_new where upazilla_id='".$editrow['upazilla_id']."' AND zilla_id='".$editrow['district_id']."' ORDER BY upazilla_name";
                 echo $db->SelectList($sql_uesr_group, $editrow['upazilla_id']);
@@ -199,7 +199,7 @@ if($dbws_details->open())
         <div class="controls">
             <select disabled id="crop_master_id" name="crop_master_id" class="span5" placeholder="Select Crop" validate="Require" onchange="load_product_type()">
                 <?php
-                $sql_uesr_group = "select crop_id as fieldkey, crop_name as fieldtext from $tbl" . "crop_info where status='Active' AND del_status='0' AND crop_id='".$editrow['crop_id']."' order by order_crop";
+                $sql_uesr_group = "select crop_id as fieldkey, crop_name as fieldtext from $tbl" . "crop_info where status='Active' AND del_status='0' AND crop_id='".$editrow['crop_id']."'  ORDER BY $tbl" . "crop_info.order_crop";
                 echo $db->SelectList($sql_uesr_group, $editrow['crop_id']);
                 ?>
             </select>

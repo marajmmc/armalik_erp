@@ -8,7 +8,7 @@ $db = new Database();
 $tbl = _DB_PREFIX;
 ?>
 
-<table class="table table-condensed table-striped table-hover table-bordered pull-left" id="data-table" >
+<table class="table table-condensed table-striped table-hover table-bordered pull-left crop_type_variety" id="data-table" >
     <thead>
     <tr>
         <th style="width:10%">
@@ -20,7 +20,7 @@ $tbl = _DB_PREFIX;
         <th style="width:10%">
             Variety
         </th>
-        <th style="width:10%">
+        <th style="width:10%" id="pack_size_th_caption">
             Pack Size(gm)
         </th>
     </tr>
@@ -42,7 +42,7 @@ $tbl = _DB_PREFIX;
                 <option value="">Select</option>
             </select>
         </td>
-        <td>
+        <td id="pack_size_td_elm">
             <select id='pack_size' name='pack_size' class='span12' placeholder='Select Pack Size(gm)'>
                 <option value=''>Select</option>
             </select>

@@ -363,7 +363,7 @@ function sum_value(){
         alertify.set({
             delay: 3000
         });
-        alertify.error("Distributor credit limit is over!");
+        alertify.error("Customer credit limit is over!");
         return false;
     }
 }

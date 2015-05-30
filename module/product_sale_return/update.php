@@ -57,7 +57,7 @@ if(empty($territory_id))
 }
 if(empty($distributor_id))
 {
-    echo "Distributor empty";
+    echo "Customer empty";
     die();
 }
 if(empty($warehouse_id))

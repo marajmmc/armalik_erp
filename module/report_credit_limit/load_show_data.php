@@ -52,7 +52,7 @@ else
                     No
                 </th>
                 <th style="width:5%">
-                    Distributor
+                    Customer
                 </th>
                 <th style="width:5%">
                     Date

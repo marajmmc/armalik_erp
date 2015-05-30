@@ -37,13 +37,13 @@ $tbl = _DB_PREFIX;
                                     Territory
                                 </th>
                                 <th style="width:10%">
-                                    Distributor
+                                    Customer
                                 </th>
                                 <th style="width:10%">
-                                    F. Date
+                                    From Date
                                 </th>
                                 <th style="width:10%">
-                                    T. Date
+                                    To Date
                                 </th>
                             </tr>
                             <tr>

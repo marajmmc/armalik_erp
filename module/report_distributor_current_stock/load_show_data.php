@@ -54,7 +54,7 @@ if ($_POST['distributor_id'] != "") {
         <thead>
             <tr>
                 <th style="width:5%">
-                    Distributor
+                    Customer
                 </th>
                 <th style="width:5%">
                     Crop

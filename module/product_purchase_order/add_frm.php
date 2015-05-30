@@ -75,10 +75,10 @@ $tbl = _DB_PREFIX;
                     </div>
                     <div class="control-group">
                         <label class="control-label" for="distributor_id">
-                            Distributor
+                            Customer
                         </label>
                         <div class="controls">
-                            <select id="distributor_id" name="distributor_id" class="span5" placeholder="Distributor" validate="Require" onchange="distributor_due_balance()">
+                            <select id="distributor_id" name="distributor_id" class="span5" placeholder="Customer" validate="Require" onchange="distributor_due_balance()">
                                 <option value="">Select</option>
 
                             </select>
@@ -317,7 +317,7 @@ $tbl = _DB_PREFIX;
             cell1.innerHTML = "<select id='bonus_crop_id["+ExId+"]' name='bonus_crop_id[]' class='span12' placeholder='Crop' onchange='bonus_load_product_type("+ExId+")' validate='Require'>\n\
                 <?php
                 echo "<option value=''>Select</option>";
-                $sql_uesr_group = "select crop_id as fieldkey, crop_name as fieldtext from $tbl" . "crop_info where status='Active' AND crop_id IN (select crop_id from $tbl" . "product_pricing where status='Active')";
+                $sql_uesr_group = "select crop_id as fieldkey, crop_name as fieldtext from $tbl" . "crop_info where status='Active' AND crop_id IN (select crop_id from $tbl" . "product_pricing where status='Active')  ORDER BY $tbl" . "crop_info.order_crop";
                 echo $db->SelectList($sql_uesr_group);
                 ?>\n\
                 </select>\n\

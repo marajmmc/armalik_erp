@@ -80,10 +80,10 @@ $editrow = $db->single_data($tbl . "distributor_add_payment", "*", "payment_id",
                     </div>
                     <div class="control-group">
                         <label class="control-label" for="distributor_id">
-                            Distributor
+                            Customer
                         </label>
                         <div class="controls">
-                            <select id="distributor_id" name="distributor_id" class="span5" placeholder="Distributor" validate="Require" onchange="distributor_due_balance()">
+                            <select id="distributor_id" name="distributor_id" class="span5" placeholder="Customer" validate="Require" onchange="distributor_due_balance()">
                                 <option value="">Select</option>
                                 <?php
                                 $sql_uesr_group = "select distributor_id as fieldkey, CONCAT_WS(' - ', $tbl" . "distributor_info.customer_code, $tbl" . "distributor_info.distributor_name) as fieldtext from $tbl" . "distributor_info WHERE status='Active' AND del_status='0' AND zone_id='" . $editrow['zone_id'] . "' AND territory_id='" . $editrow['territory_id'] . "' AND distributor_id='".$editrow['distributor_id']."'";

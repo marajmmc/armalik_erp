@@ -58,10 +58,10 @@ $tbl = _DB_PREFIX;
                     </div>
                     <div class="control-group">
                         <label class="control-label" for="distributor_id">
-                            Distributor
+                            Customer
                         </label>
                         <div class="controls">
-                            <select id="distributor_id" name="distributor_id" class="span5" placeholder="Distributor" validate="Require">
+                            <select id="distributor_id" name="distributor_id" class="span5" placeholder="Customer" validate="Require">
                                 <option value="">Select</option>
 
                             </select>

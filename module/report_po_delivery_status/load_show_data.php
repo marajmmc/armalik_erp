@@ -49,7 +49,7 @@ if ($_POST['from_date'] != "" && $_POST['to_date'] != "") {
                     Territory
                 </th>
                 <th style="width:5%">
-                    Distributor
+                    Customer
                 </th>
                 <th style="width:5%">
                     PO. No

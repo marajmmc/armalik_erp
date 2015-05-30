@@ -89,7 +89,7 @@ $editrow = $db->single_data($tbl . "farmer_info", "*", "farmer_id", $_POST['rowI
                             District
                         </label>
                         <div class="controls">
-                            <select disabled id="district_id" name="district_id" class="span5" placeholder="Distributor" validate="Require" onchange="load_upazilla_fnc()">
+                            <select disabled id="district_id" name="district_id" class="span5" placeholder="Customer" validate="Require" onchange="load_upazilla_fnc()">
                                 <?php
                                 echo "<option value=''>Select</option>";
                                 $sql_uesr_group = "SELECT
@@ -117,7 +117,7 @@ $editrow = $db->single_data($tbl . "farmer_info", "*", "farmer_id", $_POST['rowI
                             Upazilla
                         </label>
                         <div class="controls">
-                            <select disabled="" id="upazilla_id" name="upazilla_id" class="span5" placeholder="Distributor" validate="Require">
+                            <select disabled="" id="upazilla_id" name="upazilla_id" class="span5" placeholder="" validate="Require">
                                 <?php
                                 echo "<option value=''>Select</option>";
                                 echo $sql_uesr_group = "select upazilaid as fieldkey, upazilanameeng as fieldtext from $tbl" . "upazilla where   zillaid='" . $editrow['district_id'] . "' ORDER BY upazilanameeng";

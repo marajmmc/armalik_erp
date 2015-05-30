@@ -15,7 +15,7 @@ $sql_uesr_group = "SELECT
                         LEFT JOIN $tbl" . "crop_info ON $tbl" . "crop_info.crop_id = $tbl" . "distributor_product_stock.crop_id
                     WHERE
                         $tbl" . "distributor_product_stock.distributor_id='" . $_POST['distributor_id'] . "'
-                    ORDER BY $tbl" . "crop_info.crop_name
+                    ORDER BY $tbl" . "crop_info.order_crop
                 ";
 echo $db->SelectList($sql_uesr_group);
 ?>

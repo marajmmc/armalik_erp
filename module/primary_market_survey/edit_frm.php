@@ -153,7 +153,7 @@ if($dbws_details->open())
                             District
                         </label>
                         <div class="controls">
-                            <select id="district_id" name="district_id" class="span5" placeholder="Distributor" validate="Require" onchange="load_upazilla_fnc()">
+                            <select id="district_id" name="district_id" class="span5" placeholder="" validate="Require" onchange="load_upazilla_fnc()">
                                 <?php
                                 $sql_district_group = "SELECT
                                                         $tbl" . "zilla.zillaid as fieldkey,
@@ -181,7 +181,7 @@ if($dbws_details->open())
                             Upazilla
                         </label>
                         <div class="controls">
-                            <select id="upazilla_id" name="upazilla_id" class="span5" placeholder="Distributor" validate="Require">
+                            <select id="upazilla_id" name="upazilla_id" class="span5" placeholder="" validate="Require">
                                 <?php
                                 $sql_uesr_group = "select upazilla_id as fieldkey, upazilla_name as fieldtext from $tbl" . "upazilla_new where upazilla_id='".$editrow['upazilla_id']."' AND zilla_id='".$editrow['district_id']."' ORDER BY upazilla_name";
                                 echo $db->SelectList($sql_uesr_group, $editrow['upazilla_id']);

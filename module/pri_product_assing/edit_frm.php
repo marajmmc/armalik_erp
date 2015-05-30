@@ -55,7 +55,7 @@ $editrow = $dbrow->single_data($tbl . "assign_variety_pri", "*", "id", $_POST['r
                             <select id="crop_id" name="crop_id" class="span5" placeholder="Select Crop" validate="Require" onchange="load_product_type()">
                                 <?php
                                 echo "<option value=''>Select</option>";
-                                $sql_uesr_group = "select crop_id as fieldkey, crop_name as fieldtext from $tbl" . "crop_info where status='Active'";
+                                $sql_uesr_group = "select crop_id as fieldkey, crop_name as fieldtext from $tbl" . "crop_info where status='Active' ORDER BY $tbl" . "crop_info.order_crop";
                                 echo $db->SelectList($sql_uesr_group, $editrow['crop_id']);
                                 ?>
                             </select>
