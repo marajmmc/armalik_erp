@@ -34,6 +34,9 @@ $tbl = _DB_PREFIX;
                                     Sl No
                                 </th>
                                 <th style="width:20%">
+                                    Division Name
+                                </th>
+                                <th style="width:20%">
                                     Zone Name
                                 </th>
                                 <th style="width:10%">
@@ -44,12 +47,14 @@ $tbl = _DB_PREFIX;
                         <tbody>
                             <?php
                             $sql = "SELECT
-                                zone_id,
-                                zone_name,
-                                status                                
+                                $tbl" . "zone_info.zone_id,
+                                $tbl" . "zone_info.zone_name,
+                                $tbl" . "zone_info.status,
+                                $tbl" . "division_info.division_name
                             FROM
                                 $tbl" . "zone_info
-                            WHERE del_status='0'
+                                LEFT JOIN $tbl" . "division_info ON $tbl" . "division_info.division_id=$tbl" . "zone_info.division_id
+                            WHERE $tbl" . "zone_info.del_status='0'
                         ";
                             if ($db->open()) {
                                 $result = $db->query($sql);
@@ -65,6 +70,7 @@ $tbl = _DB_PREFIX;
                                         <td>
                                             <?php echo $i; ?>
                                         </td>
+                                        <td><?php echo $result_array['division_name']; ?></td>
                                         <td><?php echo $result_array['zone_name']; ?></td>
                                         <td><?php echo $result_array['status']; ?></td>
                                     </tr>

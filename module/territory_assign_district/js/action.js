@@ -17,6 +17,7 @@ function list(){
         }
     });
 }
+
 function Save_Rec()
 {
     validateResult=true;
@@ -25,7 +26,7 @@ function Save_Rec()
         if (SaveStatus==1){
             $.post("save.php",$("#frm_area").serialize(), function(result){
                 if (result){
-//                    $("#new_rec").html(result);
+                    //$("#new_rec").html(result);
                     list();
                     loader_close();
                     reset();
@@ -38,7 +39,7 @@ function Save_Rec()
             });
         }else if(SaveStatus==2){
             $.post("update.php",$("#frm_area").serialize(), function(result){
-            
+
                 if (result){
                     //$("#edit_rec").html(result);
                     list();
@@ -50,11 +51,10 @@ function Save_Rec()
                     alertify.success("Data Update Successfully");
                     return false;
                 }
-            }); 
+            });
         }
     }
 }
-
 function Load_form(){
     hide_div();
     $("#new_rec").show();
@@ -114,27 +114,14 @@ function details_form(){
         });
     }
 }
-
-
-function Existin_data(elm){
-    $("#loader").remove();
-    $.post("exist_data.php",{name:elm.value}, function(result){
+function load_territory_fnc()
+{
+    $("#territory_id").html('');
+    $.post("../../libraries/ajax_load_file/load_territory.php",{
+        zone_id:$("#zone_id").val()
+    }, function(result){
         if (result){
-            if (result=="Found"){
-//                ME_Alert('Alert', 'Exiting Your Data');
-                notification_msg('Exiting Your Data');
-                $(elm).after('<img id="loader" src="../../img/icons/25x25/loader.gif" />');
-                MenuOffOn('off','off','off','off','off','off','on','on','on','on');
-            }
-            else if (result=="Not Found"){
-                $("#loader").remove();
-                MenuOffOn('off','on','off','off','on','on','on','on','on','on');
-            }
+            $("#territory_id").append(result);
         }
     });
-}
-
-function check_integer_value()
-{
-    $("#pack_size_name").val($("#pack_size_name").val().replace(/[^0-9\.]/g,''))
 }

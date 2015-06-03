@@ -74,10 +74,11 @@ class Database {
         return (mysql_error());
     }
 
-    function query($sql = '') {
+    function query($sql = '')
+    {
 
         $this->result = @mysql_query($sql, $this->conn) or die(mysql_error());
-//        $this->close();
+        //        $this->close();
         return ($this->result != false);
     }
 
@@ -369,14 +370,14 @@ class Database {
         $result = $this->query($sql);
         $row_result = $this->fetchAssoc($result);
         $st_icon = $row_result['st_icon'];
-//        if ($st_icon != '') {
-//            $task_icon = "<img  width=25 height=25 src='../../system_images/task_icon/" . $st_icon . "'>";
-//        } else {
-//            $task_icon = '<a class="btn btn-small" data-original-title="No Icon" title="No Icon">
-//                                                            <i class="icon-warning-sign" data-original-title="Share"> </i>
-//                                                        </a>';
-//        }
-//        @$task_name_icon = $task_icon .  $row_result['st_name'];
+        //        if ($st_icon != '') {
+        //            $task_icon = "<img  width=25 height=25 src='../../system_images/task_icon/" . $st_icon . "'>";
+        //        } else {
+        //            $task_icon = '<a class="btn btn-small" data-original-title="No Icon" title="No Icon">
+        //                                                            <i class="icon-warning-sign" data-original-title="Share"> </i>
+        //                                                        </a>';
+        //        }
+        //        @$task_name_icon = $task_icon .  $row_result['st_name'];
         @$task_name_icon = $row_result['st_name'];
         $this->close();
         return $task_name_icon;
@@ -1005,7 +1006,81 @@ $tbl"."assign_variety_pri.product_type_id=$TblName.product_type_id
         }
     }
 
+    function get_division($selected='', $where='')
+    {
+        $tbl=_DB_PREFIX;
+        if(@$_SESSION['user_level'] == "Division")
+        {
+            $division="AND $tbl" . "division_info.division_id='".@$_SESSION['division_id']."'";
+        }
+        else if(@$_SESSION['user_level'] == "Zone")
+        {
+            $division="AND $tbl" . "zone_user_access.zone_id='".@$_SESSION['zone_id']."'";
+        }
+        else if($where)
+        {
+            $division="AND ait_division_info.division_id='".$where."'";
+        }
+        else
+        {
+            echo "<option value=''>Select</option>";
+            $division="";
+        }
+
+        $this->open();
+
+        $sql_division="
+                        SELECT
+                            ait_division_info.division_name as fieldtext,
+                            ait_division_info.division_id as fieldkey
+                        FROM
+                          ait_division_info
+                        WHERE
+                          ait_division_info.status='Active' AND ait_division_info.del_status=0
+                          $division
+                        GROUP BY ait_division_info.division_id
+                        ";
+
+        if($selected)
+        {
+            echo $this->SelectList($sql_division, $selected);
+        }
+        else
+        {
+            echo $this->SelectList($sql_division);
+        }
+        $this->close();
+    }
+
+    function get_crop($selected='', $where='')
+    {
+        $tbl=_DB_PREFIX;
+        if($where)
+        {
+            $where_condition="AND $tbl" . "crop_info.crop_id='".$where."'";
+        }
+        else
+        {
+            echo "<option value=''>Select</option>";
+            $where_condition="";
+        }
+
+        $this->open();
+
+        $sql_crop = "select crop_id as fieldkey, crop_name as fieldtext from $tbl" . "crop_info where status='Active' AND del_status='0' $where_condition order by order_crop";
+
+        if($selected)
+        {
+            echo $this->SelectList($sql_crop, $selected);
+        }
+        else
+        {
+            echo $this->SelectList($sql_crop);
+        }
+        $this->close();
+    }
 }
+
 
 //////////////////  Start Make by Md. Maraj Hossain ///////////////
 ?>

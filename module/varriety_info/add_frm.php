@@ -41,10 +41,9 @@ $tbl = _DB_PREFIX;
                         </label>
                         <div class="controls">
                             <select id="crop_id" name="crop_id" class="span5" placeholder="Crop" onchange="load_product_type()" validate="Require">
-                                <option value="">Select</option>
                                 <?php
-                                $sql_uesr_group = "select crop_id as fieldkey, crop_name as fieldtext from $tbl" . "crop_info where status='Active'";
-                                echo $db->SelectList($sql_uesr_group);
+                                $db_crop=new Database();
+                                $db_crop->get_crop();
                                 ?>
                             </select>
                             <span class="help-inline">

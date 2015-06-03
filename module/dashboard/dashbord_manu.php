@@ -50,28 +50,36 @@ $modules_title = '';
                     <div class="metro-nav">
                         <?php
                         $sql_modules = "SELECT
-                $tbl" . "system_module.sm_name, $tbl" . "system_module.sm_id, $tbl" . "system_module.sm_icon, count($tbl" . "user_group.up_st_id) as count_stid,$tbl" . "user_group.up_st_id
-                FROM
-                $tbl" . "user_group
-                LEFT JOIN $tbl" . "system_module ON $tbl" . "system_module.sm_id = $tbl" . "user_group.up_sm_id
-                where ug_id='$user_group_id'
-                GROUP BY
-                $tbl" . "system_module.sm_id 
-                ORDER BY $tbl" . "system_module.sm_order asc 
-                ";
-                        if ($db->open()) {
+                                            $tbl" . "system_module.sm_name, $tbl" . "system_module.sm_id, $tbl" . "system_module.sm_icon, count($tbl" . "user_group.up_st_id) as count_stid,$tbl" . "user_group.up_st_id
+                                        FROM
+                                        $tbl" . "user_group
+                                        LEFT JOIN $tbl" . "system_module ON $tbl" . "system_module.sm_id = $tbl" . "user_group.up_sm_id
+                                        where ug_id='$user_group_id'
+                                        GROUP BY
+                                        $tbl" . "system_module.sm_id
+                                        ORDER BY $tbl" . "system_module.sm_order asc
+                        ";
+                        if ($db->open())
+                        {
                             $i = 0;
                             $result_mod = $db->query($sql_modules);
-                            while ($result_array_mod = $db->fetchAssoc($result_mod)) {
-                                if ($i % 2 == 0) {
+                            while ($result_array_mod = $db->fetchAssoc($result_mod))
+                            {
+                                if ($i % 2 == 0)
+                                {
                                     $rowcolor = "gradeC";
-                                } else {
+                                }
+                                else
+                                {
                                     $rowcolor = "gradeA success";
                                 }
-//                echo $result_array_mod['sm_name'];
-                                if ($result_array_mod['sm_icon'] != '') {
+                                //                echo $result_array_mod['sm_name'];
+                                if ($result_array_mod['sm_icon'] != '')
+                                {
                                     $module_icon = "<img src='../../system_images/module_icon/$result_array_mod[sm_icon]' width=25 height=25 alt=''>";
-                                } else {
+                                }
+                                else
+                                {
                                     $module_icon = '';
                                 }
                                 ?>

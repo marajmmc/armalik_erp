@@ -53,34 +53,41 @@ $tbl = _DB_PREFIX;
                                 <th style="width:5%" class="hidden-phone">
                                     Pack Size(gm)
                                 </th>
+                                <th style="width:5%" >
+                                    Quantity
+                                </th>
+                                <th style="width:5%" class="hidden-phone">
+                                    Action
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
                             $sql = "SELECT
-                                        $tbl" . "product_info.id,
-                                        $tbl" . "product_info.product_id,
-                                        $tbl" . "product_info.product_type,
-                                        $tbl" . "product_info.pack_size,
-                                        $tbl" . "product_info.quantity,
-                                        $tbl" . "product_info.mfg_date,
-                                        $tbl" . "product_info.exp_date,
-                                        $tbl" . "product_info.`status`,
+                                        $tbl" . "product_purchase_info.id,
+                                        $tbl" . "product_purchase_info.product_id,
+                                        $tbl" . "product_purchase_info.product_type,
+                                        $tbl" . "product_purchase_info.pack_size,
+                                        $tbl" . "product_purchase_info.quantity,
+                                        $tbl" . "product_purchase_info.mfg_date,
+                                        $tbl" . "product_purchase_info.exp_date,
+                                        $tbl" . "product_purchase_info.`status`,
                                         $tbl" . "warehouse_info.warehouse_name,
                                         $tbl" . "product_pack_size.pack_size_name,
                                         $tbl" . "crop_info.crop_name,
                                         $tbl" . "product_type.product_type as ptype,
                                         $tbl" . "varriety_info.varriety_name
                                     FROM
-                                        $tbl" . "product_info
-                                        LEFT JOIN $tbl" . "warehouse_info ON $tbl" . "warehouse_info.warehouse_id = $tbl" . "product_info.warehouse_id
-                                        LEFT JOIN $tbl" . "crop_info ON $tbl" . "crop_info.crop_id = $tbl" . "product_info.crop_id
-                                        LEFT JOIN $tbl" . "product_type ON $tbl" . "product_type.product_type_id = $tbl" . "product_info.product_type_id
-                                        LEFT JOIN $tbl" . "varriety_info ON $tbl" . "varriety_info.varriety_id = $tbl" . "product_info.varriety_id
-                                        LEFT JOIN $tbl" . "product_pack_size ON $tbl" . "product_pack_size.pack_size_id = $tbl" . "product_info.pack_size
-                                    WHERE $tbl" . "product_info.del_status='0' 
-                                    ORDER BY $tbl" . "product_info.id DESC 
-                        ";
+                                        $tbl" . "product_purchase_info
+                                        LEFT JOIN $tbl" . "warehouse_info ON $tbl" . "warehouse_info.warehouse_id = $tbl" . "product_purchase_info.warehouse_id
+                                        LEFT JOIN $tbl" . "crop_info ON $tbl" . "crop_info.crop_id = $tbl" . "product_purchase_info.crop_id
+                                        LEFT JOIN $tbl" . "product_type ON $tbl" . "product_type.product_type_id = $tbl" . "product_purchase_info.product_type_id
+                                        LEFT JOIN $tbl" . "varriety_info ON $tbl" . "varriety_info.varriety_id = $tbl" . "product_purchase_info.varriety_id
+                                        LEFT JOIN $tbl" . "product_pack_size ON $tbl" . "product_pack_size.pack_size_id = $tbl" . "product_purchase_info.pack_size
+                                    WHERE
+                                        $tbl" . "product_purchase_info.del_status=0
+                                    ORDER BY $tbl" . "product_purchase_info.id DESC
+                            ";
                             if ($db->open()) {
                                 $result = $db->query($sql);
                                 $i = 1;
@@ -102,6 +109,12 @@ $tbl = _DB_PREFIX;
                                         <td><?php echo $result_array['ptype']; ?></td>
                                         <td><?php echo $result_array['varriety_name']; ?></td>
                                         <td class="hidden-phone"><?php echo $result_array['pack_size_name']; ?> gm</td>
+                                        <td><?php echo $result_array['quantity']; ?> </td>
+                                        <td>
+                                            <a class='btn btn-warning2' data-original-title='' onclick="delete_product('<?php echo $result_array["id"] ?>')">
+                                                <i class='icon-white icon-trash'> </i>
+                                            </a>
+                                        </td>
                                     </tr>
                                     <?php
                                     ++$i;

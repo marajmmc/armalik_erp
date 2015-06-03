@@ -12,14 +12,15 @@ $employee_id = $_SESSION['employee_id'];
 $tbl = _DB_PREFIX;
 
 $maxID = "DI-" . $db->getMaxID_six_digit($tbl . 'distributor_info', 'distributor_id');
-$rowfield = array(
+$rowfield = array
+(
     'distributor_id,' => "'$maxID',",
     'zone_id,' => "'" . $_POST["zone_id"] . "',",
     'territory_id,' => "'" . $_POST["territory_id"] . "',",
+    'zilla_id,' => "'" . $_POST["zilla_id"] . "',",
     'distributor_name,' => "'" . stripQuotes(removeBadChars($_POST["distributor_name"])) . "',",
     'customer_code,' => "'" . stripQuotes(removeBadChars($_POST["customer_code"])) . "',",
     'owner_name,' => "'" . stripQuotes(removeBadChars($_POST["owner_name"])) . "',",
-//    'market_name,' => "'" . $_POST["market_name"] . "',",
     'address,' => "'" . stripQuotes(removeBadChars($_POST["address"])) . "',",
     'phone,' => "'" . stripQuotes(removeBadChars($_POST["phone"])) . "',",
     'email,' => "'" . stripQuotes(removeBadChars($_POST["email"])) . "',",
@@ -36,7 +37,8 @@ $db->data_insert($tbl . 'distributor_info', $rowfield);
 $db->system_event_log('', $user_id, $employee_id, $maxID, '', $tbl . 'distributor_info', 'Save', '');
 
 
-$rowfield = array(
+$rowfield = array
+(
     'distributor_id,' => "'" . $maxID . "',",
     'due_amount,' => "due_amount+'" . $_POST["due_balance"] . "',",
     'status,' => "'Active',",

@@ -31,10 +31,12 @@ $tbl = _DB_PREFIX;
                         </label>
                         <div class="controls">
                             <select id="crop_id" name="crop_id" class="span5" placeholder="Select Crop">
-                                <option value="">Select</option>
+                                <!--<option value="">Select</option>-->
                                 <?php
-                                $sql_uesr_group = "select crop_id as fieldkey, crop_name as fieldtext from $tbl" . "crop_info where status='Active' ORDER BY $tbl" . "crop_info.order_crop";
-                                echo $db->SelectList($sql_uesr_group);
+                                //$sql_uesr_group = "select crop_id as fieldkey, crop_name as fieldtext from $tbl" . "crop_info where status='Active' ORDER BY $tbl" . "crop_info.order_crop";
+                                //echo $db->SelectList($sql_uesr_group);
+                                $db_crop=new Database();
+                                $db_crop->get_crop();
                                 ?>
                             </select>
                         </div>

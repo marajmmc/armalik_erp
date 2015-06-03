@@ -27,56 +27,55 @@ $tbl = _DB_PREFIX;
             <div class="widget-body">
                 <div id="dt_example" class="example_alt_pagination">
                     <table class="table table-condensed table-striped table-hover table-bordered pull-left" id="data-table">
-
                         <thead>
                             <tr>
-                                <th style="width:5%">
+                                <th style="width:2%">
                                     Sl No
                                 </th>
-                                <th style="width:20%">
-                                    Crop
-                                </th>
-                                <th style="width:20%">
-                                    Order
+                                <th style="width:10%">
+                                    Zone Name
                                 </th>
                                 <th style="width:10%">
-                                    Status
+                                    Territory Name
+                                </th>
+                                <th style="width:5%">
+                                    Number District
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
                             $sql = "SELECT
-                                crop_id,
-                                crop_name,
-                                order_crop,
-                                status
-                            FROM
-                                $tbl" . "crop_info
-                            WHERE del_status='0'
-							ORDER BY order_crop
-                            ";
+                                        count($tbl"."territory_assign_district.zone_id) as id,
+                                        $tbl"."zone_info.zone_id,
+                                        $tbl"."zone_info.zone_name,
+                                        $tbl"."territory_info.territory_id,
+                                        $tbl"."territory_info.territory_name
+                                    FROM $tbl"."territory_assign_district
+                                         LEFT JOIN $tbl"."zone_info ON $tbl"."zone_info.zone_id = $tbl"."territory_assign_district.zone_id
+                                         LEFT JOIN $tbl"."territory_info ON $tbl"."territory_info.territory_id = $tbl"."territory_assign_district.territory_id
+                                    WHERE $tbl"."territory_assign_district.del_status=0
+                                    GROUP BY $tbl"."territory_assign_district.zone_id
+
+                        ";
+
                             if ($db->open()) {
                                 $result = $db->query($sql);
                                 $i = 1;
-                                while ($result_array = $db->fetchAssoc())
-                                {
-                                    if ($i % 2 == 0)
-                                    {
+                                while ($result_array = $db->fetchAssoc()) {
+                                    if ($i % 2 == 0) {
                                         $rowcolor = "gradeC";
-                                    }
-                                    else
-                                    {
+                                    } else {
                                         $rowcolor = "gradeA success";
                                     }
                                     ?>
-                                    <tr class="<?php echo $rowcolor ?> pointer" id="tr_id<?php echo $i; ?>" onclick="get_rowID('<?php echo $result_array["crop_id"] ?>', '<?php echo $i; ?>')" ondblclick="details_form();">
+                                    <tr class="<?php echo $rowcolor ?> pointer" id="tr_id<?php echo $i; ?>" onclick="get_rowID('<?php echo $result_array["territory_id"] ?>', '<?php echo $i; ?>')" ondblclick="details_form();">
                                         <td>
                                             <?php echo $i; ?>
                                         </td>
-                                        <td><?php echo $result_array['crop_name']; ?></td>
-                                        <td><?php echo $result_array['order_crop']; ?></td>
-                                        <td><?php echo $result_array['status']; ?></td>
+                                        <td><?php echo $result_array['zone_name']; ?></td>
+                                        <td><?php echo $result_array['territory_name']; ?></td>
+                                        <td><?php echo $result_array['id']; ?></td>
                                     </tr>
                                     <?php
                                     ++$i;

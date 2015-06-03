@@ -50,6 +50,9 @@ if ($_SESSION['user_level'] == "Zone") {
                                     Territory
                                 </th>
                                 <th style="width:10%">
+                                    District
+                                </th>
+                                <th style="width:10%">
                                     Customer
                                 </th>
                                 <th style="width:10%">
@@ -73,11 +76,13 @@ if ($_SESSION['user_level'] == "Zone") {
                                         $tbl" . "distributor_info.distributor_name,
                                         $tbl" . "distributor_info.owner_name,
                                         $tbl" . "distributor_info.phone,
-                                        $tbl" . "distributor_info.status
+                                        $tbl" . "distributor_info.status,
+                                        $tbl"."zilla.zillanameeng
                                     FROM
                                         $tbl" . "distributor_info
                                         LEFT JOIN $tbl" . "zone_info ON $tbl" . "zone_info.zone_id = $tbl" . "distributor_info.zone_id
                                         LEFT JOIN $tbl" . "territory_info ON $tbl" . "territory_info.territory_id = $tbl" . "distributor_info.territory_id
+                                        LEFT JOIN $tbl"."zilla ON $tbl"."zilla.zillaid = $tbl"."distributor_info.zilla_id
                                     WHERE $tbl" . "distributor_info.status='Active' AND $tbl" . "distributor_info.del_status='0' 
                                     $zone_id $territory  ".$db->get_zone_access($tbl. "distributor_info")." 
                                 ";
@@ -95,6 +100,7 @@ if ($_SESSION['user_level'] == "Zone") {
                                         <td><?php echo $result_array['customer_code']; ?></td>
                                         <td><?php echo $result_array['zone_name']; ?></td>
                                         <td><?php echo $result_array['territory_name']; ?></td>
+                                        <td><?php echo $result_array['zillanameeng']; ?></td>
                                         <td><?php echo $result_array['distributor_name']; ?></td>
                                         <td><?php echo $result_array['owner_name']; ?></td>
                                         <td><?php echo $result_array['phone']; ?></td>

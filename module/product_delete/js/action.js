@@ -13,7 +13,7 @@ function list(){
             $("#list_rec").html(result);
             $(".mini-title").html('List');
             loader_close();
-            MenuOffOn('off','off','on','on','on','on','on','off','on','on');
+            MenuOffOn('off','off','off','off','on','on','on','off','on','on');
         }
     });
 }
@@ -93,26 +93,26 @@ function edit_form(){
     }
 }
 function details_form(){
-    if($("#rowID").val()==""){
-        alertify.set({
-            delay: 3000
-        });
-        alertify.error("Please Select Any Row In The Table");
-        return false;
-    }else{
-        hide_div();
-        $("#details_rec").show();
-        loader_start();
-        $.post("details_frm.php",$("#frm_area").serialize(), function(result){
-            if (result){
-                SaveStatus=2;
-                $("#details_rec").html(result);
-                $(".mini-title").html('View Detials From');
-                loader_close();
-                MenuOffOn('off','off','off','off','on','on','on','on','on','on');
-            }
-        });
-    }
+//    if($("#rowID").val()==""){
+//        alertify.set({
+//            delay: 3000
+//        });
+//        alertify.error("Please Select Any Row In The Table");
+//        return false;
+//    }else{
+//        hide_div();
+//        $("#details_rec").show();
+//        loader_start();
+//        $.post("details_frm.php",$("#frm_area").serialize(), function(result){
+//            if (result){
+//                SaveStatus=2;
+//                $("#details_rec").html(result);
+//                $(".mini-title").html('View Detials From');
+//                loader_close();
+//                MenuOffOn('off','off','off','off','on','on','on','on','on','on');
+//            }
+//        });
+//    }
 }
 
 
@@ -168,51 +168,98 @@ function load_product_type(){
     })
 }
 
-function delete_product(row_id, serial){
-    $.post("../../libraries/ajax_load_file/load_product_current_stock.php",{
-        crop_id:$("#crop_id"+serial).val(),
-        product_type_id:$("#product_type_id"+serial).val(),
-        varriety_id:$("#varriety_id"+serial).val(),
-        pack_size:$("#pack_size"+serial).val(),
-        warehouse_id:$("#warehouse_id"+serial).val()
-    }, function(result){
-        if (result){
-            var current_quantity = parseFloat(result);
-            var purchase_quantity = parseFloat($("#purchase_quantity"+serial).val());
-            var total_quantity=(current_quantity-purchase_quantity);
-            if(current_quantity<purchase_quantity){
-                var con_msg="Sorry your current quantity not available. Your current quantity is:"+current_quantity+", delete quantity is:"+purchase_quantity+", short quantity is:"+total_quantity;
-                reset();
-                alertify.alert(con_msg, function (e) {
-                    if (e) {
-                        
+//function delete_product(row_id, serial)
+//{
+//    $.post("../../libraries/ajax_load_file/load_product_current_stock.php",
+//    {
+//        crop_id:$("#crop_id"+serial).val(),
+//        product_type_id:$("#product_type_id"+serial).val(),
+//        varriety_id:$("#varriety_id"+serial).val(),
+//        pack_size:$("#pack_size"+serial).val(),
+//        warehouse_id:$("#warehouse_id"+serial).val()
+//    },
+//    function(result)
+//    {
+//        if (result)
+//        {
+//            var current_quantity = parseFloat(result);
+//            var purchase_quantity = parseFloat($("#purchase_quantity"+serial).val());
+//            var total_quantity=(current_quantity-purchase_quantity);
+//            if(current_quantity<purchase_quantity)
+//            {
+//                var con_msg="Sorry your current quantity not available. Your current quantity is:"+current_quantity+", delete quantity is:"+purchase_quantity+", short quantity is:"+total_quantity;
+//                reset();
+//                alertify.alert(con_msg, function (e)
+//                {
+//                    if (e)
+//                    {
+//
+//                    }
+//                });
+//                return false;
+//            }
+//            else
+//            {
+//                var con_msg="Are You Sure .... Delete this requisition? Your current quantity is:"+current_quantity+", delete quantity is:"+purchase_quantity+", total quantity is:"+total_quantity;
+//                reset();
+//                alertify.confirm(con_msg, function (e)
+//                {
+//                    if (e)
+//                    {
+//                        $.post("delete_product.php",
+//                        {
+//                            row_id:row_id,
+//                            crop_id:$("#crop_id"+serial).val(),
+//                            product_type_id:$("#product_type_id"+serial).val(),
+//                            varriety_id:$("#varriety_id"+serial).val(),
+//                            pack_size:$("#pack_size"+serial).val(),
+//                            warehouse_id:$("#warehouse_id"+serial).val(),
+//                            purchase_quantity:$("#purchase_quantity"+serial).val()
+//                        },
+//                        function(result)
+//                        {
+//                            if(result)
+//                            {
+//                                $("#tr_id"+serial).fadeOut();
+//                            }
+//                        })
+//                    }
+//                    else
+//                    {
+//
+//                    }
+//                });
+//                return false;
+//            }
+//        }
+//    });
+//}
+
+function delete_product(row_id)
+{
+    var con_msg="Are You Sure .... Delete this requisition?";
+    reset();
+    alertify.confirm(con_msg, function (e)
+    {
+        if (e)
+        {
+            $.post("delete_product.php",
+                {
+                    row_id:row_id
+                },
+                function(result)
+                {
+                    if(result)
+                    {
+                        alert (result);
+                        list();
                     }
-                });
-                return false;
-            }else{
-                var con_msg="Are You Sure .... Delete this requisition? Your current quantity is:"+current_quantity+", delete quantity is:"+purchase_quantity+", total quantity is:"+total_quantity;
-                reset();
-                alertify.confirm(con_msg, function (e) {
-                    if (e) {
-                        $.post("delete_product.php", {
-                            row_id:row_id,
-                            crop_id:$("#crop_id"+serial).val(),
-                            product_type_id:$("#product_type_id"+serial).val(),
-                            varriety_id:$("#varriety_id"+serial).val(),
-                            pack_size:$("#pack_size"+serial).val(),
-                            warehouse_id:$("#warehouse_id"+serial).val(),
-                            purchase_quantity:$("#purchase_quantity"+serial).val()
-                        }, function(result){
-                            if(result){
-                                $("#tr_id"+serial).fadeOut();
-                            }
-                        })
-                    } else {
-                
-                    }
-                });
-                return false;
-            }
+                })
+        }
+        else
+        {
+
         }
     });
+    return false;
 }

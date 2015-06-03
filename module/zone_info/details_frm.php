@@ -27,6 +27,23 @@ $editrow = $db->single_data($tbl . "zone_info", "*", "zone_id", $_POST['rowID'])
             <div class="form-horizontal no-margin">
                 <div class="widget-body span6">
                     <div class="control-group">
+                        <label class="control-label" for="zone_name">
+                            Division Name
+                        </label>
+                        <div class="controls">
+                            <select disabled id="division_id" name="division_id" class="span5" placeholder="Division" >
+                                <?php
+                                //include_once '../../libraries/ajax_load_file/load_division.php';
+                                $db_division=new Database();
+                                $db_division->get_division($editrow['division_id'], $editrow['division_id']);
+                                ?>
+                            </select>
+                            <span class="help-inline">
+                                *
+                            </span>
+                        </div>
+                    </div>
+                    <div class="control-group">
                         <label class="control-label" for="zone_name_en">
                             Zone Name
                         </label>

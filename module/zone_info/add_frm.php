@@ -27,6 +27,23 @@ $tbl = _DB_PREFIX;
                 <div class="widget-body span6">
                     <div class="control-group">
                         <label class="control-label" for="zone_name">
+                            Division Name
+                        </label>
+                        <div class="controls">
+                            <select id="division_id" name="division_id" class="span5" placeholder="Division" >
+                                <?php
+                                //include_once '../../libraries/ajax_load_file/load_division.php';
+                                $db_division=new Database();
+                                $db_division->get_division();
+                                ?>
+                            </select>
+                            <span class="help-inline">
+                                *
+                            </span>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="zone_name">
                             Zone Name
                         </label>
                         <div class="controls">

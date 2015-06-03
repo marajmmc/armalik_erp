@@ -55,6 +55,23 @@ $editrow = $db->single_data($tbl . "distributor_info", "*", "distributor_id", $_
                         </div>
                     </div>
                     <div class="control-group">
+                        <label class="control-label" for="">
+                            District
+                        </label>
+                        <div class="controls">
+                            <select disabled id="zilla_id" name="zilla_id" class="span5" placeholder="" validate="Require">
+                                <!--                                <option value="">Select</option>-->
+                                <?php
+                                $sql_uesr_group = "select zillaid as fieldkey, zillanameeng as fieldtext from $tbl" . "zilla where visible='0' AND zillaid='".$editrow['zilla_id']."'";
+                                echo $db->SelectList($sql_uesr_group, $editrow['zilla_id']);
+                                ?>
+                            </select>
+                            <span class="help-inline">
+                                *
+                            </span>
+                        </div>
+                    </div>
+                    <div class="control-group">
                         <label class="control-label" for="distributor_name">
                             Customer
                         </label>

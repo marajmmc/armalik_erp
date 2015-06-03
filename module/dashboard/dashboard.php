@@ -21,10 +21,7 @@ include_once '../../libraries/lib/inclue_system_file.php';
         <!--<script type="text/javascript" src="../../html5shiv.googlecode.com/svn/trunk/html5.js">-->
     </script>
     <link href="../../icomoon/style.css" rel="stylesheet">
-    <!--[if lte IE 7]>
-    <script src="css/icomoon-font/lte-ie7.js">
-    </script>
-    <![endif]-->
+
     <link href="../../system_css/wysiwyg/bootstrap-wysihtml5.css" rel="stylesheet">
     <link href="../../system_css/wysiwyg/wysiwyg-color.css" rel="stylesheet">
     <link href="../../system_css/main.css" rel="stylesheet"> <!-- Important. For Theming change primary-color variable in main.css  -->

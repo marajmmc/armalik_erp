@@ -126,13 +126,19 @@ function load_territory_fnc(){
     });
 }
 
-function load_distributor_fnc(){
+function load_distributor_fnc()
+{
     $("#distributor_id").html('');
-    $.post("../../libraries/ajax_load_file/load_distributor.php",{
+    $.post("../../libraries/ajax_load_file/load_distributor.php",
+    {
         zone_id:$("#zone_id").val(),
-        territory_id:$("#territory_id").val()
-    }, function(result){
-        if (result){
+        territory_id:$("#territory_id").val(),
+        zilla_id:$("#zilla_id").val()
+    },
+    function(result)
+    {
+        if (result)
+        {
             $("#distributor_id").append(result);
         }
     });
@@ -181,25 +187,35 @@ function session_load_distributor(){
     });
 }
 
-function load_product_type(serial){
+function load_product_type(serial)
+{
     $("#product_type_id"+serial).html('');
-    $.post("../../libraries/ajax_load_file/load_po_product_type.php", {
+    $.post("../../libraries/ajax_load_file/load_po_product_type.php",
+    {
         crop_id: $("#crop_id"+serial).val()
-    }, function(result){
-        if(result){
+    },
+    function(result)
+    {
+        if(result)
+        {
             $("#product_type_id"+serial).append(result);
         }
     })
 }
 
-function load_varriety_fnc(serial){
+function load_varriety_fnc(serial)
+{
     $("#varriety_id"+serial).html('');
-    $.post("../../libraries/ajax_load_file/load_po_varriety.php",{
+    $.post("../../libraries/ajax_load_file/load_po_varriety.php",
+    {
         crop_id:$("#crop_id"+serial).val(),
         product_type_id:$("#product_type_id"+serial).val()
-    }, function(result){
+    },
+    function(result)
+    {
         //        alert (result)
-        if (result){
+        if (result)
+        {
             $("#varriety_id"+serial).append(result);
         }
     });
@@ -350,7 +366,8 @@ function send_status_approved(){
 function distributor_due_balance(){
     $("#lbl_distributor_due_balance").html('');
     $.post("../../libraries/ajax_load_file/load_distributor_purchase_value.php", {
-        distributor_id: $("#distributor_id").val()
+        distributor_id: $("#distributor_id").val(),
+        zilla_id: $("#zilla_id").val()
     }, function(result){
         if(result){
             $("#lbl_distributor_due_balance").html(result);
@@ -394,12 +411,17 @@ function sum_value(){
     //        MenuOffOn('off','on','off','off','on','on','on','on','on','on');
     }
 }
-function bonus_load_product_type(serial){
+function bonus_load_product_type(serial)
+{
     $("#bonus_product_type_id"+serial).html('');
-    $.post("../../libraries/ajax_load_file/load_po_product_type.php", {
+    $.post("../../libraries/ajax_load_file/load_po_product_type.php",
+    {
         crop_id: $("#bonus_crop_id"+serial).val()
-    }, function(result){
-        if(result){
+    },
+    function(result)
+    {
+        if(result)
+        {
             $("#bonus_product_type_id"+serial).append(result);
         }
     })
@@ -514,23 +536,44 @@ function del_bonus_product(serial,elm_id){
     return false;
 }
 
-function load_crop_warehouse(serial){
+function load_crop_warehouse(serial)
+{
     $("#crop_id"+serial).html('');
-    $.post("../../libraries/ajax_load_file/load_crop_warehouse.php",{
+    $.post("../../libraries/ajax_load_file/load_crop_warehouse.php",
+    {
         warehouse_id:$("#warehouse_id").val()
-    }, function(result){
-        if (result){
+    },
+    function(result)
+    {
+        if (result)
+        {
             $("#crop_id"+serial).append(result);
         }
     });
 }
-function load_crop_warehouse_bonus(serial){
+function load_crop_warehouse_bonus(serial)
+{
     $("#bonus_crop_id"+serial).html('');
-    $.post("../../libraries/ajax_load_file/load_crop_warehouse.php",{
+    $.post("../../libraries/ajax_load_file/load_crop_warehouse.php",
+    {
         warehouse_id:$("#warehouse_id").val()
-    }, function(result){
-        if (result){
+    },
+    function(result)
+    {
+        if (result)
+        {
             $("#bonus_crop_id"+serial).append(result);
+        }
+    });
+}
+function load_district_fnc()
+{
+    $("#zilla_id").html('');
+    $.post("../../libraries/ajax_load_file/load_territory_assign_district.php",{zone_id: $('#zone_id').val(), territory_id: $('#territory_id').val()},function(result)
+    {
+        if (result)
+        {
+            $("#zilla_id").append(result);
         }
     });
 }

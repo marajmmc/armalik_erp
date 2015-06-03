@@ -30,7 +30,7 @@ $tbl = _DB_PREFIX;
                             Zone
                         </label>
                         <div class="controls">
-                            <select id="zone_id" name="zone_id" class="span5" placeholder="Zone" onchange="load_territory_fnc()">
+                            <select id="zone_id" name="zone_id" class="span5" placeholder="Zone" onchange="load_territory_fnc()" validate="Require">
                                 <option value="">Select</option>
                                 <?php
                                 echo $sql_uesr_group = "select zone_id as fieldkey, zone_name as fieldtext from $tbl" . "zone_info WHERE status='Active' AND del_status='0' " . $db->get_zone_access($tbl . "zone_info") . " ";
@@ -44,10 +44,27 @@ $tbl = _DB_PREFIX;
                             Territory
                         </label>
                         <div class="controls">
-                            <select id="territory_id" name="territory_id" class="span5" placeholder="Territory">
+                            <select id="territory_id" name="territory_id" class="span5" placeholder="Territory" onchange="load_district_fnc()" validate="Require">
                                 <option value="">Select</option>
 
                             </select>
+                            <span class="help-inline">
+                                *
+                            </span>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="">
+                            District
+                        </label>
+                        <div class="controls">
+                            <select id="zilla_id" name="zilla_id" class="span5" placeholder="" validate="Require">
+                                <option value="">Select</option>
+
+                            </select>
+                            <span class="help-inline">
+                                *
+                            </span>
                         </div>
                     </div>
                     <div class="control-group">

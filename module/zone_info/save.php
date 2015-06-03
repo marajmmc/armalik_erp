@@ -14,6 +14,7 @@ $tbl = _DB_PREFIX;
 $maxID = "ZI-".$db->getMaxID_six_digit($tbl . 'zone_info', 'zone_id');
 $rowfield = array(
     'zone_id,' => "'$maxID',",
+    'division_id,' => "'" . $_POST["division_id"] . "',",
     'zone_name,' => "'" . $_POST["zone_name"] . "',",
     'description,' => "'" . $_POST["description"] . "',",
     'status,' => "'Active',",

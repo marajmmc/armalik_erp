@@ -64,7 +64,21 @@ $tbl = _DB_PREFIX;
                             Territory
                         </label>
                         <div class="controls">
-                            <select id="territory_id" name="territory_id" class="span5" placeholder="Territory" onchange="load_distributor_fnc()" validate="Require">
+                            <select id="territory_id" name="territory_id" class="span5" placeholder="Territory" onchange="load_district_fnc()" validate="Require">
+                                <option value="">Select</option>
+
+                            </select>
+                            <span class="help-inline">
+                                *
+                            </span>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="">
+                            District
+                        </label>
+                        <div class="controls">
+                            <select id="zilla_id" name="zilla_id" class="span5" placeholder="" validate="Require" onchange="load_distributor_fnc()">
                                 <option value="">Select</option>
 
                             </select>
@@ -142,15 +156,13 @@ $tbl = _DB_PREFIX;
                                     </th>
                                 </tr>
                             </thead>
-
                         </table>
                         <input type='hidden' name='total_value' maxlength='50' id='total_value' class='span12'/>
-                        <input type='hidden' name='txt_distributor_due_balance' maxlength='50' id='txt_distributor_due_balance' class='span12'/>
+                        <input type='hidden' name='txt_distributor_due_balance' maxlength='50' id='txt_distributor_due_balance' class='span12' />
                         <h3><u>Product Bonus Information</u></h3>
                         <div class="controls controls-row">
                             <span class="label label label-info" style="cursor: pointer; float: right" onclick="RowIncrement_bonus()"> + Add More </span>
                         </div>
-
                         <table class="table table-condensed table-striped table-bordered table-hover no-margin" id="TaskTable_bonus">
                             <thead>
                                 <tr>
@@ -185,7 +197,8 @@ $tbl = _DB_PREFIX;
 
 
 <script>
-    $(document).ready(function(){
+    $(document).ready(function()
+    {
         session_load_fnc()
     });
     
@@ -194,17 +207,23 @@ $tbl = _DB_PREFIX;
     function RowIncrement() 
     {
         
-        if($("#warehouse_id").val()==""){
+        if($("#warehouse_id").val()=="")
+        {
             reset();
             alertify.set({
                 delay: 3000
             });
             alertify.error("Please select warehouse.");
             return false;
-        }else{
-            if($("#userLevel").val()=="Marketing"){
+        }
+        else
+        {
+            if($("#userLevel").val()=="Marketing")
+            {
                 var ElmReadonly="";
-            }else{
+            }
+            else
+            {
                 var ElmReadonly="readonly='readonly'";
             }
             var table = document.getElementById('TaskTable');
@@ -217,69 +236,46 @@ $tbl = _DB_PREFIX;
             //        alert(row.id);
             var cell1 = row.insertCell(0);
             cell1.innerHTML = "<select id='crop_id"+ExId+"' name='crop_id[]' class='span12' placeholder='Crop' onchange='load_product_type("+ExId+")' validate='Require'>\n\
-<option value=''>Select</option></select>\n\
-    <input type='hidden' id='id[]' name='id[]' value=''/>";
+                <option value=''>Select</option></select>\n\
+                <input type='hidden' id='id[]' name='id[]' value=''/>";
+
                 cell1 = row.insertCell(1);
                 cell1.innerHTML = "<select id='product_type_id"+ExId+"' name='product_type_id[]' class='span12' placeholder='Zone' onchange='load_varriety_fnc("+ExId+")' validate='Require'>\n\
-    <option value=''>Select</option></select>";
+                <option value=''>Select</option></select>";
                 cell1.style.cursor="default";
-            
+
                 cell1 = row.insertCell(2);
                 cell1.innerHTML = "<select id='varriety_id"+ExId+"' name='varriety_id[]' class='span12' placeholder='Zone' onchange='load_pack_size_fnc("+ExId+")' validate='Require'>\n\
-    <option value=''>Select</option></select>";
+                <option value=''>Select</option></select>";
                 cell1.style.cursor="default";
         
                 cell1 = row.insertCell(3);
                 cell1.innerHTML = "<select id='pack_size"+ExId+"' name='pack_size[]' class='span12' placeholder='Zone' onchange='load_product_price_fnc("+ExId+")' validate='Require'>\n\
-    <option value=''>Select</option></select>";
+                <option value=''>Select</option></select>";
                 cell1.style.cursor="default";
         
                 cell1 = row.insertCell(4);
                 cell1.innerHTML = "<input type='text' name='price[]' maxlength='50' id='price"+ExId+"' class='span12' "+ElmReadonly+"  validate='Require' />";
                 cell1.style.cursor="default";
+
                 cell1 = row.insertCell(5);
                 cell1.innerHTML = "<input type='text' name='quantity[]' maxlength='50' id='quantity"+ExId+"' class='span12' value='0' onblur='load_product_total_price("+ExId+"); sum_value()' validate='Require' />";
                 cell1.style.cursor="default";
+
                 cell1 = row.insertCell(6);
                 cell1.innerHTML = "<input type='text' name='total_price[]' maxlength='50' id='total_price"+ExId+"' class='span12' "+ElmReadonly+" value='0' validate='Require' />";
                 cell1.style.cursor="default";
+
                 cell1 = row.insertCell(7);
                 cell1.innerHTML = "<a class='btn btn-warning2' data-original-title='' onclick=\"RowDecrement('TaskTable','T"+ExId+"')\">\n\
-    <i class='icon-white icon-trash'> </i>";
+                <i class='icon-white icon-trash'> </i>";
                 cell1.style.cursor="default";
                 document.getElementById("crop_id"+ExId).focus();
-            
                 load_crop_warehouse(ExId);
-            
                 ExId=ExId+1;
                 $("#TaskTable").tableDnD();
             }
         }
-
-        function RowDecrement(tableID,id) 
-        {
-            try {
-                var table = document.getElementById(tableID);
-                for(var i=1;i<table.rows.length;i++)
-                {
-                    if(table.rows[i].id==id)
-                    {
-                        table.deleteRow(i);
-                        //                showAlert('SA-00106');
-                    }
-                }
-            }
-            catch(e) {
-                alert(e);
-            }
-        }
-
-        function RowDecrement_All() 
-        {
-            $("#TaskTable .tableHover").remove();
-            $("#TaskTable_bonus .tableHover").remove();
-        }
-
 
         //////////////////////////////////////// Table Row add delete function ///////////////////////////////
 </script>
@@ -300,9 +296,12 @@ $tbl = _DB_PREFIX;
         }
         else
         {
-            if($("#userLevel").val()=="Marketing"){
+            if($("#userLevel").val()=="Marketing")
+            {
                 var ElmReadonly="";
-            }else{
+            }
+            else
+            {
                 var ElmReadonly="readonly='readonly'";
             }
             var table = document.getElementById('TaskTable_bonus');
@@ -315,45 +314,71 @@ $tbl = _DB_PREFIX;
             //alert(row.id);
             var cell1 = row.insertCell(0);
             cell1.innerHTML = "<select id='bonus_crop_id["+ExId+"]' name='bonus_crop_id[]' class='span12' placeholder='Crop' onchange='bonus_load_product_type("+ExId+")' validate='Require'>\n\
-                <?php
-                echo "<option value=''>Select</option>";
-                $sql_uesr_group = "select crop_id as fieldkey, crop_name as fieldtext from $tbl" . "crop_info where status='Active' AND crop_id IN (select crop_id from $tbl" . "product_pricing where status='Active')  ORDER BY $tbl" . "crop_info.order_crop";
-                echo $db->SelectList($sql_uesr_group);
-                ?>\n\
-                </select>\n\
-                <input type='hidden' id='bonus_id[]' name='bonus_id[]' value=''/>";
-                                        
-                cell1 = row.insertCell(1);
-                cell1.innerHTML = "<select id='bonus_product_type_id"+ExId+"' name='bonus_product_type_id[]' class='span12' placeholder='Zone' onchange='bonus_load_varriety_fnc("+ExId+")' validate='Require'>\n\
-    <option value=''>Select</option></select>";
-                cell1.style.cursor="default";
-                                        
-                cell1 = row.insertCell(2);
-                cell1.innerHTML = "<select id='bonus_varriety_id"+ExId+"' name='bonus_varriety_id[]' class='span12' placeholder='Zone' onchange='bonus_load_pack_size_fnc("+ExId+")' validate='Require'>\n\
-    <option value=''>Select</option></select>";
-                cell1.style.cursor="default";
-                                    
-                cell1 = row.insertCell(3);
-                cell1.innerHTML = "<select id='bonus_pack_size"+ExId+"' name='bonus_pack_size[]' class='span12' placeholder='Zone' onchange='load_bonus_current_stock_fnc("+ExId+"); load_pack_size_name("+ExId+")' validate='Require'>\n\
-    <option value=''>Select</option></select><input type='hidden' id='bonus_pack_size_name"+ExId+"' name='bonus_pack_size_name[]' value=''/>";
-                cell1.style.cursor="default";
-                                    
-                cell1 = row.insertCell(4);
-                cell1.innerHTML = "<input type='text' name='bonus_quantity[]' maxlength='50' id='bonus_quantity"+ExId+"' class='span12' value='0' onkeypress='return numberOnly(event)' validate='Require' />";
-                cell1.style.cursor="default";
-                                    
-                cell1 = row.insertCell(5);
-                cell1.innerHTML = "<a class='btn btn-warning2' data-original-title='' onclick=\"RowDecrement_bonus('TaskTable_bonus','T"+ExId+"')\">\n\
-    <i class='icon-white icon-trash'> </i>";
-                cell1.style.cursor="default";
-                document.getElementById("bonus_crop_id"+ExId).focus();
-                
-                load_crop_warehouse_bonus(ExId);
-                
-                ExId=ExId+1;
-                $("#TaskTable_bonus").tableDnD();
+            <?php
+            echo "<option value=''>Select</option>";
+            $sql_uesr_group = "select crop_id as fieldkey, crop_name as fieldtext from $tbl" . "crop_info where status='Active' AND crop_id IN (select crop_id from $tbl" . "product_pricing where status='Active')  ORDER BY $tbl" . "crop_info.order_crop";
+            echo $db->SelectList($sql_uesr_group);
+            ?>\n\
+            </select>\n\
+            <input type='hidden' id='bonus_id[]' name='bonus_id[]' value=''/>";
+
+            cell1 = row.insertCell(1);
+            cell1.innerHTML = "<select id='bonus_product_type_id"+ExId+"' name='bonus_product_type_id[]' class='span12' placeholder='Zone' onchange='bonus_load_varriety_fnc("+ExId+")' validate='Require'>\n\
+            <option value=''>Select</option></select>";
+            cell1.style.cursor="default";
+
+            cell1 = row.insertCell(2);
+            cell1.innerHTML = "<select id='bonus_varriety_id"+ExId+"' name='bonus_varriety_id[]' class='span12' placeholder='Zone' onchange='bonus_load_pack_size_fnc("+ExId+")' validate='Require'>\n\
+            <option value=''>Select</option></select>";
+            cell1.style.cursor="default";
+
+            cell1 = row.insertCell(3);
+            cell1.innerHTML = "<select id='bonus_pack_size"+ExId+"' name='bonus_pack_size[]' class='span12' placeholder='Zone' onchange='load_bonus_current_stock_fnc("+ExId+"); load_pack_size_name("+ExId+")' validate='Require'>\n\
+            <option value=''>Select</option></select><input type='hidden' id='bonus_pack_size_name"+ExId+"' name='bonus_pack_size_name[]' value=''/>";
+            cell1.style.cursor="default";
+
+            cell1 = row.insertCell(4);
+            cell1.innerHTML = "<input type='text' name='bonus_quantity[]' maxlength='50' id='bonus_quantity"+ExId+"' class='span12' value='0' onkeypress='return numberOnly(event)' validate='Require' />";
+            cell1.style.cursor="default";
+
+            cell1 = row.insertCell(5);
+            cell1.innerHTML = "<a class='btn btn-warning2' data-original-title='' onclick=\"RowDecrement_bonus('TaskTable_bonus','T"+ExId+"')\">\n\
+            <i class='icon-white icon-trash'> </i>";
+            cell1.style.cursor="default";
+            document.getElementById("bonus_crop_id"+ExId).focus();
+
+            load_crop_warehouse_bonus(ExId);
+
+            ExId=ExId+1;
+            $("#TaskTable_bonus").tableDnD();
+        }
+    }
+
+
+    function RowDecrement_All()
+    {
+        $("#TaskTable .tableHover").remove();
+        $("#TaskTable_bonus .tableHover").remove();
+    }
+
+    function RowDecrement(tableID,id)
+    {
+        try {
+            var table = document.getElementById(tableID);
+            for(var i=1;i<table.rows.length;i++)
+            {
+                if(table.rows[i].id==id)
+                {
+                    table.deleteRow(i);
+                    //                showAlert('SA-00106');
+                }
             }
         }
+        catch(e) {
+            alert(e);
+        }
+    }
+
 
         function RowDecrement_bonus(tableID,id) 
         {

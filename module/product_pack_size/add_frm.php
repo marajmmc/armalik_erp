@@ -30,7 +30,7 @@ $tbl = _DB_PREFIX;
                             Pack Size(gm)
                         </label>
                         <div class="controls">
-                            <input class="span9" type="text" name="pack_size_name" id="pack_size_name" placeholder="Pack Size(gm)" validate="Require" onkeypress="return numbersOnly(event)" />
+                            <input class="span9" type="text" name="pack_size_name" id="pack_size_name" placeholder="Pack Size(gm)" validate="Require" onkeyup="check_integer_value()" />
                             <span class="help-inline">
                                 *
                             </span>

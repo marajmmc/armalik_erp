@@ -42,10 +42,9 @@ $editrow = $db->single_data($tbl . "varriety_info", "*", "varriety_id", $_POST['
                         </label>
                         <div class="controls">
                             <select id="crop_id" name="crop_id" disabled="" class="span5" placeholder="Crop" validate="Require">
-                                <option value="">Select</option>
                                 <?php
-                                $sql_uesr_group = "select crop_id as fieldkey, crop_name as fieldtext from $tbl" . "crop_info where status='Active'";
-                                echo $db->SelectList($sql_uesr_group, $editrow['crop_id']);
+                                $db_crop=new Database();
+                                $db_crop->get_crop($editrow['crop_id'], $editrow['crop_id']);
                                 ?>
                             </select>
                             <span class="help-inline">

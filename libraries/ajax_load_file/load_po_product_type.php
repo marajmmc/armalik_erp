@@ -5,9 +5,12 @@ require_once("../../libraries/lib/functions.inc.php");
 
 $tbl = _DB_PREFIX;
 $db = new Database();
-if($_POST['crop_id']!=""){
+if($_POST['crop_id']!="")
+{
     $crop_id="AND crop_id='".$_POST['crop_id']."'";
-}else{
+}
+else
+{
     $crop_id="AND crop_id=''";
 }
 echo "<option value=''>Select</option>";

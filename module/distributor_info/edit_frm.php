@@ -6,6 +6,8 @@ require_once("../../libraries/lib/config.inc.php");
 require_once("../../libraries/lib/functions.inc.php");
 $db = new Database();
 $tbl = _DB_PREFIX;
+$zone_id='';
+$territory='';
 $editrow = $db->single_data($tbl . "distributor_info", "*", "distributor_id", $_POST['rowID']);
 if ($_SESSION['user_level'] == "Zone") {
     $zone_id = "AND zone_id='" . $_SESSION['zone_id'] . "'";
@@ -16,9 +18,11 @@ if ($_SESSION['user_level'] == "Zone") {
     $territory = "AND territory_id='" . $_SESSION['territory_id'] . "'";
 } else {
     $select = "<option value=''>Select</option>";
-    $zone_id = '';
-    $territory = '';
+    $zone_id = "AND zone_id='" . $editrow['zone_id'] . "'";
+    $territory = "AND territory_id='" . $editrow['territory_id'] . "'";
 }
+
+//echo $editrow['territory_id'];
 ?>
 <div class="row-fluid">
     <div class="span12">
@@ -43,13 +47,16 @@ if ($_SESSION['user_level'] == "Zone") {
                             Zone
                         </label>
                         <div class="controls">
-                            <select id="zone_id" name="zone_id" class="span5" placeholder="Zone" onchange="load_territory_fnc()">
-                                <option value="">Select</option>
-                                <?php
-                                $sql_uesr_group = "select zone_id as fieldkey, zone_name as fieldtext from $tbl" . "zone_info WHERE status='Active' AND del_status='0' $zone_id  ".$db->get_zone_access($tbl. "zone_info")." ";
+                            <select id="zone_id" name="zone_id" class="span5" placeholder="Zone" onchange="load_territory_fnc()" validate="Require">
+                                    <option value="">Select</option>
+                                    <?php
+                                $sql_uesr_group = "select zone_id as fieldkey, zone_name as fieldtext from $tbl" . "zone_info WHERE status='Active' AND del_status='0'  ".$db->get_zone_access($tbl. "zone_info")." ";
                                 echo $db->SelectList($sql_uesr_group, $editrow['zone_id']);
                                 ?>
                             </select>
+                            <span class="help-inline">
+                                *
+                            </span>
                         </div>
                     </div>
                     <div class="control-group">
@@ -57,12 +64,47 @@ if ($_SESSION['user_level'] == "Zone") {
                             Territory
                         </label>
                         <div class="controls">
-                            <select id="territory_id" name="territory_id" class="span5" placeholder="Territory">
+                            <select id="territory_id" name="territory_id" class="span5" placeholder="Territory" onchange="load_district_fnc()" validate="Require">
                                 <?php
-                                $sql_uesr_group = "select territory_id as fieldkey, territory_name as fieldtext from $tbl" . "territory_info where status='Active' AND del_status='0' $zone_id $territory";
+                                $sql_uesr_group = "select territory_id as fieldkey, territory_name as fieldtext from $tbl" . "territory_info where status='Active' AND del_status='0' $zone_id ";
                                 echo $db->SelectList($sql_uesr_group, $editrow['territory_id']);
                                 ?>                                
                             </select>
+                            <span class="help-inline">
+                                *
+                            </span>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="">
+                            District
+                        </label>
+                        <div class="controls">
+                            <select id="zilla_id" name="zilla_id" class="span5" placeholder="" validate="Require">
+                                <!--                                <option value="">Select</option>-->
+                                <?php
+                                //$sql_uesr_group = "select zillaid as fieldkey, zillanameeng as fieldtext from $tbl" . "zilla where visible='0' ";
+                                //echo $db->SelectList($sql_uesr_group, $editrow['zilla_id']);
+
+                                echo "<option value=''>Select</option>";
+                                echo $sql_uesr_group = "SELECT
+                                        $tbl" . "zilla.zillaid as fieldkey,
+                                        $tbl" . "zilla.zillanameeng as fieldtext
+                                    FROM
+                                        $tbl" . "territory_assign_district
+                                        LEFT JOIN $tbl" . "zilla ON $tbl" . "zilla.zillaid = $tbl" . "territory_assign_district.zilla_id
+                                    WHERE
+                                        $tbl" . "territory_assign_district.del_status=0
+                                        AND $tbl" . "zilla.visible=0
+                                        AND $tbl" . "territory_assign_district.status='Active'
+                                        AND $tbl" . "territory_assign_district.territory_id='" . $editrow['territory_id'] . "'
+";
+                                echo $db->SelectList($sql_uesr_group);
+                                ?>
+                            </select>
+                            <span class="help-inline">
+                                *
+                            </span>
                         </div>
                     </div>
                     <div class="control-group">

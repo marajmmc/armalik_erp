@@ -55,6 +55,14 @@ $tbl = _DB_PREFIX;
                             <textarea class="span9" name="description" id="description" placeholder="Description " ></textarea>
                         </div>
                     </div>
+                    <div class="control-group">
+                        <label class="control-label" for="description">
+                            Description
+                        </label>
+                        <div class="controls">
+                            <textarea class="span9" name="description" id="description" placeholder="Description " ></textarea>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -175,3 +175,15 @@ function session_load_territory(){
         }
     });
 }
+
+function load_district_fnc()
+{
+    $("#zilla_id").html('');
+    $.post("../../libraries/ajax_load_file/load_territory_assign_district.php",{zone_id: $('#zone_id').val(), territory_id: $('#territory_id').val()},function(result)
+    {
+        if (result)
+        {
+            $("#zilla_id").append(result);
+        }
+    });
+}

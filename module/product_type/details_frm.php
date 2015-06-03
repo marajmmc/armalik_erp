@@ -34,8 +34,8 @@ $editrow = $db->single_data($tbl . "product_type", "*", "product_type_id", $_POS
                             <select id="crop_id" name="crop_id" disabled="" class="span5" placeholder="Select Crop" validate="Require">
                                 <option value="">Select</option>
                                 <?php
-                                $sql_uesr_group = "select crop_id as fieldkey, crop_name as fieldtext from $tbl" . "crop_info where status='Active' ORDER BY $tbl" . "crop_info.order_crop";
-                                echo $db->SelectList($sql_uesr_group, $editrow['crop_id']);
+                                $db_crop=new Database();
+                                $db_crop->get_crop($editrow['crop_id'], $editrow['crop_id']);
                                 ?>
                             </select>
                             <span class="help-inline">

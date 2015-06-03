@@ -25,14 +25,14 @@ function Save_Rec()
         if (SaveStatus==1){
             $.post("save.php",$("#frm_area").serialize(), function(result){
                 if (result){
-//                    $("#new_rec").html(result);
+                    //$("#new_rec").html(result);
                     list();
                     loader_close();
                     reset();
                     alertify.set({
                         delay: 3000
                     });
-                    alertify.success("Data Save Successfully");
+                    alertify.success(result);
                     return false;
                 }
             });
@@ -144,13 +144,18 @@ function Existin_data(elm){
     });
 }
 
-function load_varriety_fnc(){
+function load_varriety_fnc()
+{
     $("#varriety_id").html('');
-    $.post("../../libraries/ajax_load_file/load_varriety.php",{
+    $.post("../../libraries/ajax_load_file/load_varriety.php",
+    {
         crop_id:$("#crop_id").val(),
         product_type_id:$("#product_type_id").val()
-    }, function(result){
-        if (result){
+    },
+    function(result)
+    {
+        if (result)
+        {
             $("#varriety_id").append(result);
         }
     });

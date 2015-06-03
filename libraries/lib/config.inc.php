@@ -45,19 +45,21 @@ if (_SITE_MODE == "debug") {
 
 //------------------------------------------------------------------------------
 
-class Config {
+class Config
+{
 
     var $host = '';
     var $user = '';
     var $password = '';
     var $database = '';
 
-    function Config() {
-$this->host = "127.0.0.1";
+    function Config()
+    {
+        $this->host = "127.0.0.1";
         $this->user = 'root';
         $this->password = 'vertrigo';
         $this->database = 'armalikg_armalik_db_live';
-//        $this->database = 'test';
+        //$this->database = 'test1';
     }
 
 }

@@ -12,6 +12,7 @@ $tbl = _DB_PREFIX;
 
 $maxID = $_POST['rowID'];
 $rowfield = array(
+    'division_id' => "'" . $_POST["division_id"] . "'",
     'zone_name' => "'" . $_POST["zone_name"] . "'",
     'description' => "'" . $_POST["description"] . "'",
     'status' => "'" . $_POST["status"] . "'",

@@ -76,15 +76,22 @@ $product_type = '';
                                             LEFT JOIN $tbl" . "crop_info ON $tbl" . "crop_info.crop_id = $tbl" . "varriety_info.crop_id
                                             LEFT JOIN $tbl" . "product_type ON $tbl" . "product_type.product_type_id = $tbl" . "varriety_info.product_type_id
                                         WHERE $tbl" . "varriety_info.del_status='0'
-                                        ORDER BY  $tbl" . "varriety_info.varriety_id DESC 
+                                        ORDER BY
+                                        $tbl" . "crop_info.order_crop,
+                                        $tbl" . "product_type.order_type,
+                                        $tbl" . "varriety_info.order_variety
                         ";
                             if ($db->open()) {
                                 $result = $db->query($sql);
                                 $i = 1;
-                                while ($result_array = $db->fetchAssoc()) {
-                                    if ($i % 2 == 0) {
+                                while ($result_array = $db->fetchAssoc())
+                                {
+                                    if ($i % 2 == 0)
+                                    {
                                         $rowcolor = "gradeC";
-                                    } else {
+                                    }
+                                    else
+                                    {
                                         $rowcolor = "gradeA success";
                                     }
                                     ?>

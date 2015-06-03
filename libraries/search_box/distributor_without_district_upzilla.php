@@ -26,7 +26,9 @@ $tbl = _DB_PREFIX;
         <td>
             <select id="division_id" name="division_id" class="span12" placeholder="Division" onchange="load_zone()" >
                 <?php
-                include_once '../../libraries/ajax_load_file/load_division.php';
+                //include_once '../../libraries/ajax_load_file/load_division.php';
+                $db_division=new Database();
+                $db_division->get_division();
                 ?>
             </select>
         </td>

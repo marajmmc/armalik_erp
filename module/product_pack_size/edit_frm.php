@@ -31,7 +31,7 @@ $editrow = $db->single_data($tbl . "product_pack_size", "*", "pack_size_id", $_P
                             Pack Size(gm)
                         </label>
                         <div class="controls">
-                            <input class="span9" type="text" name="pack_size_name" id="pack_size_name" value="<?php echo $editrow['pack_size_name']?>" placeholder="Pack Size(gm)" validate="Require" onkeypress="return numbersOnly(event)" />
+                            <input readonly class="span9" type="text" name="pack_size_name" id="pack_size_name" value="<?php echo $editrow['pack_size_name']?>" placeholder="Pack Size(gm)" validate="Require" onkeypress="return numbersOnly(event)" />
                             <span class="help-inline">
                                 *
                             </span>

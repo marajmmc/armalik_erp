@@ -56,7 +56,8 @@ if ($_SESSION['warehouse_id']) {
                         <div class="controls">
                             <select id="crop_id" name="crop_id" class="span5" placeholder="Select Crop" validate="Require" onchange="load_product_type()">
                                 <?php
-                                include_once '../../libraries/ajax_load_file/load_crop.php';
+                                $db_crop=new Database();
+                                $db_crop->get_crop();
                                 ?>
                             </select>
                             <span class="help-inline">
@@ -113,7 +114,7 @@ if ($_SESSION['warehouse_id']) {
                             <select id="pack_size" name="pack_size" class="span3" placeholder="Select Type" validate="Require">
                                 <?php
                                 echo "<option value=''>Select</option>";
-                                $sql_uesr_group = "select pack_size_id as fieldkey, pack_size_name as fieldtext from $tbl" . "product_pack_size where status='Active'";
+                                $sql_uesr_group = "select pack_size_id as fieldkey, pack_size_name as fieldtext from $tbl" . "product_pack_size where status='Active' order by pack_size_name";
                                 echo $db->SelectList($sql_uesr_group);
                                 ?>
                             </select>
