@@ -60,9 +60,8 @@ $tbl = _DB_PREFIX;
                         <div class="controls">
                             <select id="crop_id" name="crop_id" class="span5 reset_drop_down" placeholder="Select Crop" validate="Require" onchange="load_product_type()">
                                 <?php
-                                echo "<option value=''>Select</option>";
-                                $sql_uesr_group = "select crop_id as fieldkey, crop_name as fieldtext from $tbl" . "crop_info where status='Active' ORDER BY $tbl" . "crop_info.order_crop";
-                                echo $db->SelectList($sql_uesr_group);
+                                $db_crop=new Database();
+                                $db_crop->get_crop();
                                 ?>
                             </select>
                             <span class="help-inline">
@@ -83,22 +82,7 @@ $tbl = _DB_PREFIX;
                             </span>
                         </div>
                     </div>
-                    <!--<div class="control-group">
-                        <label class="control-label" for="district_id">
-                            F1 Hybrid/OP
-                        </label>
-                        <div class="controls">
-                            <select id="hybrid" name="hybrid" class="span5 reset_drop_down" onchange="load_variety_fnc()" validate="Require">
-                                <option value="">Select</option>
-                                <option value="F1 Hybrid">F1 Hybrid</option>
-                                <option value="OP">OP</option>
 
-                            </select>
-                            <span class="help-inline">
-                                *
-                            </span>
-                        </div>
-                    </div>-->
                     <div class="control-group">
                         <label class="control-label" for="variety_id">
                             Variety Name

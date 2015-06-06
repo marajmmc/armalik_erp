@@ -446,7 +446,8 @@ class Database {
         $this->close();
     }
 
-    function get_act_subhead_number($act_head) {
+    function get_act_subhead_number($act_head)
+    {
         $this->open();
         $tbl = _DB_PREFIX;
 
@@ -604,13 +605,13 @@ class Database {
         if ($dpt['department'] == "R&D Farm")
         {
             $access = "AND $tbl"."pdo_photo_upload.pdo_id in
-(
-SELECT $tbl"."assign_variety_pri.variety_id FROM $tbl"."assign_variety_pri
-WHERE
-$tbl"."assign_variety_pri.employee_id='$employee_id' AND
-$tbl"."assign_variety_pri.crop_id=$TblName.crop_id AND
-$tbl"."assign_variety_pri.product_type_id=$TblName.product_type_id
-)";
+            (
+            SELECT $tbl"."assign_variety_pri.variety_id FROM $tbl"."assign_variety_pri
+            WHERE
+            $tbl"."assign_variety_pri.employee_id='$employee_id' AND
+            $tbl"."assign_variety_pri.crop_id=$TblName.crop_id AND
+            $tbl"."assign_variety_pri.product_type_id=$TblName.product_type_id
+            )";
         }
         else
         {
@@ -619,28 +620,101 @@ $tbl"."assign_variety_pri.product_type_id=$TblName.product_type_id
         return $access;
     }
 
-    function get_product_stock($warehouse = NULL, $crop = NULL, $product_type = NULL, $varreity = NULL, $pack_size = NULL, $quantity = NULL) {
+    function get_product_stock($year=NULL, $warehouse = NULL, $crop = NULL, $product_type = NULL, $variety = NULL, $pack_size = NULL, $quantity = NULL)
+    {
         $tbl = _DB_PREFIX;
-        if ($warehouse != "" && $crop != "" && $product_type != "" && $varreity != "" && $pack_size != "") {
-            echo $sql = "SELECT
-                        current_stock_qunatity
+        if ($warehouse != "" && $crop != "" && $product_type != "" && $variety != "" && $pack_size != "")
+        {
+            $sql="SELECT
+                        pi.id,
+                        ait_warehouse_info.warehouse_name,
+                        ait_crop_info.crop_name,
+                        ait_product_type.product_type,
+                        ait_varriety_info.varriety_name,
+                        ait_product_pack_size.pack_size_name,
+                        pi.crop_id,
+                        pi.product_type_id,
+                        pi.varriety_id,
+                        pi.pack_size,
+                        (
+                        SELECT SUM(ppi.quantity) FROM ait_product_purchase_info AS ppi
+                        WHERE
+                        ppi.year_id=pi.year_id AND
+                        ppi.warehouse_id=pi.warehouse_id AND
+                        ppi.crop_id=pi.crop_id AND
+                        ppi.product_type_id = pi.product_type_id AND
+                        ppi.varriety_id = pi.varriety_id AND
+                        ppi.pack_size = pi.pack_size
+                        ) AS Total_HQ_Purchase_Quantity,
+                        (
+                        SELECT SUM(ppoi.approved_quantity) FROM ait_product_purchase_order_invoice AS ppoi
+                        WHERE
+                        ppoi.year_id=pi.year_id AND
+                        ppoi.warehouse_id=pi.warehouse_id AND
+                        ppoi.crop_id=pi.crop_id AND
+                        ppoi.product_type_id = pi.product_type_id AND
+                        ppoi.varriety_id = pi.varriety_id AND
+                        ppoi.pack_size = pi.pack_size
+                        ) AS Total_Sales_Quantity,
+                        (
+                        SELECT SUM(ppob.quantity) FROM ait_product_purchase_order_bonus AS ppob
+                        WHERE
+                        ppob.year_id=pi.year_id AND
+                        ppob.warehouse_id=pi.warehouse_id AND
+                        ppob.crop_id=pi.crop_id AND
+                        ppob.product_type_id = pi.product_type_id AND
+                        ppob.varriety_id = pi.varriety_id AND
+                        ppob.pack_size = pi.pack_size
+                        ) AS Total_Bonus_Quantity,
+                        (
+                        SELECT SUM(pin.damage_quantity) FROM ait_product_inventory AS pin
+                        WHERE
+                        pin.warehouse_id=pi.warehouse_id AND
+                        pin.crop_id=pi.crop_id AND
+                        pin.product_type_id = pi.product_type_id AND
+                        pin.varriety_id = pi.varriety_id AND
+                        pin.pack_size = pi.pack_size
+                        ) AS Total_Short_Quantity,
+                        (
+                        SELECT SUM(pin.access_quantity) FROM ait_product_inventory AS pin
+                        WHERE
+                        pin.warehouse_id=pi.warehouse_id AND
+                        pin.crop_id=pi.crop_id AND
+                        pin.product_type_id = pi.product_type_id AND
+                        pin.varriety_id = pi.varriety_id AND
+                        pin.pack_size = pi.pack_size
+                        ) AS Total_Access_Quantity
                     FROM
-                        $tbl" . "product_stock
+                        ait_product_info AS pi
+                        LEFT JOIN ait_warehouse_info ON ait_warehouse_info.warehouse_id = pi.warehouse_id
+                        LEFT JOIN ait_crop_info ON ait_crop_info.crop_id = pi.crop_id
+                        LEFT JOIN ait_product_type ON ait_product_type.product_type_id = pi.product_type_id
+                        LEFT JOIN ait_varriety_info ON ait_varriety_info.varriety_id = pi.varriety_id
+                        LEFT JOIN ait_product_pack_size ON ait_product_pack_size.pack_size_id = pi.pack_size
                     WHERE
-                        status='Active' AND del_status='0' AND
-                        warehouse_id='$warehouse' AND crop_id='$crop' AND 
-                        product_type_id='$product_type' AND varriety_id='$varreity' AND 
-                        pack_size='$pack_size'
-                ";
+                        pi.del_status=0
+                        $crop $product_type $variety $pack_size $warehouse
+                    GROUP BY
+                        pi.crop_id, pi.product_type_id, pi.varriety_id, pi.pack_size
+                    ORDER BY
+                        ait_warehouse_info.warehouse_id,
+                        ait_crop_info.order_crop,
+                        ait_product_type.order_type,
+                        ait_varriety_info.order_variety";
             $result = $this->query($sql);
             $row_result = $this->fetchAssoc($result);
-            $quty = $row_result['current_stock_qunatity'];
-            if ($quantity <= $quty) {
+            $current_stock=($row_result['Total_HQ_Purchase_Quantity']-(($row_result['Total_Sales_Quantity']+$row_result['Total_Bonus_Quantity']+$row_result['Total_Access_Quantity'])-$row_result['Total_Short_Quantity']));
+            if ($quantity <= $current_stock)
+            {
                 return TRUE;
-            } else {
+            }
+            else
+            {
                 return FALSE;
             }
-        } else {
+        }
+        else
+        {
             return FALSE;
         }
     }
@@ -1068,6 +1142,110 @@ $tbl"."assign_variety_pri.product_type_id=$TblName.product_type_id
         $this->open();
 
         $sql_crop = "select crop_id as fieldkey, crop_name as fieldtext from $tbl" . "crop_info where status='Active' AND del_status='0' $where_condition order by order_crop";
+
+        if($selected)
+        {
+            echo $this->SelectList($sql_crop, $selected);
+        }
+        else
+        {
+            echo $this->SelectList($sql_crop);
+        }
+        $this->close();
+    }
+
+    function get_fiscal_year($selected='', $where='')
+    {
+        $tbl=_DB_PREFIX;
+        if($where)
+        {
+            $where_condition="AND $tbl" . "year.year_id='".$where."'";
+        }
+        else
+        {
+            //echo "<option value=''>Select</option>";
+            $where_condition="";
+        }
+
+        $this->open();
+
+        $sql_crop = "select year_id as fieldkey, year_name as fieldtext from $tbl" . "year where status='Active' AND del_status='0' $where_condition order by year_id";
+
+        if($selected)
+        {
+            echo $this->SelectList($sql_crop, $selected);
+        }
+        else
+        {
+            echo $this->SelectList($sql_crop);
+        }
+        $this->close();
+    }
+
+    function get_zone_assign_district($selected='', $zilla_id='', $zone_id, $territory_id)
+    {
+        $this->open();
+        $tbl=_DB_PREFIX;
+        if($zilla_id)
+        {
+            $zilla_id="AND $tbl" . "zilla.zillaid='$zilla_id'";
+        }
+        else
+        {
+            $zilla_id='';
+            echo "<option value=''>Select</option>";
+        }
+        $sql_zilla = "SELECT
+                                $tbl" . "zilla.zillaid as fieldkey,
+                                $tbl" . "zilla.zillanameeng as fieldtext
+                            FROM
+                                $tbl" . "territory_assign_district
+                                LEFT JOIN $tbl" . "zilla ON $tbl" . "zilla.zillaid = $tbl" . "territory_assign_district.zilla_id
+                            WHERE
+                                $tbl" . "territory_assign_district.del_status=0
+                                $zilla_id
+                                AND $tbl" . "zilla.visible=0
+                                AND $tbl" . "territory_assign_district.status='Active'
+                                AND $tbl" . "territory_assign_district.zone_id='".$zone_id."' AND $tbl" . "territory_assign_district.territory_id='".$territory_id."'
+                        ";
+
+        if($selected)
+        {
+            echo $this->SelectList($sql_zilla, $selected);
+        }
+        else
+        {
+            echo $this->SelectList($sql_zilla);
+        }
+        $this->close();
+    }
+
+    function get_crop_warehouse($selected='', $crop_id='', $warehouse_id)
+    {
+        $this->open();
+        $tbl=_DB_PREFIX;
+        if($crop_id)
+        {
+            $crop_id="AND $tbl" . "product_info.crop_id='".$crop_id."'";
+        }
+        else
+        {
+            $crop_id='';
+            echo "<option value=''>Select</option>";
+        }
+        $sql_crop = "SELECT
+                            $tbl" . "crop_info.crop_id AS fieldkey,
+                            $tbl" . "crop_info.crop_name AS fieldtext
+                        FROM
+                            $tbl" . "product_info
+                            LEFT JOIN $tbl" . "crop_info ON $tbl" . "crop_info.crop_id = $tbl" . "product_info.crop_id
+                        WHERE
+                                $tbl" . "product_info.warehouse_id='".$warehouse_id."'
+                                $crop_id
+                                AND $tbl" . "crop_info.`status`='Active' AND $tbl" . "product_info.crop_id IN (SELECT $tbl" . "product_pricing.crop_id FROM $tbl" . "product_pricing WHERE $tbl" . "product_pricing.`status`='Active')
+                        GROUP BY $tbl" . "crop_info.crop_id
+                        ORDER BY $tbl" . "crop_info.order_crop
+                        ";
 
         if($selected)
         {

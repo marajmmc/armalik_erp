@@ -18,7 +18,20 @@ $total_pack_price = '';
 $total_quantity = '';
 $total_price = '';
 $total_value=0;
+
+$year_id = $_POST["year_id"];
 $warehouse_id = $_POST["warehouse_id"];
+$zone_id = $_POST["zone_id"];
+$territory_id = $_POST["territory_id"];
+$zilla_id = $_POST["zilla_id"];
+$distributor_id = $_POST["distributor_id"];
+if(empty($year_id) && empty($warehouse_id) && empty($zone_id) && empty($territory_id) && empty($zilla_id) && empty($distributor_id))
+{
+    echo "Please check year, warehouse, zone, territory, district, distributor.";
+    die();
+}
+
+
 $maxID = "PO-" . $db->Get_CustMaxID($tbl . 'product_purchase_order_request', 'purchase_order_id', '8', '');
 
 $count = count($_POST['id']);
@@ -31,6 +44,7 @@ $total_value=$_POST["price"][$i]*$_POST["quantity"][$i];
         'purchase_order_id,' => "'$maxID',",
         'purchase_order_date,' => "'" . $db->date_formate($_POST["purchase_order_date"]) . "',",
         'warehouse_id,' => "'" . $warehouse_id . "',",
+        'year_id,' => "'" . $_POST["year_id"] . "',",
         'zone_id,' => "'" . $_POST["zone_id"] . "',",
         'territory_id,' => "'" . $_POST["territory_id"] . "',",
         'zilla_id,' => "'" . $_POST["zilla_id"] . "',",
@@ -60,6 +74,7 @@ for ($i = 0; $i < $bonus_count; $i++)
         'purchase_order_id,' => "'" . $maxID . "',",
         'invoice_date,' => "'" . $db->date_formate($_POST["invoice_date"]) . "',",
         'warehouse_id,' => "'" . $warehouse_id . "',",
+        'year_id,' => "'" . $_POST["year_id"] . "',",
         'zone_id,' => "'" . $_POST["zone_id"] . "',",
         'territory_id,' => "'" . $_POST["territory_id"] . "',",
         'zilla_id,' => "'" . $_POST["zilla_id"] . "',",

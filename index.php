@@ -10,7 +10,7 @@
     <head>
         <meta charset="utf-8">
         <title>
-            ::.. AR Malik Login ..::
+            ::.. AR Malik Login V2.0.0 ..::
         </title>
 
         <meta name="description" content="">
@@ -67,7 +67,7 @@
                                                         <div class="row-fluid">
                                                             <div class="span12">
                                                                 <h3>
-                                                                    AR Malik
+                                                                    AR Malik V2.0.0
                                                                     <img src="system_images/logo/company-logo.png" alt="Logo" class="pull-right" width="10%"/> 
                                                                 </h3>
                                                                 <p>Fill out the form below to login.</p>
@@ -78,12 +78,12 @@
                                                     <div class="content">
                                                         <div class="row-fluid">
                                                             <div class="span12">
-                                                                <input id="user_name" name="user_name" class="input span12 email" placeholder="User Name" validate="Require" onkeypress="checkEnter(event)" type="text" value="">
+                                                                <input id="user_name" name="user_name" class="input span12 email" placeholder="User Name" validate="Require" onkeypress="checkEnter(event); capLock(event)" type="text" value="">
                                                             </div>
                                                         </div>
                                                         <div class="row-fluid">
                                                             <div class="span12">
-                                                                <input id="user_passwd" name="user_passwd" class="input span12 password" placeholder="Password" validate="Require" onkeypress="checkEnter(event)" type="password">
+                                                                <input id="user_passwd" name="user_passwd" class="input span12 password" placeholder="Password" validate="Require" onkeypress="checkEnter(event); capLock(event)" type="password">
                                                             </div>
                                                         </div>
                                                         <div class="row-fluid">
@@ -117,7 +117,7 @@
                                                     <div class="content">
                                                         <div class="row-fluid">
                                                             <div class="span12">
-                                                                <input id="reset_user_name" name="reset_user_name" class="input span12 email" placeholder="User Name" onkeypress="checkEnterReset(event)" type="text" value="">
+                                                                <input id="reset_user_name" name="reset_user_name" class="input span12 email" placeholder="User Name" onkeypress="checkEnterReset(event);capLock(event)" type="text" value="">
                                                             </div>
                                                         </div>
                                                         <div class="row-fluid">
@@ -242,5 +242,21 @@
     function login_back_fnc(){
         $("#login_box").slideDown();
         $("#forget_pass_box").slideUp();
+    }
+
+    function capLock(e)
+    {
+        kc = e.keyCode?e.keyCode:e.which;
+        sk = e.shiftKey?e.shiftKey:((kc == 16)?true:false);
+        if(((kc >= 65 && kc <= 90) && !sk)||((kc >= 97 && kc <= 122) && sk))
+        {
+            $('#msg').html('Caps Lock is on.');
+            $("#user_name").val('');
+            $("#user_passwd").val('');
+        }
+        else
+        {
+            $('#msg').html('');
+        }
     }
 </script>

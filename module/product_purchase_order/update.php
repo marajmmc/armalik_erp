@@ -24,10 +24,13 @@ $total_value_up=0;
 $maxID=$_POST['purchase_order_id'];
 $count = count($_POST['id']);
 
-for ($i = 0; $i < $count; $i++) {
-    if ($_POST['id'][$i] != "") {
+for ($i = 0; $i < $count; $i++)
+{
+    if ($_POST['id'][$i] != "")
+    {
         $total_value_ins=$_POST["price"][$i]*$_POST["quantity"][$i];
-        $rowfield = array(
+        $rowfield = array
+        (
             'crop_id' => "'" . $_POST["crop_id"][$i] . "'",
             'purchase_order_date' => "'" . $db->date_formate($_POST["purchase_order_date"]) . "'",
             'warehouse_id' => "'" . $warehouse_id . "'",
@@ -50,12 +53,15 @@ for ($i = 0; $i < $count; $i++) {
     {
         $total_value_up=$_POST["price"][$i]*$_POST["quantity"][$i];
 
-        $rowfield = array(
+        $rowfield = array
+        (
             'purchase_order_id,' => "'" . $_POST['purchase_order_id'] . "',",
             'purchase_order_date,' => "'" . $db->date_formate($_POST["purchase_order_date"]) . "',",
             'warehouse_id,' => "'" . $warehouse_id . "',",
+            'year_id,' => "'" . $_POST["year_id"] . "',",
             'zone_id,' => "'" . $_POST["zone_id"] . "',",
             'territory_id,' => "'" . $_POST["territory_id"] . "',",
+            'zilla_id,' => "'" . $_POST["zilla_id"] . "',",
             'distributor_id,' => "'" . $_POST["distributor_id"] . "',",
             'crop_id,' => "'" . $_POST["crop_id"][$i] . "',",
             'product_type_id,' => "'" . $_POST["product_type_id"][$i] . "',",
@@ -76,14 +82,17 @@ for ($i = 0; $i < $count; $i++) {
 }
 
 $bonus_count = count($_POST['bonus_id']);
-for ($i = 0; $i < $bonus_count; $i++) {
-    if ($_POST['bonus_id'][$i] != "") {
-        $rowfield = array(
+for ($i = 0; $i < $bonus_count; $i++)
+{
+    if ($_POST['bonus_id'][$i] != "")
+    {
+        $rowfield = array
+        (
             'invoice_date' => "'" . $db->date_formate($_POST["purchase_order_date"]) . "'",
             'warehouse_id' => "'" . $warehouse_id . "'",
-            'zone_id' => "'" . $_POST["zone_id"] . "'",
-            'territory_id' => "'" . $_POST["territory_id"] . "'",
-            'distributor_id' => "'" . $_POST["distributor_id"] . "'",
+            //            'zone_id' => "'" . $_POST["zone_id"] . "'",
+            //            'territory_id' => "'" . $_POST["territory_id"] . "'",
+            //            'distributor_id' => "'" . $_POST["distributor_id"] . "'",
             'crop_id' => "'" . $_POST["bonus_crop_id"][$i] . "'",
             'product_type_id' => "'" . $_POST["bonus_product_type_id"][$i] . "'",
             'varriety_id' => "'" . $_POST["bonus_varriety_id"][$i] . "'",
@@ -97,13 +106,18 @@ for ($i = 0; $i < $bonus_count; $i++) {
         $wherefield = array('id' => "'" . $_POST["bonus_id"][$i] . "'");
         $db->data_update($tbl . 'product_purchase_order_bonus', $rowfield, $wherefield);
         $db->system_event_log('', $user_id, $ei_id, $maxID, '', $tbl . 'product_purchase_order_bonus', 'Save', '');
-    } else {
-        $rowfield = array(
+    }
+    else
+    {
+        $rowfield = array
+        (
             'purchase_order_id,' => "'" . $maxID . "',",
             'invoice_date,' => "'" . $db->date_formate($_POST["purchase_order_date"]) . "',",
             'warehouse_id,' => "'" . $warehouse_id . "',",
+            'year_id,' => "'" . $_POST["year_id"] . "',",
             'zone_id,' => "'" . $_POST["zone_id"] . "',",
             'territory_id,' => "'" . $_POST["territory_id"] . "',",
+            'zilla_id,' => "'" . $_POST["zilla_id"] . "',",
             'distributor_id,' => "'" . $_POST["distributor_id"] . "',",
             'crop_id,' => "'" . $_POST["bonus_crop_id"][$i] . "',",
             'product_type_id,' => "'" . $_POST["bonus_product_type_id"][$i] . "',",

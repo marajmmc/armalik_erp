@@ -24,7 +24,8 @@ function Save_Rec()
     if(validateResult){
         if (SaveStatus==1){
             $.post("save.php",$("#frm_area").serialize(), function(result){
-                if (result){
+                if (result)
+                {
                     $("#new_rec").html(result);
                     //                    list();
                     //                    loader_close();
@@ -38,8 +39,10 @@ function Save_Rec()
             });
         }else if(SaveStatus==2){
             $.post("update.php",$("#frm_area").serialize(), function(result){
-                if (result){
-                    if(result=="VALIDATE"){
+                if (result)
+                {
+                    if(result=="VALIDATE")
+                    {
                         //                        $("#edit_rec").html(result);
                         list();
                         loader_close();
@@ -49,7 +52,9 @@ function Save_Rec()
                         });
                         alertify.success("Data Update Successfully");
                         return false;
-                    }else if(result=="NOT_VALIDATE"){
+                    }
+                    else if(result=="NOT_VALIDATE")
+                    {
                         //                        $("#edit_rec").html(result);
                         list();
                         loader_close();
@@ -59,7 +64,9 @@ function Save_Rec()
                         });
                         alertify.error("Data Update Not Successfully");
                         return false;
-                    }else if(result=="INVOICE_EXIST"){
+                    }
+                    else if(result=="INVOICE_EXIST")
+                    {
                         //                        $("#edit_rec").html(result);
                         list();
                         loader_close();
@@ -69,9 +76,35 @@ function Save_Rec()
                         });
                         alertify.error("This invoice exist.");
                         return false;
-                    }else{
+                    }
+                    else if(result=="Approved_Status_Empty")
+                    {
                         //                        $("#edit_rec").html(result);
                         list();
+                        loader_close();
+                        reset();
+                        alertify.set({
+                            delay: 3000
+                        });
+                        alertify.error("Please check approved/reject status.");
+                        return false;
+                    }
+                    else if(result=="Location_Empty")
+                    {
+                        //                        $("#edit_rec").html(result);
+                        list();
+                        loader_close();
+                        reset();
+                        alertify.set({
+                            delay: 3000
+                        });
+                        alertify.error("Please check year, warehouse, zone, territory, district, customer.");
+                        return false;
+                    }
+                    else
+                    {
+                                                $("#edit_rec").html(result);
+                        //list();
                         loader_close();
                         reset();
                         alertify.set({
@@ -309,7 +342,8 @@ function load_product_price_fnc_(serial){
     });
 }
 
-function load_product_total_price_(serial){
+function load_product_total_price_(serial)
+{
     var price=parseFloat($("#price_"+serial).val());
     var quantity=parseFloat($("#approved_quantity_"+serial).val());
     var crnt_stock=parseFloat($("#current_stock_"+serial).val());
@@ -318,7 +352,8 @@ function load_product_total_price_(serial){
     
     $("#total_price_"+serial).val(total_price);
     
-    if(crnt_stock<current_stock){
+    if(crnt_stock<current_stock)
+    {
         $("#approved_quantity_"+serial).css("background", "#FF4A4A");
         MenuOffOn('off','off','off','off','off','on','on','off','on','on');
         reset();
@@ -327,32 +362,37 @@ function load_product_total_price_(serial){
         });
         alertify.error("Product stock not available");
         return false;
-    }else{
+    }
+    else
+    {
         $("#approved_quantity_"+serial).css("background", "");
     }  
 }
 
-function load_current_stock_fnc(crop_id, product_type_id, varriety_id, pack_size, serial){
+function load_current_stock_fnc(crop_id, product_type_id, varriety_id, pack_size, serial)
+{
     $("#current_stock_"+serial).val('');
-    $.post("../../libraries/ajax_load_file/load_po_current_stock.php", {
+    $.post("../../libraries/ajax_load_file/load_po_current_stock.php",
+    {
         crop_id:crop_id,
         product_type_id:product_type_id,
         varriety_id:varriety_id,
         pack_size:pack_size,
         purchase_order_id: $("#purchase_order_id").val(),
         warehouse_id: $("#warehouse_id").val()
-    }, function(result){
-        if(result){
-//            alert (result)
+    },
+    function(result)
+    {
+        if(result)
+        {
+            //            alert (result)
             var stock=parseFloat(result);
             var rp_qnty=parseFloat($("#quantity_"+serial).val());
-            var exist_qnty=parseFloat(exist_qnty)+parseFloat(stock);
             var current_stock=parseFloat(($("#pack_size_name_"+serial).val()*rp_qnty)/1000);
+            $("#current_stock_"+serial).val(parseFloat(($("#pack_size_name_"+serial).val()*stock)/1000));
 
-            $("#current_stock_"+serial).val(stock);
-            
-            if(stock<current_stock){
-                
+            if(stock<rp_qnty)
+            {
                 $("#quantity_"+serial).css("background", "#FF4A4A");
                 
                 MenuOffOn('off','off','off','off','off','on','on','off','on','on');
@@ -363,7 +403,9 @@ function load_current_stock_fnc(crop_id, product_type_id, varriety_id, pack_size
                 alertify.error("Product stock not available");
                 return false;
                 
-            }else{
+            }
+            else
+            {
                 
                 $("#quantity_"+serial).css("background", "");
                 
@@ -543,17 +585,23 @@ function load_pack_size_name_(serial){
     })
 }
 
-function load_current_stock_bonus_fnc(crop_id, product_type_id, varriety_id, pack_size, serial, po_id){
+function load_current_stock_bonus_fnc(crop_id, product_type_id, varriety_id, pack_size, serial, po_id)
+{
     $("#bonus_stock_"+serial).val('');
-    $.post("../../libraries/ajax_load_file/load_po_bonus_current_stock_in_kg.php", {
+    $.post("../../libraries/ajax_load_file/load_po_bonus_current_stock_in_kg.php",
+    {
         purchase_order_id:po_id,
         crop_id:crop_id,
         product_type_id:product_type_id,
         varriety_id:varriety_id,
         pack_size:pack_size,
         warehouse_id: $("#warehouse_id").val()
-    }, function(result){
-        if(result){
+    },
+    function(result)
+    {
+        if(result)
+        {
+            //alert (result)
             var stock=parseFloat(result);
             $("#bonus_stock_"+serial).val(stock);
         }
@@ -565,16 +613,20 @@ function load_bonus_product_qnantity_(serial){
     var quantity=parseFloat($("#bonus_quantity_"+serial).val());
     var bonus=parseFloat($("#bonus_stock_"+serial).val());
     var current_stock=parseFloat(($("#bonus_pack_size_name_"+serial).val()*quantity)/1000);
-    if(bonus<current_stock){
+    if(bonus<current_stock)
+    {
         $("#bonus_quantity_"+serial).css("background", "#FF4A4A");
         MenuOffOn('off','off','off','off','off','off','on','off','on','on');
-    }else{
+    }
+    else
+    {
         $("#bonus_quantity_"+serial).css("background", "");
         MenuOffOn('off','on','off','off','on','on','on','on','on','on');
     }  
 }
 
-function del_bonus_product(serial,elm_id){
+function del_bonus_product(serial,elm_id)
+{
     //    alert (serial)
     reset();
     alertify.confirm("Are You Sure .... Delete this bonus product?", function (e) {
@@ -612,4 +664,15 @@ function del_purchase_order(serial,elm_id){
         }
     });
     return false;
+}
+function load_district_fnc()
+{
+    $("#zilla_id").html('');
+    $.post("../../libraries/ajax_load_file/load_territory_assign_district.php",{zone_id: $('#zone_id').val(), territory_id: $('#territory_id').val()},function(result)
+    {
+        if (result)
+        {
+            $("#zilla_id").append(result);
+        }
+    });
 }

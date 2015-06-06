@@ -25,5 +25,5 @@ if($db->open()){
     }
 }
 
-$db->system_event_log('', $user_id, $ei_id, $_POST['elm_id'], '', $tbl . 'product_purchase_order_request', 'Delete', '');
+$db->system_event_log('', $user_id, $ei_id, $_POST['elm_id'], '', $tbl . 'product_purchase_order_request', 'status="Pending"', '');
 ?>

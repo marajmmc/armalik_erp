@@ -15,6 +15,8 @@ $sql = "SELECT
             $tbl" . "product_purchase_order_request.id,
             $tbl" . "product_purchase_order_request.purchase_order_id,
             $tbl" . "product_purchase_order_request.purchase_order_date,
+            $tbl" . "product_purchase_order_request.year_id,
+            $tbl" . "product_purchase_order_request.zilla_id,
             $tbl" . "product_purchase_order_request.warehouse_id,
             $tbl" . "product_purchase_order_request.zone_id,
             $tbl" . "product_purchase_order_request.territory_id,
@@ -38,6 +40,8 @@ if ($db->open()) {
     while ($row = $db->fetchAssoc($result)) {
         $elm_id[] = $row['id'];
         $warehouse_id = $row['warehouse_id'];
+        $year_id = $row['year_id'];
+        $zilla_id = $row['zilla_id'];
         $purchase_order_id = $row['purchase_order_id'];
         $status = $row['status'];
         $purchase_order_date = $row['purchase_order_date'];
@@ -94,6 +98,22 @@ if ($status != "Edit_Ready") {
                             </div>
                         </div>
                         <div class="control-group">
+                            <label class="control-label">
+                                Year
+                            </label>
+                            <div class="controls">
+                                <select id="year_id" name="year_id" class="span5" validate="Require">
+                                    <?php
+                                    $db_fiscal_year=new Database();
+                                    $db_fiscal_year->get_fiscal_year($year_id);
+                                    ?>
+                                </select>
+                            <span class="help-inline">
+                                *
+                            </span>
+                            </div>
+                        </div>
+                        <div class="control-group">
                             <label class="control-label" for="zone_id">
                                 Zone
                             </label>
@@ -114,10 +134,27 @@ if ($status != "Edit_Ready") {
                                 Territory
                             </label>
                             <div class="controls">
-                                <select id="territory_id" name="territory_id" class="span5" placeholder="Territory" onchange="load_distributor_fnc()" validate="Require">
+                                <select id="territory_id" name="territory_id" class="span5" placeholder="Territory" onchange="load_district_fnc()" validate="Require">
                                     <?php
                                     echo $sql_uesr_group = "select territory_id as fieldkey, territory_name as fieldtext from $tbl" . "territory_info where status='Active' AND del_status='0' AND territory_id='$territory_id' ";
                                     echo $db->SelectList($sql_uesr_group);
+                                    ?>
+                                </select>
+                                <span class="help-inline">
+                                    *
+                                </span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="">
+                                District
+                            </label>
+                            <div class="controls">
+                                <select id="zilla_id" name="zilla_id" class="span5" placeholder="" validate="Require" onchange="load_distributor_fnc()">
+                                    <option value="">Select</option>
+                                    <?php
+                                    $db_zilla=new Database();
+                                    $db_zilla->get_zone_assign_district($zilla_id,'', $zone_id, $territory_id);
                                     ?>
                                 </select>
                                 <span class="help-inline">
@@ -198,10 +235,14 @@ if ($status != "Edit_Ready") {
                                 </thead>
                                 <?php
                                 $rowcount = count($crop_id);
-                                for ($i = 0; $i < $rowcount; $i++) {
-                                    if ($i % 2 == 0) {
+                                for ($i = 0; $i < $rowcount; $i++)
+                                {
+                                    if ($i % 2 == 0)
+                                    {
                                         $rowcolor = "gradeC";
-                                    } else {
+                                    }
+                                    else
+                                    {
                                         $rowcolor = "gradeA success";
                                     }
                                     ?>
@@ -209,9 +250,8 @@ if ($status != "Edit_Ready") {
                                         <td>
                                             <select id='crop_id_<?php echo $i; ?>' name='crop_id[]' class='span12' placeholder='Crop' onchange='load_product_type_("<?php echo $i; ?>")' validate='Require'>
                                                 <?php
-                                                echo "<option value=''>Select</option>";
-                                                $sql_uesr_group = "select crop_id as fieldkey, crop_name as fieldtext from $tbl" . "crop_info where status='Active' ORDER BY $tbl" . "crop_info.order_crop";
-                                                echo $db->SelectList($sql_uesr_group, $crop_id[$i]);
+                                                $db_crop=new Database();
+                                                $db_crop->get_crop_warehouse($crop_id[$i],'',$warehouse_id);
                                                 ?>
                                             </select>
                                             <input type='hidden' id='id[]' name='id[]' value='<?php echo $elm_id[$i]; ?>'/>
@@ -304,12 +344,17 @@ if ($status != "Edit_Ready") {
                                         WHERE ait_product_purchase_order_bonus.status='Active' AND 
                                             ait_product_purchase_order_bonus.del_status='0' AND 
                                             ait_product_purchase_order_bonus.purchase_order_id='$purchase_order_id'";
-                                if ($dbbonus->open()) {
+                                if ($dbbonus->open())
+                                {
                                     $result = $dbbonus->query($sqlb);
-                                    while ($row = $dbbonus->fetchAssoc($result)) {
-                                        if ($i % 2 == 0) {
+                                    while ($row = $dbbonus->fetchAssoc($result))
+                                    {
+                                        if ($i % 2 == 0)
+                                        {
                                             $rowcolor = "gradeC";
-                                        } else {
+                                        }
+                                        else
+                                        {
                                             $rowcolor = "gradeA success";
                                         }
                                         ?>
@@ -317,9 +362,8 @@ if ($status != "Edit_Ready") {
                                             <td>
                                                 <select id='bonus_crop_id_<?php echo $i; ?>' name='bonus_crop_id[]' class='span12' placeholder='Crop' onchange='bonus_load_product_type_("<?php echo $i; ?>")'  validate='Require'>
                                                     <?php
-                                                    echo "<option value=''>Select</option>";
-                                                    $sql_uesr_group = "select crop_id as fieldkey, crop_name as fieldtext from $tbl" . "crop_info where status='Active'";
-                                                    echo $db->SelectList($sql_uesr_group, $row['crop_id']);
+                                                    $db_crop=new Database();
+                                                    $db_crop->get_crop_warehouse($row['crop_id'],'',$warehouse_id);
                                                     ?>
                                                 </select>
                                                 <input type='hidden' id='bonus_id[]' name='bonus_id[]' value='<?php echo $row['id']; ?>'/>
@@ -399,27 +443,27 @@ if ($status != "Edit_Ready") {
             //alert(row.id);
             var cell1 = row.insertCell(0);
             cell1.innerHTML = "<select id='crop_id"+ExId+"' name='crop_id[]' class='span12' placeholder='Crop' onchange='load_product_type("+ExId+")' validate='Require'>\n\
-    <?php
-    echo "<option value=''>Select</option>";
-    $sql_uesr_group = "select crop_id as fieldkey, crop_name as fieldtext from $tbl" . "crop_info where status='Active' AND crop_id IN (select crop_id from $tbl" . "product_pricing where status='Active')";
-    echo $db->SelectList($sql_uesr_group);
-    ?>\n\
-    </select>\n\
-    <input type='hidden' id='id[]' name='id[]' value=''/>";
+            <?php
+            echo "<option value=''>Select</option>";
+            //$sql_uesr_group = "select crop_id as fieldkey, crop_name as fieldtext from $tbl" . "crop_info where status='Active' AND crop_id IN (select crop_id from $tbl" . "product_pricing where status='Active')";
+            //echo $db->SelectList($sql_uesr_group);
+            ?>\n\
+            </select>\n\
+            <input type='hidden' id='id[]' name='id[]' value=''/>";
                                 
             cell1 = row.insertCell(1);
             cell1.innerHTML = "<select id='product_type_id"+ExId+"' name='product_type_id[]' class='span12' placeholder='Zone' onchange='load_varriety_fnc("+ExId+")' validate='Require'>\n\
-    <option value=''>Select</option></select>";
+                <option value=''>Select</option></select>";
             cell1.style.cursor="default";
                                 
             cell1 = row.insertCell(2);
             cell1.innerHTML = "<select id='varriety_id"+ExId+"' name='varriety_id[]' class='span12' placeholder='Zone' onchange='load_pack_size_fnc("+ExId+")' validate='Require'>\n\
-    <option value=''>Select</option></select>";
+            <option value=''>Select</option></select>";
             cell1.style.cursor="default";
                             
             cell1 = row.insertCell(3);
             cell1.innerHTML = "<select id='pack_size"+ExId+"' name='pack_size[]' class='span12' placeholder='Zone' onchange='load_product_price_fnc("+ExId+")' validate='Require'>\n\
-    <option value=''>Select</option></select>";
+            <option value=''>Select</option></select>";
             cell1.style.cursor="default";
                             
             cell1 = row.insertCell(4);
@@ -433,11 +477,12 @@ if ($status != "Edit_Ready") {
             cell1.style.cursor="default";
             cell1 = row.insertCell(7);
             cell1.innerHTML = "<a class='btn btn-warning2' data-original-title='' onclick=\"RowDecrement('TaskTable','T"+ExId+"')\">\n\
-    <i class='icon-white icon-trash'> </i>";
+            <i class='icon-white icon-trash'> </i>";
             cell1.style.cursor="default";
-            document.getElementById("crop_id"+ExId).focus();
+            //document.getElementById("crop_id"+ExId).focus();
+            load_crop_warehouse(ExId);
             ExId=ExId+1;
-            $("#TaskTable").tableDnD();
+            //$("#TaskTable").tableDnD();
         }
 
         function RowDecrement(tableID,id) 
@@ -514,9 +559,10 @@ if ($status != "Edit_Ready") {
             cell1.innerHTML = "<a class='btn btn-warning2' data-original-title='' onclick=\"RowDecrement_bonus('TaskTable_bonus','T"+ExId+"')\">\n\
     <i class='icon-white icon-trash'> </i>";
             cell1.style.cursor="default";
-            document.getElementById("bonus_crop_id"+ExId).focus();
+            //document.getElementById("bonus_crop_id"+ExId).focus();
+            load_crop_warehouse_bonus(ExId);
             ExId=ExId+1;
-            $("#TaskTable_bonus").tableDnD();
+            //$("#TaskTable_bonus").tableDnD();
         }
 
         function RowDecrement_bonus(tableID,id) 

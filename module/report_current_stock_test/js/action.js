@@ -176,12 +176,8 @@ function load_pack_size_fnc(){
 
 function show_report_fnc(){
     $('#div_show_rpt').html('');
-    $(".icon-print").append("<div id='div_loader'><img src='../../system_images/fb_loader.gif' /></div>");
-    $(".icon-print").attr('disable', 'disable');
     $.post('load_show_data.php', $("#frm_area").serialize(), function(result){
         if(result){
-            $('#div_loader').remove();
-            $(".icon-print").attr('disable', '');
             $('#div_show_rpt').html(result);
         }
     })

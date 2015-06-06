@@ -87,7 +87,7 @@ if ($_SESSION['user_level'] == "Zone") {
                                 //echo $db->SelectList($sql_uesr_group, $editrow['zilla_id']);
 
                                 echo "<option value=''>Select</option>";
-                                echo $sql_uesr_group = "SELECT
+                                $sql_uesr_group = "SELECT
                                         $tbl" . "zilla.zillaid as fieldkey,
                                         $tbl" . "zilla.zillanameeng as fieldtext
                                     FROM
@@ -99,7 +99,7 @@ if ($_SESSION['user_level'] == "Zone") {
                                         AND $tbl" . "territory_assign_district.status='Active'
                                         AND $tbl" . "territory_assign_district.territory_id='" . $editrow['territory_id'] . "'
 ";
-                                echo $db->SelectList($sql_uesr_group);
+                                echo $db->SelectList($sql_uesr_group,$editrow['zilla_id']);
                                 ?>
                             </select>
                             <span class="help-inline">

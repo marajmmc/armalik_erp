@@ -17,6 +17,8 @@ $sql = "SELECT
             $tbl" . "product_purchase_order_request.purchase_order_id,
             $tbl" . "product_purchase_order_request.purchase_order_date,
             $tbl" . "product_purchase_order_request.warehouse_id,
+            $tbl" . "product_purchase_order_request.year_id,
+            $tbl" . "product_purchase_order_request.zilla_id,
             $tbl" . "product_purchase_order_request.zone_id,
             $tbl" . "product_purchase_order_request.territory_id,
             $tbl" . "product_purchase_order_request.distributor_id,
@@ -39,6 +41,8 @@ if ($db->open()) {
     while ($row = $db->fetchAssoc($result)) {
         $elm_id[] = $row['id'];
         $warehouse_id = $row['warehouse_id'];
+        $year_id = $row['year_id'];
+        $zilla_id = $row['zilla_id'];
         $purchase_order_id = $row['purchase_order_id'];
         $remark = $row['remark'];
         $status = $row['status'];
@@ -97,6 +101,22 @@ if ($status != "Pending") {
                             </div>
                         </div>
                         <div class="control-group">
+                            <label class="control-label">
+                                Year
+                            </label>
+                            <div class="controls">
+                                <select id="year_id" name="year_id" class="span5" validate="Require">
+                                    <?php
+                                    $db_fiscal_year=new Database();
+                                    $db_fiscal_year->get_fiscal_year($year_id);
+                                    ?>
+                                </select>
+                            <span class="help-inline">
+                                *
+                            </span>
+                            </div>
+                        </div>
+                        <div class="control-group">
                             <label class="control-label" for="zone_id">
                                 Warehouse
                             </label>
@@ -134,10 +154,26 @@ if ($status != "Pending") {
                                 Territory
                             </label>
                             <div class="controls">
-                                <select id="territory_id" name="territory_id" class="span5" placeholder="Territory" onchange="load_distributor_fnc()" validate="Require">
+                                <select id="territory_id" name="territory_id" class="span5" placeholder="Territory" onchange="load_district_fnc()" validate="Require">
                                     <?php
                                     echo $sql_uesr_group = "select territory_id as fieldkey, territory_name as fieldtext from $tbl" . "territory_info where status='Active' AND del_status='0' AND territory_id='$territory_id' ";
                                     echo $db->SelectList($sql_uesr_group);
+                                    ?>
+                                </select>
+                                <span class="help-inline">
+                                    *
+                                </span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="">
+                                District
+                            </label>
+                            <div class="controls">
+                                <select id="zilla_id" name="zilla_id" class="span5" placeholder="" validate="Require" onchange="load_distributor_fnc()">
+                                    <?php
+                                    $db_zilla=new Database();
+                                    $db_zilla->get_zone_assign_district($zilla_id,$zilla_id, $zone_id, $territory_id);
                                     ?>
                                 </select>
                                 <span class="help-inline">

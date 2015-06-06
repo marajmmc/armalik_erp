@@ -43,6 +43,22 @@ $tbl = _DB_PREFIX;
                         </div>
                     </div>
                     <div class="control-group">
+                        <label class="control-label">
+                            Year
+                        </label>
+                        <div class="controls">
+                            <select id="year_id" name="year_id" class="span5" validate="Require">
+                                <?php
+                                $db_fiscal_year=new Database();
+                                $db_fiscal_year->get_fiscal_year();
+                                ?>
+                            </select>
+                            <span class="help-inline">
+                                *
+                            </span>
+                        </div>
+                    </div>
+                    <div class="control-group">
                         <label class="control-label" for="zone_id">
                             Zone
                         </label>
@@ -270,16 +286,16 @@ $tbl = _DB_PREFIX;
                 cell1.innerHTML = "<a class='btn btn-warning2' data-original-title='' onclick=\"RowDecrement('TaskTable','T"+ExId+"')\">\n\
                 <i class='icon-white icon-trash'> </i>";
                 cell1.style.cursor="default";
-                document.getElementById("crop_id"+ExId).focus();
+
+                //document.getElementById("crop_id"+ExId).focus();
                 load_crop_warehouse(ExId);
                 ExId=ExId+1;
-                $("#TaskTable").tableDnD();
+                //$("#TaskTable").tableDnD();
             }
         }
 
         //////////////////////////////////////// Table Row add delete function ///////////////////////////////
-</script>
-<script>
+
                                                                 
     //////////////////////////////////////// Table Row add delete function ///////////////////////////////
     var ExId=0;
@@ -313,11 +329,11 @@ $tbl = _DB_PREFIX;
             row.className="tableHover";
             //alert(row.id);
             var cell1 = row.insertCell(0);
-            cell1.innerHTML = "<select id='bonus_crop_id["+ExId+"]' name='bonus_crop_id[]' class='span12' placeholder='Crop' onchange='bonus_load_product_type("+ExId+")' validate='Require'>\n\
+            cell1.innerHTML = "<select id='bonus_crop_id"+ExId+"' name='bonus_crop_id[]' class='span12' placeholder='Crop' onchange='bonus_load_product_type("+ExId+")' validate='Require'>\n\
             <?php
             echo "<option value=''>Select</option>";
-            $sql_uesr_group = "select crop_id as fieldkey, crop_name as fieldtext from $tbl" . "crop_info where status='Active' AND crop_id IN (select crop_id from $tbl" . "product_pricing where status='Active')  ORDER BY $tbl" . "crop_info.order_crop";
-            echo $db->SelectList($sql_uesr_group);
+            //$sql_uesr_group = "select crop_id as fieldkey, crop_name as fieldtext from $tbl" . "crop_info where status='Active' AND crop_id IN (select crop_id from $tbl" . "product_pricing where status='Active')  ORDER BY $tbl" . "crop_info.order_crop";
+            //echo $db->SelectList($sql_uesr_group);
             ?>\n\
             </select>\n\
             <input type='hidden' id='bonus_id[]' name='bonus_id[]' value=''/>";
@@ -345,12 +361,12 @@ $tbl = _DB_PREFIX;
             cell1.innerHTML = "<a class='btn btn-warning2' data-original-title='' onclick=\"RowDecrement_bonus('TaskTable_bonus','T"+ExId+"')\">\n\
             <i class='icon-white icon-trash'> </i>";
             cell1.style.cursor="default";
-            document.getElementById("bonus_crop_id"+ExId).focus();
+            //document.getElementById("bonus_crop_id"+ExId).focus();
 
             load_crop_warehouse_bonus(ExId);
 
             ExId=ExId+1;
-            $("#TaskTable_bonus").tableDnD();
+            //$("#TaskTable_bonus").tableDnD();
         }
     }
 
@@ -380,23 +396,23 @@ $tbl = _DB_PREFIX;
     }
 
 
-        function RowDecrement_bonus(tableID,id) 
-        {
-            try {
-                var table = document.getElementById(tableID);
-                for(var i=1;i<table.rows.length;i++)
-                {                   
-                    if(table.rows[i].id==id)
-                    {
-                        table.deleteRow(i);
-                        //                showAlert('SA-00106');
-                    }
+    function RowDecrement_bonus(tableID,id)
+    {
+        try {
+            var table = document.getElementById(tableID);
+            for(var i=1;i<table.rows.length;i++)
+            {
+                if(table.rows[i].id==id)
+                {
+                    table.deleteRow(i);
+                    //                showAlert('SA-00106');
                 }
             }
-            catch(e) {
-                alert(e);
-            }
         }
+        catch(e) {
+            alert(e);
+        }
+    }
         
 
         //////////////////////////////////////// Table Row add delete function ///////////////////////////////

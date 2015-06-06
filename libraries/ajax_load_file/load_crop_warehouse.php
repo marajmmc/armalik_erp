@@ -8,7 +8,7 @@ $tbl = _DB_PREFIX;
 $db = new Database();
 
 echo "<option value=''>Select</option>";
-$sql_uesr_group = "SELECT
+echo $sql_uesr_group = "SELECT
     $tbl" . "crop_info.crop_id AS fieldkey,
     $tbl" . "crop_info.crop_name AS fieldtext
 FROM

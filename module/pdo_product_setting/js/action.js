@@ -121,13 +121,17 @@ function load_variety_fnc(){
     });
 }
 
-function load_product_type(){
-
+function load_product_type()
+{
     $("#product_type_id").html('');
-    $.post("../../libraries/ajax_load_file/load_product_type.php", {
+    $.post("../../libraries/ajax_load_file/load_product_type.php",
+    {
         crop_id: $("#crop_id").val()
-    }, function(result){
-        if(result){
+    },
+    function(result)
+    {
+        if(result)
+        {
             $("#product_type_id").append(result);
         }
     })

@@ -18,18 +18,41 @@ $total_quantity = '';
 $total_price = '';
 $tpins = 0;
 $tpup = 0;
+$year_id = $_POST['year_id'];
 $warehouse_id = $_POST['warehouse_id'];
+$zone_id = $_POST['zone_id'];
+$territory_id = $_POST['territory_id'];
+$zilla_id = $_POST['zilla_id'];
+$distributor_id = $_POST['distributor_id'];
+$approved_status = $_POST['approved_status'];
+
+if(empty($approved_status))
+{
+    echo "Approved_Status_Empty";
+    die();
+}
+
+if(empty($year_id) && empty($warehouse_id) && empty($zone_id) && empty($territory_id) && empty($zilla_id) && empty($distributor_id))
+{
+    echo "Location_Empty";
+    die();
+}
 
 $maxID = "IN-" . $db->Get_CustMaxID($tbl . 'product_purchase_order_invoice', 'invoice_id', '8', '');
 $chk_inv = $dbchk->single_data($tbl . "product_purchase_order_invoice", "purchase_order_id", "purchase_order_id", $_POST['purchase_order_id']);
-if ($chk_inv['purchase_order_id'] != "") {
+if ($chk_inv['purchase_order_id'] != "")
+{
     echo "INVOICE_EXIST";
-} else {
+}
+else
+{
     $valid_po = TRUE;
     $count_po = count($_POST['id']);
-    for ($i = 0; $i < $count_po; $i++) {
+    for ($i = 0; $i < $count_po; $i++)
+    {
         $qnty = $db->get_product_stock($_POST["warehouse_id"], $_POST["crop_id"][$i], $_POST["product_type_id"][$i], $_POST["varriety_id"][$i], $_POST["pack_size"][$i], $_POST["approved_quantity"][$i]);
-        if (!$qnty) {
+        if (!$qnty)
+        {
             $valid_po = FALSE;
             break;
         }
@@ -37,16 +60,20 @@ if ($chk_inv['purchase_order_id'] != "") {
 
     $valid_bonus = TRUE;
     $bonus_count = count($_POST['bonus_id']);
-    for ($i = 0; $i < $bonus_count; $i++) {
+    for ($i = 0; $i < $bonus_count; $i++)
+    {
         $qnty = $db->get_product_stock($_POST["warehouse_id"], $_POST["bonus_crop_id"][$i], $_POST["bonus_product_type_id"][$i], $_POST["bonus_varriety_id"][$i], $_POST["bonus_pack_size"][$i], $_POST["bonus_quantity"][$i]);
-        if (!$qnty) {
+        if (!$qnty)
+        {
             $valid_bonus = FALSE;
             break;
         }
     }
-    if ($valid_po && $valid_bonus) {
+    if ($valid_po && $valid_bonus)
+    {
 
-        if ($_POST['approved_status'] == "Reject") {
+        if ($_POST['approved_status'] == "Reject")
+        {
             $updatesql = "UPDATE $tbl" . "product_purchase_order_request SET 
                     remark='" . $_POST['remark'] . "',
                     status='" . $_POST['approved_status'] . "'
@@ -55,13 +82,16 @@ if ($chk_inv['purchase_order_id'] != "") {
             {
                 $result = $dbud->query($updatesql);
             }
-        } else {
+        }
+        else
+        {
             $count = count($_POST['id']);
             for ($i = 0; $i < $count; $i++)
             {
                 $total_price = $total_price + $_POST["total_price"][$i];
                 $tpins=$_POST["price"][$i] * $_POST["approved_quantity"][$i];
-                $rowfield = array(
+                $rowfield = array
+                (
                     'invoice_id,' => "'" . $maxID . "',",
                     'purchase_order_id,' => "'" . $_POST['purchase_order_id'] . "',",
                     'invoice_date,' => "'" . $db->date_formate($_POST["invoice_date"]) . "',",
@@ -94,7 +124,8 @@ if ($chk_inv['purchase_order_id'] != "") {
                     total_price='" . $_POST["total_price"][$i] . "', 
                     invoice_id='$maxID' 
                 WHERE id='" . $_POST['id'][$i] . "'";
-                if ($dbud->open()) {
+                if ($dbud->open())
+                {
                     $result = $dbud->query($updatesql);
                 }
 
