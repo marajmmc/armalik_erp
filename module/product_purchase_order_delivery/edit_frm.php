@@ -15,11 +15,13 @@ $ttotal_price = "";
 $sql = "SELECT
             $tbl" . "product_purchase_order_invoice.id,
             $tbl" . "product_purchase_order_invoice.invoice_id,
+            $tbl" . "product_purchase_order_invoice.year_id,
             $tbl" . "product_purchase_order_invoice.warehouse_id,
             $tbl" . "product_purchase_order_invoice.purchase_order_id,
             $tbl" . "product_purchase_order_invoice.invoice_date,
             $tbl" . "product_purchase_order_invoice.zone_id,
             $tbl" . "product_purchase_order_invoice.territory_id,
+            $tbl" . "product_purchase_order_invoice.zilla_id,
             $tbl" . "product_purchase_order_invoice.distributor_id,
             $tbl" . "product_purchase_order_invoice.crop_id,
             $tbl" . "product_purchase_order_invoice.product_type_id,
@@ -39,11 +41,14 @@ $sql = "SELECT
 ";
 if ($db->open()) {
     $result = $db->query($sql);
-    while ($row = $db->fetchAssoc($result)) {
+    while ($row = $db->fetchAssoc($result))
+    {
         $elm_id[] = $row['id'];
         $invoice_id = $row['invoice_id'];
         $purchase_order_id = $row['purchase_order_id'];
+        $year_id = $row['year_id'];
         $warehouse_id = $row['warehouse_id'];
+        $zilla_id = $row['zilla_id'];
         $status = $row['status'];
         $invoice_date = $row['invoice_date'];
         $zone_id = $row['zone_id'];
@@ -61,14 +66,17 @@ if ($db->open()) {
         $pack_size_name[] = $row['pack_size_name'];
     }
 }
-echo count($elm_id);
-if ($status != "Pending") {
+//echo count($elm_id);
+if ($status != "Pending")
+{
     ?>
     <script>
         send_status();
     </script>
     <?php
-} else {
+}
+else
+{
     ?>
     <div class="row-fluid">
         <div class="span12">
@@ -104,6 +112,22 @@ if ($status != "Pending") {
                             </div>
                         </div>
                         <div class="control-group">
+                            <label class="control-label">
+                                Year
+                            </label>
+                            <div class="controls">
+                                <select id="year_id" name="year_id" class="span5" validate="Require">
+                                    <?php
+                                    $db_fiscal_year=new Database();
+                                    $db_fiscal_year->get_fiscal_year($year_id);
+                                    ?>
+                                </select>
+                            <span class="help-inline">
+                                *
+                            </span>
+                            </div>
+                        </div>
+                        <div class="control-group">
                             <label class="control-label" for="zone_id">
                                 Zone
                             </label>
@@ -124,10 +148,26 @@ if ($status != "Pending") {
                                 Territory
                             </label>
                             <div class="controls">
-                                <select id="territory_id" name="territory_id" class="span5" placeholder="Territory" onchange="load_distributor_fnc()" validate="Require">
+                                <select id="territory_id" name="territory_id" class="span5" placeholder="Territory" onchange="load_district_fnc()" validate="Require">
                                     <?php
                                     $sql_uesr_group = "select territory_id as fieldkey, territory_name as fieldtext from $tbl" . "territory_info where status='Active' AND del_status='0' AND territory_id='$territory_id' ";
                                     echo $db->SelectList($sql_uesr_group);
+                                    ?>
+                                </select>
+                                <span class="help-inline">
+                                    *
+                                </span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="">
+                                District
+                            </label>
+                            <div class="controls">
+                                <select id="zilla_id" name="zilla_id" class="span5" placeholder="" validate="Require" onchange="load_distributor_fnc()">
+                                    <?php
+                                    $db_zilla=new Database();
+                                    $db_zilla->get_zone_assign_district($zilla_id,$zilla_id, $zone_id, $territory_id);
                                     ?>
                                 </select>
                                 <span class="help-inline">
@@ -158,7 +198,7 @@ if ($status != "Pending") {
                             <div class="controls">
                                 <select id="warehouse_id" name="warehouse_id" class="span5" placeholder="Zone" validate="Require">
                                     <?php
-//                                    echo "<option value=''>Select</option>";
+                                    //                                    echo "<option value=''>Select</option>";
                                     $sql_uesr_group = "select warehouse_id as fieldkey, warehouse_name as fieldtext from $tbl" . "warehouse_info where status='Active' AND warehouse_id='$warehouse_id'";
                                     echo $db->SelectList($sql_uesr_group, $warehouse_id);
                                     ?>
@@ -168,34 +208,26 @@ if ($status != "Pending") {
                                 </span>
                             </div>
                         </div>
-                        <!--                        <div class="control-group">
-                                                    <label class="control-label" for="distributor_id">
-                                                        Approved/Reject
-                                                    </label>
-                                                    <div class="controls">
-                                                        <select id="approved_status" name="approved_status" class="span5" placeholder="" validate="Require">
-                                                            <option value="Approved"> Approved </option>
-                                                            <option value="Reject"> Reject </option>
-                                                        </select>
-                                                        <span class="help-inline">
-                                                            *
-                                                        </span>
-                                                    </div>
-                                                </div>-->
                         <div class="controls controls-row">
                             <?php
                             $color = "";
                             $amount = "";
                             $blnc = $db->single_data($tbl . "distributor_balance", "balance_amount", "distributor_id", $distributor_id);
                             $desblnc = $blnc['balance_amount'];
-                            if ($desblnc == "") {
+                            if ($desblnc == "")
+                            {
                                 $amount = "0.00";
-                            } else {
+                            }
+                            else
+                            {
                                 $amount = $desblnc;
                             }
-                            if ($desblnc < $ttotal_price) {
+                            if ($desblnc < $ttotal_price)
+                            {
                                 $color = "label-important";
-                            } else {
+                            }
+                            else
+                            {
                                 $color = "label-success";
                             }
                             ?> 
@@ -230,12 +262,7 @@ if ($status != "Pending") {
                                         <th style="width:10%">
                                             Qty(pieces)
                                         </th>
-    <!--                                        <th style="width:10%">
-                                            App. Qnty
-                                        </th>-->
-<!--                                        <th style="width:10%">
-                                            Stock in(kg)
-                                        </th>-->
+
                                         <th style="width:10%">
                                             Total Value
                                         </th>
@@ -253,9 +280,9 @@ if ($status != "Pending") {
                                     } else {
                                         $rowcolor = "gradeA success";
                                     }
-//                                    echo "<script>
-//                                            load_current_stock_fnc('$crop_id[$i]','$product_type_id[$i]','$varriety_id[$i]','$pack_size[$i]','$i','$elm_id[$i]')
-//                                            </script>";
+                                    //                                    echo "<script>
+                                    //                                            load_current_stock_fnc('$crop_id[$i]','$product_type_id[$i]','$varriety_id[$i]','$pack_size[$i]','$i','$elm_id[$i]')
+                                    //                                            </script>";
                                     $tprice = $tprice + $price[$i];
                                     $tquantity = $tquantity + $quantity[$i];
                                     ?>
@@ -263,9 +290,13 @@ if ($status != "Pending") {
                                         <td>
                                             <select id='crop_id_<?php echo $i; ?>' name='crop_id[]' class='span12' placeholder='Crop' onchange='load_product_type_("<?php echo $i; ?>")'>
                                                 <?php
-//                                                echo "<option value=''>Select</option>";
-                                                $sql_uesr_group = "select crop_id as fieldkey, crop_name as fieldtext from $tbl" . "crop_info where status='Active' AND crop_id='$crop_id[$i]' ORDER BY $tbl" . "crop_info.order_crop";
-                                                echo $db->SelectList($sql_uesr_group, $crop_id[$i]);
+                                                //echo "<option value=''>Select</option>";
+                                                //$sql_uesr_group = "select crop_id as fieldkey, crop_name as fieldtext from $tbl" . "crop_info where status='Active' AND crop_id='$crop_id[$i]' ORDER BY $tbl" . "crop_info.order_crop";
+                                                //echo $db->SelectList($sql_uesr_group, $crop_id[$i]);
+                                                ?>
+                                                <?php
+                                                $db_crop=new Database();
+                                                $db_crop->get_crop_warehouse($crop_id[$i],$crop_id[$i],$warehouse_id, $year_id);
                                                 ?>
                                             </select>
                                             <input type='hidden' id='id[]' name='id[]' value='<?php echo $elm_id[$i]; ?>'/>

@@ -12,6 +12,7 @@ $variety_id = $_POST['varriety_id'];
 $pack_size = $_POST['pack_size'];
 $purchase_order_id = $_POST['purchase_order_id'];
 $warehouse_id = $_POST['warehouse_id'];
+$year_id = $_POST['year_id'];
 
 
 $sql="SELECT
@@ -28,6 +29,7 @@ $sql="SELECT
             (
                 SELECT SUM(ppi.quantity) FROM ait_product_purchase_info AS ppi
                 WHERE
+                ppi.year_id=pi.year_id AND
                 ppi.warehouse_id=pi.warehouse_id AND
                 ppi.crop_id=pi.crop_id AND
                 ppi.product_type_id = pi.product_type_id AND
@@ -37,6 +39,7 @@ $sql="SELECT
             (
                 SELECT SUM(ppoi.approved_quantity) FROM ait_product_purchase_order_invoice AS ppoi
                 WHERE
+                ppoi.year_id=pi.year_id AND
                 ppoi.warehouse_id=pi.warehouse_id AND
                 ppoi.crop_id=pi.crop_id AND
                 ppoi.product_type_id = pi.product_type_id AND
@@ -46,6 +49,7 @@ $sql="SELECT
             (
                 SELECT SUM(ppob.quantity) FROM ait_product_purchase_order_bonus AS ppob
                 WHERE
+                ppob.year_id=pi.year_id AND
                 ppob.warehouse_id=pi.warehouse_id AND
                 ppob.crop_id=pi.crop_id AND
                 ppob.product_type_id = pi.product_type_id AND
@@ -55,6 +59,7 @@ $sql="SELECT
             (
                 SELECT SUM(pind.damage_quantity) FROM ait_product_inventory AS pind
                 WHERE
+                pind.year_id=pi.year_id AND
                 pind.warehouse_id=pi.warehouse_id AND
                 pind.crop_id=pi.crop_id AND
                 pind.product_type_id = pi.product_type_id AND
@@ -64,6 +69,7 @@ $sql="SELECT
             (
                 SELECT SUM(pina.access_quantity) FROM ait_product_inventory AS pina
                 WHERE
+                pina.year_id=pi.year_id AND
                 pina.warehouse_id=pi.warehouse_id AND
                 pina.crop_id=pi.crop_id AND
                 pina.product_type_id = pi.product_type_id AND
@@ -84,8 +90,9 @@ $sql="SELECT
             AND pi.product_type_id='$product_type_id'
             AND pi.pack_size='$pack_size'
             AND pi.varriety_id='$variety_id'
+            AND pi.year_id='$year_id'
         GROUP BY
-            pi.warehouse_id, pi.crop_id, pi.product_type_id, pi.varriety_id, pi.pack_size
+            pi.year_id, pi.warehouse_id, pi.crop_id, pi.product_type_id, pi.varriety_id, pi.pack_size
         ORDER BY
             ait_warehouse_info.warehouse_id,
             ait_crop_info.order_crop,

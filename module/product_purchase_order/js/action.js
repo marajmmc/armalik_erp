@@ -541,7 +541,8 @@ function load_crop_warehouse(serial)
     $("#crop_id"+serial).html('');
     $.post("../../libraries/ajax_load_file/load_crop_warehouse.php",
     {
-        warehouse_id:$("#warehouse_id").val()
+        warehouse_id:$("#warehouse_id").val(),
+        year_id:$("#year_id").val()
     },
     function(result)
     {
@@ -556,7 +557,8 @@ function load_crop_warehouse_bonus(serial)
     $("#bonus_crop_id"+serial).html('');
     $.post("../../libraries/ajax_load_file/load_crop_warehouse.php",
     {
-        warehouse_id:$("#warehouse_id").val()
+        warehouse_id:$("#warehouse_id").val(),
+        year_id:$("#year_id").val()
     },
     function(result)
     {

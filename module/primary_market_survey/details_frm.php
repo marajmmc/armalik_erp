@@ -155,20 +155,20 @@ if($dbws_details->open())
         <div class="controls">
             <select disabled id="district_id" name="district_id" class="span5" placeholder="" validate="Require" onchange="load_upazilla_fnc()">
                 <?php
-                $sql_district_group = "SELECT
-                                                        $tbl" . "zilla.zillaid as fieldkey,
-                                                        $tbl" . "zilla.zillanameeng as fieldtext
-                                                    FROM
-                                                        $tbl" . "zone_assign_district
-                                                        LEFT JOIN $tbl" . "zilla ON $tbl" . "zilla.zillaid = $tbl" . "zone_assign_district.zilla_id
-                                                    WHERE
-                                                        $tbl" . "zone_assign_district.del_status=0
-                                                        AND $tbl" . "zilla.visible=0
-                                                        AND $tbl" . "zone_assign_district.status='Active'
-                                                        AND $tbl" . "zone_assign_district.zone_id='".$editrow['zone_id']."'
-                                                        AND $tbl" . "zone_assign_district.zilla_id='".$editrow['district_id']."'
-                                                    ";
-                echo $db->SelectList($sql_district_group, $editrow['district_id']);
+                echo "<option value=''>Select</option>";
+                $sql_uesr_group = "SELECT
+                                        $tbl" . "zilla.zillaid as fieldkey,
+                                        $tbl" . "zilla.zillanameeng as fieldtext
+                                    FROM
+                                        $tbl" . "territory_assign_district
+                                        LEFT JOIN $tbl" . "zilla ON $tbl" . "zilla.zillaid = $tbl" . "territory_assign_district.zilla_id
+                                    WHERE
+                                        $tbl" . "territory_assign_district.del_status=0
+                                        AND $tbl" . "zilla.visible=0
+                                        AND $tbl" . "territory_assign_district.status='Active'
+                                        AND $tbl" . "territory_assign_district.territory_id='" . $editrow['territory_id'] . "'
+";
+                echo $db->SelectList($sql_uesr_group,$editrow['district_id']);
                 ?>
             </select>
                             <span class="help-inline">

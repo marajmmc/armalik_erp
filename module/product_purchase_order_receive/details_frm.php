@@ -12,6 +12,8 @@ $totalextra_quantity = "0";
 $status = "";
 $sql = "SELECT
             $tbl" . "product_purchase_order_challan_received.id,
+            $tbl" . "product_purchase_order_challan_received.year_id,
+            $tbl" . "product_purchase_order_challan_received.warehouse_id,
             $tbl" . "product_purchase_order_challan_received.challan_received_id,
             $tbl" . "product_purchase_order_challan_received.challan_id,
             $tbl" . "product_purchase_order_challan_received.invoice_id,
@@ -19,6 +21,7 @@ $sql = "SELECT
             $tbl" . "product_purchase_order_challan_received.challan_received_date,
             $tbl" . "product_purchase_order_challan_received.zone_id,
             $tbl" . "product_purchase_order_challan_received.territory_id,
+            $tbl" . "product_purchase_order_challan_received.zilla_id,
             $tbl" . "product_purchase_order_challan_received.distributor_id,
             $tbl" . "product_purchase_order_challan_received.crop_id,
             $tbl" . "product_purchase_order_challan_received.product_type_id,
@@ -39,10 +42,13 @@ if ($db->open()) {
         $elm_id[] = $row['id'];
         $invoice_id = $row['invoice_id'];
         $challan_id = $row['challan_id'];
+        $year_id = $row['year_id'];
+        $warehouse_id = $row['warehouse_id'];
         $purchase_order_id = $row['purchase_order_id'];
         $status = $row['status'];
         $challan_date = $row['challan_received_date'];
         $zone_id = $row['zone_id'];
+        $zilla_id = $row['zilla_id'];
         $territory_id = $row['territory_id'];
         $distributor_id = $row['distributor_id'];
         $crop_id[] = $row['crop_id'];
@@ -102,6 +108,22 @@ if ($status != "Received") {
                             </div>
                         </div>
                         <div class="control-group">
+                            <label class="control-label">
+                                Year
+                            </label>
+                            <div class="controls">
+                                <select disabled id="year_id" name="year_id" class="span5" validate="Require">
+                                    <?php
+                                    $db_fiscal_year=new Database();
+                                    $db_fiscal_year->get_fiscal_year($year_id);
+                                    ?>
+                                </select>
+                            <span class="help-inline">
+                                *
+                            </span>
+                            </div>
+                        </div>
+                        <div class="control-group">
                             <label class="control-label" for="zone_id">
                                 Zone
                             </label>
@@ -122,10 +144,26 @@ if ($status != "Received") {
                                 Territory
                             </label>
                             <div class="controls">
-                                <select disabled="" id="territory_id" name="territory_id" class="span5" placeholder="Territory" onchange="load_distributor_fnc()" validate="Require">
+                                <select disabled="" id="territory_id" name="territory_id" class="span5" placeholder="Territory" onchange="load_district_fnc()" validate="Require">
                                     <?php
                                     $sql_uesr_group = "select territory_id as fieldkey, territory_name as fieldtext from $tbl" . "territory_info where status='Active' AND del_status='0' AND territory_id='$territory_id' ";
                                     echo $db->SelectList($sql_uesr_group);
+                                    ?>
+                                </select>
+                                <span class="help-inline">
+                                    *
+                                </span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="">
+                                District
+                            </label>
+                            <div class="controls">
+                                <select disabled id="zilla_id" name="zilla_id" class="span5" placeholder="" validate="Require" onchange="load_distributor_fnc()">
+                                    <?php
+                                    $db_zilla=new Database();
+                                    $db_zilla->get_zone_assign_district($zilla_id,$zilla_id, $zone_id, $territory_id);
                                     ?>
                                 </select>
                                 <span class="help-inline">
@@ -142,6 +180,23 @@ if ($status != "Received") {
                                     <?php
                                     $sql_uesr_group = "select distributor_id as fieldkey, CONCAT_WS(' - ', $tbl" . "distributor_info.customer_code, $tbl" . "distributor_info.distributor_name) as fieldtext from $tbl" . "distributor_info where status='Active' AND del_status='0' AND distributor_id='$distributor_id'";
                                     echo $db->SelectList($sql_uesr_group);
+                                    ?>
+                                </select>
+                                <span class="help-inline">
+                                    *
+                                </span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="zone_id">
+                                Warehouse
+                            </label>
+                            <div class="controls">
+                                <select disabled id="warehouse_id" name="warehouse_id" class="span5" placeholder="Zone" validate="Require">
+                                    <?php
+                                    //                                    echo "<option value=''>Select</option>";
+                                    $sql_uesr_group = "select warehouse_id as fieldkey, warehouse_name as fieldtext from $tbl" . "warehouse_info where status='Active' AND warehouse_id='$warehouse_id'";
+                                    echo $db->SelectList($sql_uesr_group, $warehouse_id);
                                     ?>
                                 </select>
                                 <span class="help-inline">
@@ -230,9 +285,13 @@ if ($status != "Received") {
                                         <td>
                                             <select disabled="" id='crop_id_<?php echo $i; ?>' name='crop_id[]' class='span12' placeholder='Crop' onchange='load_varriety_fnc_("<?php echo $i; ?>")' validate="Reqiure">
                                                 <?php
-                                                echo "<option value=''>Select</option>";
-                                                $sql_uesr_group = "select crop_id as fieldkey, crop_name as fieldtext from $tbl" . "crop_info where status='Active' AND crop_id='$crop_id[$i]' ORDER BY $tbl" . "crop_info.order_crop";
-                                                echo $db->SelectList($sql_uesr_group, $crop_id[$i]);
+                                                //echo "<option value=''>Select</option>";
+                                                //$sql_uesr_group = "select crop_id as fieldkey, crop_name as fieldtext from $tbl" . "crop_info where status='Active' AND crop_id='$crop_id[$i]' ORDER BY $tbl" . "crop_info.order_crop";
+                                                //echo $db->SelectList($sql_uesr_group, $crop_id[$i]);
+                                                ?>
+                                                <?php
+                                                $db_crop=new Database();
+                                                $db_crop->get_crop_warehouse($crop_id[$i],$crop_id[$i],$warehouse_id, $year_id);
                                                 ?>
                                             </select>
                                             <input type='hidden' id='id[]' name='id[]' value='<?php echo $elm_id[$i]; ?>'/>

@@ -103,42 +103,42 @@ if ($dbc->open()) {
 }
 
 
-echo $sql = "INSERT INTO $tbl" . "product_purchase_order_invoice_delete 
-SELECT 
-'',
-invoice_id,
-warehouse_id,
-purchase_order_id,
-invoice_date,
-zone_id,
-territory_id,
-distributor_id,
-crop_id,
-product_type_id,
-varriety_id,
-pack_size,
-price,
-quantity,
-approved_quantity,
-loss_quantity,
-total_price,
-remark,
-read_status,
-'PO Approve Delete',
-`status`,
-del_status,
-'$user_id',
-'" . $dbins->ToDayDate() . "'
-FROM $tbl" . "product_purchase_order_invoice WHERE invoice_id='" . $_POST['inv_id'] . "'";
-if ($dbins->open()) {
-    $dbins->query($sql);
-}
+//echo $sql = "INSERT INTO $tbl" . "product_purchase_order_invoice_delete
+//SELECT
+//'',
+//invoice_id,
+//warehouse_id,
+//purchase_order_id,
+//invoice_date,
+//zone_id,
+//territory_id,
+//distributor_id,
+//crop_id,
+//product_type_id,
+//varriety_id,
+//pack_size,
+//price,
+//quantity,
+//approved_quantity,
+//loss_quantity,
+//total_price,
+//remark,
+//read_status,
+//'PO Approve Delete',
+//`status`,
+//del_status,
+//'$user_id',
+//'" . $dbins->ToDayDate() . "'
+//FROM $tbl" . "product_purchase_order_invoice WHERE invoice_id='" . $_POST['inv_id'] . "'";
+//if ($dbins->open()) {
+//    $dbins->query($sql);
+//}
 
 //$delsql="DELETE FROM $tbl" . "product_purchase_order_request WHERE id='".$_POST['elm_id']."'";
 
-$delsqlr = "DELETE FROM $tbl" . "product_purchase_order_request WHERE invoice_id='" . $_POST['inv_id'] . "'";
-$delsqli = "DELETE FROM $tbl" . "product_purchase_order_invoice WHERE invoice_id='" . $_POST['inv_id'] . "'";
-$delsqlb = "DELETE FROM $tbl" . "product_purchase_order_bonus WHERE invoice_id='" . $_POST['inv_id'] . "'";
+$delsqlr = "UPDATE $tbl" . "product_purchase_order_request SET status='In-Active', del_status=0, entry_date='".$db->ToDayDate()."' WHERE invoice_id='" . $_POST['inv_id'] . "'";
+$delsqli = "UPDATE $tbl" . "product_purchase_order_invoice SET status='In-Active', del_status=0, entry_date='".$db->ToDayDate()."' WHERE invoice_id='" . $_POST['inv_id'] . "'";
+$delsqlb = "UPDATE $tbl" . "product_purchase_order_bonus SET status='In-Active', del_status=0, entry_date='".$db->ToDayDate()."' WHERE invoice_id='" . $_POST['inv_id'] . "'";
 if ($db->open()) {
     $db->query($delsqlr);
     $db->query($delsqli);

@@ -48,7 +48,7 @@ if ($_SESSION['warehouse_id'] == "") {
 
                             <tr>
                                 <td>
-                                    <select id="zone_id" name="zone_id" class="span12" placeholder="Zone" onchange="load_district();load_territory_fnc();">
+                                    <select id="zone_id" name="zone_id" class="span12" placeholder="Zone" onchange="load_territory_fnc();">
                                         <option value="">Select</option>
                                         <?php
                                         $sql_uesr_group = "select zone_id as fieldkey, zone_name as fieldtext from $tbl" . "zone_info WHERE status='Active' AND del_status='0'";
@@ -57,13 +57,13 @@ if ($_SESSION['warehouse_id'] == "") {
                                     </select>
                                 </td>
                                 <td>
-                                    <select id="territory_id" name="territory_id" class="span12" placeholder="Territory" validate="Require">
+                                    <select id="territory_id" name="territory_id" class="span12" onchange="load_district_fnc()">
                                         <option value="">Select</option>
 
                                     </select>
                                 </td>
                                 <td>
-                                    <select id="district_id" name="district_id" class="span12" placeholder="" validate="Require" onchange="load_upazilla_fnc()">
+                                    <select id="district_id" name="district_id" class="span12" onchange="load_upazilla_fnc()">
                                         <option value="">Select</option>
                                         <?php
                                         //                                        $sql_uesr_group = "select zillaid as fieldkey, zillanameeng as fieldtext from $tbl" . "zilla ORDER BY zillanameeng";

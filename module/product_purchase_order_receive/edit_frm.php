@@ -14,11 +14,14 @@ $ttotal_price = "";
 $sql = "SELECT
             $tbl" . "product_purchase_order_challan.id,
             $tbl" . "product_purchase_order_challan.challan_id,
+            $tbl" . "product_purchase_order_challan.year_id,
+            $tbl" . "product_purchase_order_challan.warehouse_id,
             $tbl" . "product_purchase_order_challan.invoice_id,
             $tbl" . "product_purchase_order_challan.purchase_order_id,
             $tbl" . "product_purchase_order_challan.challan_date,
             $tbl" . "product_purchase_order_challan.zone_id,
             $tbl" . "product_purchase_order_challan.territory_id,
+            $tbl" . "product_purchase_order_challan.zilla_id,
             $tbl" . "product_purchase_order_challan.distributor_id,
             $tbl" . "product_purchase_order_challan.crop_id,
             $tbl" . "product_purchase_order_challan.product_type_id,
@@ -29,15 +32,21 @@ $sql = "SELECT
             $tbl" . "product_purchase_order_challan.total_price,
             $tbl" . "product_purchase_order_challan.`status`
         FROM `$tbl" . "product_purchase_order_challan`
-        WHERE $tbl" . "product_purchase_order_challan.challan_id='" . $_POST['rowID'] . "' AND $tbl" . "product_purchase_order_challan.del_status='0'
+        WHERE
+        $tbl" . "product_purchase_order_challan.challan_id='" . $_POST['rowID'] . "'
+        AND $tbl" . "product_purchase_order_challan.del_status='0'
 ";
 if ($db->open()) {
     $result = $db->query($sql);
-    while ($row = $db->fetchAssoc($result)) {
+    while ($row = $db->fetchAssoc($result))
+    {
         $elm_id[] = $row['id'];
         $invoice_id = $row['invoice_id'];
         $challan_id = $row['challan_id'];
+        $warehouse_id = $row['warehouse_id'];
         $purchase_order_id = $row['purchase_order_id'];
+        $year_id = $row['year_id'];
+        $zilla_id = $row['zilla_id'];
         $status = $row['status'];
         $challan_date = $row['challan_date'];
         $zone_id = $row['zone_id'];
@@ -53,13 +62,16 @@ if ($db->open()) {
         $ttotal_price = $ttotal_price + $row['total_price'];
     }
 }
-if ($status == "Received") {
+if ($status == "Received")
+{
     ?>
     <script>
         send_status();
     </script>
     <?php
-} else {
+}
+else
+{
     ?>
     <div class="row-fluid">
         <div class="span12">
@@ -96,6 +108,22 @@ if ($status == "Received") {
                             </div>
                         </div>
                         <div class="control-group">
+                            <label class="control-label">
+                                Year
+                            </label>
+                            <div class="controls">
+                                <select id="year_id" name="year_id" class="span5" validate="Require">
+                                    <?php
+                                    $db_fiscal_year=new Database();
+                                    $db_fiscal_year->get_fiscal_year($year_id);
+                                    ?>
+                                </select>
+                            <span class="help-inline">
+                                *
+                            </span>
+                            </div>
+                        </div>
+                        <div class="control-group">
                             <label class="control-label" for="zone_id">
                                 Zone
                             </label>
@@ -116,10 +144,26 @@ if ($status == "Received") {
                                 Territory
                             </label>
                             <div class="controls">
-                                <select id="territory_id" name="territory_id" class="span5" placeholder="Territory" onchange="load_distributor_fnc()" validate="Require">
+                                <select id="territory_id" name="territory_id" class="span5" placeholder="Territory" onchange="load_district_fnc()" validate="Require">
                                     <?php
                                     $sql_uesr_group = "select territory_id as fieldkey, territory_name as fieldtext from $tbl" . "territory_info where status='Active' AND del_status='0' AND territory_id='$territory_id' ";
                                     echo $db->SelectList($sql_uesr_group);
+                                    ?>
+                                </select>
+                                <span class="help-inline">
+                                    *
+                                </span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="">
+                                District
+                            </label>
+                            <div class="controls">
+                                <select id="zilla_id" name="zilla_id" class="span5" placeholder="" validate="Require" onchange="load_distributor_fnc()">
+                                    <?php
+                                    $db_zilla=new Database();
+                                    $db_zilla->get_zone_assign_district($zilla_id,$zilla_id, $zone_id, $territory_id);
                                     ?>
                                 </select>
                                 <span class="help-inline">
@@ -136,6 +180,23 @@ if ($status == "Received") {
                                     <?php
                                     $sql_uesr_group = "select distributor_id as fieldkey, CONCAT_WS(' - ', $tbl" . "distributor_info.customer_code, $tbl" . "distributor_info.distributor_name) as fieldtext from $tbl" . "distributor_info where status='Active' AND del_status='0' AND distributor_id='$distributor_id'";
                                     echo $db->SelectList($sql_uesr_group);
+                                    ?>
+                                </select>
+                                <span class="help-inline">
+                                    *
+                                </span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="zone_id">
+                                Warehouse
+                            </label>
+                            <div class="controls">
+                                <select id="warehouse_id" name="warehouse_id" class="span5" placeholder="Zone" validate="Require">
+                                    <?php
+                                    //                                    echo "<option value=''>Select</option>";
+                                    $sql_uesr_group = "select warehouse_id as fieldkey, warehouse_name as fieldtext from $tbl" . "warehouse_info where status='Active' AND warehouse_id='$warehouse_id'";
+                                    echo $db->SelectList($sql_uesr_group, $warehouse_id);
                                     ?>
                                 </select>
                                 <span class="help-inline">
@@ -164,7 +225,7 @@ if ($status == "Received") {
                                 Credit Limit: <?php echo $amount ?>
                             </span> 
                             <span class="label label label-info" style="cursor: pointer; float: right"> 
-                                Challan No.: <?php echo $challan_id; ?> 
+                                Challan No.: <?php echo substr($purchase_order_id,3); ?>
                             </span>
                         </div>
                     </div>
@@ -209,9 +270,12 @@ if ($status == "Received") {
                                 $rowcount = count($crop_id);
                                 for ($i = 0; $i < $rowcount; $i++) {
                                     $z++;
-                                    if ($z % 2 == 0) {
+                                    if ($z % 2 == 0)
+                                    {
                                         $rowcolor = "gradeC";
-                                    } else {
+                                    }
+                                    else
+                                    {
                                         $rowcolor = "gradeA success";
                                     }
                                     echo "<script>
@@ -224,9 +288,13 @@ if ($status == "Received") {
                                         <td>
                                             <select id='crop_id_<?php echo $i; ?>' name='crop_id[]' class='span12' placeholder='Crop' onchange='load_product_type_("<?php echo $i; ?>")' validate="Reqiure">
                                                 <?php
-//                                                echo "<option value=''>Select</option>";
-                                                $sql_uesr_group = "select crop_id as fieldkey, crop_name as fieldtext from $tbl" . "crop_info where status='Active' AND crop_id='$crop_id[$i]'";
-                                                echo $db->SelectList($sql_uesr_group, $crop_id[$i]);
+                                                //echo "<option value=''>Select</option>";
+                                                //$sql_uesr_group = "select crop_id as fieldkey, crop_name as fieldtext from $tbl" . "crop_info where status='Active' AND crop_id='$crop_id[$i]'";
+                                                //echo $db->SelectList($sql_uesr_group, $crop_id[$i]);
+                                                ?>
+                                                <?php
+                                                $db_crop=new Database();
+                                                $db_crop->get_crop_warehouse($crop_id[$i],$crop_id[$i],$warehouse_id, $year_id);
                                                 ?>
                                             </select>
                                             <input type='hidden' id='id[]' name='id[]' value='<?php echo $elm_id[$i]; ?>'/>
@@ -340,14 +408,19 @@ if ($status == "Received") {
                                                 LEFT JOIN $tbl" . "varriety_info ON $tbl" . "varriety_info.varriety_id = $tbl" . "product_purchase_order_bonus.varriety_id
                                                 LEFT JOIN $tbl" . "product_pack_size ON $tbl" . "product_pack_size.pack_size_id = $tbl" . "product_purchase_order_bonus.pack_size
                                             WHERE
-                                                $tbl" . "product_purchase_order_bonus.invoice_id='" . $invoice_id . "' AND $tbl" . "product_purchase_order_bonus.del_status='0'
+                                                $tbl" . "product_purchase_order_bonus.invoice_id='" . $invoice_id . "'
+                                                AND $tbl" . "product_purchase_order_bonus.year_id='" . $year_id . "'
+                                                AND $tbl" . "product_purchase_order_bonus.del_status=0
                                     ";
                                     if ($db->open()) {
                                         $resultbonus = $db->query($sqlbonus);
                                         while ($rowbonus = $db->fetchAssoc($resultbonus)) {
-                                            if ($rowbonus['crop_name'] == "") {
+                                            if ($rowbonus['crop_name'] == "")
+                                            {
                                                 echo "<tr><td colspan='12' style='text-align: center; color red;'><h3>Bonus Not Available</h3></td></tr>";
-                                            } else {
+                                            }
+                                            else
+                                            {
                                                 ?>
                                             <input type="hidden" id="bonus_crop_id[]" name="bonus_crop_id[]" value="<?php echo $rowbonus['crop_id'] ?>" />
                                             <input type="hidden" id="bonus_product_type_id[]" name="bonus_product_type_id[]" value="<?php echo $rowbonus['product_type_id'] ?>" />

@@ -22,7 +22,8 @@ function Save_Rec()
     validateResult=true;
     formValidate();
     if(validateResult){
-        if (SaveStatus==1){
+        if (SaveStatus==1)
+        {
             $.post("save.php",$("#frm_area").serialize(), function(result){
                 if (result){
                     $("#new_rec").html(result);
@@ -36,9 +37,26 @@ function Save_Rec()
                     return false;
                 }
             });
-        }else if(SaveStatus==2){
-            $.post("update.php",$("#frm_area").serialize(), function(result){
-                if (result){
+        }
+        else if(SaveStatus==2)
+        {
+            $.post("update.php",$("#frm_area").serialize(), function(result)
+            {
+                alert (result)
+                if (result=="Not_Successfully_Delivery")
+                {
+                    //                                        $("#edit_rec").html(result);
+                    list();
+                    loader_close();
+                    reset();
+                    alertify.set({
+                        delay: 3000
+                    });
+                    alertify.error("Data Update Not Successfully");
+                    return false;
+                }
+                else
+                {
                     //                                        $("#edit_rec").html(result);
                     list();
                     loader_close();
@@ -377,23 +395,34 @@ function print_rpt(){
     eval("page" + id + " = window.open(URL, '" + id + "', 'toolbar=yes,scrollbars=yes ,location=0,statusbar=0 ,menubar=yes,resizable=1,width=880,height=600,left = 20,top = 50');");        
 }
 
-function invoice_print_fnc(inv_id){
+function invoice_print_fnc(inv_id)
+{
     $("#data_show").html('');
-    $.post("details_frm.php", {
+    $.post("details_frm.php",
+    {
         rowID:inv_id
-    }, function(result){
-        if(result){
+    },
+    function(result)
+    {
+        if(result)
+        {
             $("#data_show").html(result);
         }
     })
 }
-function challan_print_fnc(inv_id, cstatus){
+function challan_print_fnc(inv_id, cstatus)
+{
     $("#data_show").html('');
-    if(cstatus=="Delivery"){
-        $.post("load_challan.php", {
+    if(cstatus=="Delivery")
+    {
+        $.post("load_challan.php",
+        {
             rowID:inv_id
-        }, function(result){
-            if(result){
+        },
+        function(result)
+        {
+            if(result)
+            {
                 $("#data_show").html(result);
                 print_rpt()
             }

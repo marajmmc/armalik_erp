@@ -291,9 +291,13 @@ if ($status != "Pending") {
                                         <td>
                                             <select id='crop_id_<?php echo $i; ?>' name='crop_id[]' class='span12' placeholder='Crop' onchange='load_product_type_("<?php echo $i; ?>")'>
                                                 <?php
-//                                                echo "<option value=''>Select</option>";
-                                                $sql_uesr_group = "select crop_id as fieldkey, crop_name as fieldtext from $tbl" . "crop_info where status='Active' AND crop_id='$crop_id[$i]' ORDER BY $tbl" . "crop_info.order_crop";
-                                                echo $db->SelectList($sql_uesr_group, $crop_id[$i]);
+                                                //echo "<option value=''>Select</option>";
+                                                //$sql_uesr_group = "select crop_id as fieldkey, crop_name as fieldtext from $tbl" . "crop_info where status='Active' AND crop_id='$crop_id[$i]' ORDER BY $tbl" . "crop_info.order_crop";
+                                                //echo $db->SelectList($sql_uesr_group, $crop_id[$i]);
+                                                ?>
+                                                <?php
+                                                $db_crop=new Database();
+                                                $db_crop->get_crop_warehouse($crop_id[$i],$crop_id[$i],$warehouse_id, $year_id);
                                                 ?>
                                             </select>
                                             <input type='hidden' id='id[]' name='id[]' value='<?php echo $elm_id[$i]; ?>'/>
@@ -427,9 +431,13 @@ if ($status != "Pending") {
                                             <td>
                                                 <select id='bonus_crop_id_<?php echo $i; ?>' name='bonus_crop_id[]' class='span12' placeholder='Crop' onchange='bonus_load_product_type_("<?php echo $i; ?>")'>
                                                     <?php
-                                                    echo "<option value=''>Select</option>";
-                                                    $sql_uesr_group = "select crop_id as fieldkey, crop_name as fieldtext from $tbl" . "crop_info where status='Active'";
-                                                    echo $db->SelectList($sql_uesr_group, $row['crop_id']);
+                                                    //echo "<option value=''>Select</option>";
+                                                    //$sql_uesr_group = "select crop_id as fieldkey, crop_name as fieldtext from $tbl" . "crop_info where status='Active'";
+                                                    //echo $db->SelectList($sql_uesr_group, $row['crop_id']);
+                                                    ?>
+                                                    <?php
+                                                    $db_crop=new Database();
+                                                    $db_crop->get_crop_warehouse($row['crop_id'],$row['crop_id'],$warehouse_id, $year_id);
                                                     ?>
                                                 </select>
                                                 <input type='hidden' id='bonus_id[]' name='bonus_id[]' value='<?php echo $row['id']; ?>'/>
@@ -463,7 +471,7 @@ if ($status != "Pending") {
                                                 <input type='hidden' id='bonus_pack_size_name_<?php echo $i; ?>' name='bonus_pack_size_name[]' value=''/>
                                             </td>
                                             <td>
-                                                <input type='text' name='bonus_quantity[]' maxlength='50' id='bonus_quantity_<?php echo $i; ?>' class='span12' value='<?php echo $row['quantity']; ?>' onblur='load_bonus_product_qnantity_("<?php echo $i; ?>")'  onkeypress='return numberOnly(event)' validate='Require' />
+                                                <input type='text' name='bonus_quantity[]' maxlength='50' id='bonus_quantity_<?php echo $i; ?>' class='span12' value='<?php echo $row['quantity']; ?>' onblur='load_bonus_product_qnantity_("<?php echo $i; ?>")'  validate='Require' />
                                             </td>
                                             <td>
                                                 <input type='text' name='bonus_stock[]' maxlength='50' id='bonus_stock_<?php echo $i; ?>' class='span12' value='' readonly="" />
@@ -508,31 +516,33 @@ if ($status != "Pending") {
             //alert(row.id);
             var cell1 = row.insertCell(0);
             cell1.innerHTML = "<select id='bonus_crop_id"+ExId+"' name='bonus_crop_id[]' class='span12' placeholder='Crop' onchange='bonus_load_product_type("+ExId+")' validate='Require'>\n\
-    <?php
-    echo "<option value=''>Select</option>";
-    $sql_uesr_group = "select crop_id as fieldkey, crop_name as fieldtext from $tbl" . "crop_info where status='Active' AND crop_id IN (select crop_id from $tbl" . "product_pricing where status='Active')";
-    echo $db->SelectList($sql_uesr_group);
-    ?>\n\
-    </select>\n\
-    <input type='hidden' id='bonus_id[]' name='bonus_id[]' value=''/>";
+            <?php
+            //echo "<option value=''>Select</option>";
+            //$sql_uesr_group = "select crop_id as fieldkey, crop_name as fieldtext from $tbl" . "crop_info where status='Active' AND crop_id IN (select crop_id from $tbl" . "product_pricing where status='Active')";
+            //echo $db->SelectList($sql_uesr_group);
+            $db_crop=new Database();
+            $db_crop->get_crop_warehouse('','',$warehouse_id, $year_id);
+            ?>\n\
+            </select>\n\
+            <input type='hidden' id='bonus_id[]' name='bonus_id[]' value=''/>";
                                                     
             cell1 = row.insertCell(1);
             cell1.innerHTML = "<select id='bonus_product_type_id"+ExId+"' name='bonus_product_type_id[]' class='span12' placeholder='Zone' onchange='bonus_load_varriety_fnc("+ExId+")' validate='Require'>\n\
-    <option value=''>Select</option></select>";
+            <option value=''>Select</option></select>";
             cell1.style.cursor="default";
                                                     
             cell1 = row.insertCell(2);
             cell1.innerHTML = "<select id='bonus_varriety_id"+ExId+"' name='bonus_varriety_id[]' class='span12' placeholder='Zone' onchange='bonus_load_pack_size_fnc("+ExId+")' validate='Require'>\n\
-    <option value=''>Select</option></select>";
+            <option value=''>Select</option></select>";
             cell1.style.cursor="default";
                                                 
             cell1 = row.insertCell(3);
             cell1.innerHTML = "<select id='bonus_pack_size"+ExId+"' name='bonus_pack_size[]' class='span12' placeholder='Zone' onchange='load_bonus_current_stock_fnc("+ExId+"); load_pack_size_name("+ExId+")' validate='Require'>\n\
-    <option value=''>Select</option></select><input type='hidden' id='bonus_pack_size_name"+ExId+"' name='bonus_pack_size_name[]' value=''/>";
+            <option value=''>Select</option></select><input type='hidden' id='bonus_pack_size_name"+ExId+"' name='bonus_pack_size_name[]' value=''/>";
             cell1.style.cursor="default";
                                                 
             cell1 = row.insertCell(4);
-            cell1.innerHTML = "<input type='text' name='bonus_quantity[]' maxlength='50' id='bonus_quantity"+ExId+"' class='span12' value='0' onkeypress='return numberOnly(event)' onblur='load_bonus_product_qnantity("+ExId+")' validate='Require' />";
+            cell1.innerHTML = "<input type='text' name='bonus_quantity[]' maxlength='50' id='bonus_quantity"+ExId+"' class='span12' value='0' onblur='load_bonus_product_qnantity("+ExId+")' validate='Require' />";
             cell1.style.cursor="default";
                                                 
             cell1 = row.insertCell(5);
@@ -541,11 +551,11 @@ if ($status != "Pending") {
                                                 
             cell1 = row.insertCell(6);
             cell1.innerHTML = "<a class='btn btn-warning2' data-original-title='' onclick=\"RowDecrement('TaskTable','T"+ExId+"')\">\n\
-    <i class='icon-white icon-trash'> </i>";
+            <i class='icon-white icon-trash'> </i>";
             cell1.style.cursor="default";
-            document.getElementById("bonus_crop_id"+ExId).focus();
+            //document.getElementById("bonus_crop_id"+ExId).focus();
             ExId=ExId+1;
-            $("#TaskTable").tableDnD();
+            //$("#TaskTable").tableDnD();
         }
 
         function RowDecrement(tableID,id) 

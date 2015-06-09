@@ -12,6 +12,7 @@ $product_type_id=$_POST['product_type_id'];
 $variety_id=$_POST['varriety_id'];
 $pack_size=$_POST['pack_size'];
 $warehouse_id = $_POST['warehouse_id'];
+$year_id = $_POST['year_id'];
 
 $sql="SELECT
             pi.id,
@@ -27,6 +28,7 @@ $sql="SELECT
             (
                 SELECT SUM(ppi.quantity) FROM ait_product_purchase_info AS ppi
                 WHERE
+                ppi.year_id=pi.year_id AND
                 ppi.warehouse_id=pi.warehouse_id AND
                 ppi.crop_id=pi.crop_id AND
                 ppi.product_type_id = pi.product_type_id AND
@@ -36,6 +38,7 @@ $sql="SELECT
             (
                 SELECT SUM(ppo.quantity) FROM ait_product_purchase_order_request AS ppo
                 WHERE
+                ppo.year_id=pi.year_id AND
                 ppo.warehouse_id=pi.warehouse_id AND
                 ppo.crop_id=pi.crop_id AND
                 ppo.product_type_id = pi.product_type_id AND
@@ -46,6 +49,7 @@ $sql="SELECT
             (
                 SELECT SUM(ppoi.approved_quantity) FROM ait_product_purchase_order_invoice AS ppoi
                 WHERE
+                ppoi.year_id=pi.year_id AND
                 ppoi.warehouse_id=pi.warehouse_id AND
                 ppoi.crop_id=pi.crop_id AND
                 ppoi.product_type_id = pi.product_type_id AND
@@ -55,6 +59,7 @@ $sql="SELECT
             (
                 SELECT SUM(ppob.quantity) FROM ait_product_purchase_order_bonus AS ppob
                 WHERE
+                ppob.year_id=pi.year_id AND
                 ppob.warehouse_id=pi.warehouse_id AND
                 ppob.crop_id=pi.crop_id AND
                 ppob.product_type_id = pi.product_type_id AND
@@ -64,6 +69,7 @@ $sql="SELECT
             (
                 SELECT SUM(pind.damage_quantity) FROM ait_product_inventory AS pind
                 WHERE
+                pind.year_id=pi.year_id AND
                 pind.warehouse_id=pi.warehouse_id AND
                 pind.crop_id=pi.crop_id AND
                 pind.product_type_id = pi.product_type_id AND
@@ -73,6 +79,7 @@ $sql="SELECT
             (
                 SELECT SUM(pina.access_quantity) FROM ait_product_inventory AS pina
                 WHERE
+                pina.year_id=pi.year_id AND
                 pina.warehouse_id=pi.warehouse_id AND
                 pina.crop_id=pi.crop_id AND
                 pina.product_type_id = pi.product_type_id AND
@@ -88,6 +95,7 @@ $sql="SELECT
             LEFT JOIN ait_product_pack_size ON ait_product_pack_size.pack_size_id = pi.pack_size
         WHERE
             pi.del_status=0
+            AND pi.year_id='$year_id'
             AND pi.warehouse_id='$warehouse_id'
             AND pi.crop_id='$crop_id'
             AND pi.product_type_id='$product_type_id'

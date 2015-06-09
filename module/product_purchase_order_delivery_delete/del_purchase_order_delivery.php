@@ -121,28 +121,30 @@ del_status,
   '$user_id',
   '" . $dbins->ToDayDate() . "'
   FROM $tbl" . "product_purchase_order_challan WHERE invoice_id='" . $_POST['inv_id'] . "'";
-if ($dbins->open()) {
+if ($dbins->open())
+{
     $dbins->query($sql);
 }
 
-//$delsqlr = "UPDATE $tbl" . "product_purchase_order_request SET del_status='1' WHERE invoice_id='" . $_POST['inv_id'] . "'";
-//$delsqli = "UPDATE $tbl" . "product_purchase_order_invoice SET del_status='1' WHERE invoice_id='" . $_POST['inv_id'] . "'";
-//$delsqlb = "UPDATE $tbl" . "product_purchase_order_bonus SET del_status='1' WHERE invoice_id='" . $_POST['inv_id'] . "'";
-//$delsqlc = "UPDATE $tbl" . "product_purchase_order_challan SET del_status='1' WHERE invoice_id='" . $_POST['inv_id'] . "'";
+$delsqlr = "UPDATE $tbl" . "product_purchase_order_request SET status='In-Active', del_status='1', entry_date='".$db->ToDayDate()."' WHERE invoice_id='" . $_POST['inv_id'] . "'";
+$delsqli = "UPDATE $tbl" . "product_purchase_order_invoice SET status='In-Active', del_status='1', entry_date='".$db->ToDayDate()."' WHERE invoice_id='" . $_POST['inv_id'] . "'";
+$delsqlb = "UPDATE $tbl" . "product_purchase_order_bonus SET status='In-Active', del_status='1', entry_date='".$db->ToDayDate()."' WHERE invoice_id='" . $_POST['inv_id'] . "'";
+$delsqlc = "UPDATE $tbl" . "product_purchase_order_challan SET status='In-Active', del_status='1', entry_date='".$db->ToDayDate()."' WHERE invoice_id='" . $_POST['inv_id'] . "'";
+if ($db->open())
+{
+    $db->query($delsqlr);
+    $db->query($delsqli);
+    $db->query($delsqlb);
+    $db->query($delsqlc);
+}
+//echo $delsqlr = "DELETE FROM $tbl" . "product_purchase_order_request WHERE invoice_id='" . $_POST['inv_id'] . "'";
+//echo $delsqli = "DELETE FROM $tbl" . "product_purchase_order_invoice WHERE invoice_id='" . $_POST['inv_id'] . "'";
+//echo $delsqlb = "DELETE FROM $tbl" . "product_purchase_order_bonus WHERE invoice_id='" . $_POST['inv_id'] . "'";
+//echo $delsqlc = "DELETE FROM $tbl" . "product_purchase_order_challan WHERE invoice_id='" . $_POST['inv_id'] . "'";
 //if ($db->open()) {
 //    $db->query($delsqlr);
 //    $db->query($delsqli);
 //    $db->query($delsqlb);
 //    $db->query($delsqlc);
 //}
-echo $delsqlr = "DELETE FROM $tbl" . "product_purchase_order_request WHERE invoice_id='" . $_POST['inv_id'] . "'";
-echo $delsqli = "DELETE FROM $tbl" . "product_purchase_order_invoice WHERE invoice_id='" . $_POST['inv_id'] . "'";
-echo $delsqlb = "DELETE FROM $tbl" . "product_purchase_order_bonus WHERE invoice_id='" . $_POST['inv_id'] . "'";
-echo $delsqlc = "DELETE FROM $tbl" . "product_purchase_order_challan WHERE invoice_id='" . $_POST['inv_id'] . "'";
-if ($db->open()) {
-    $db->query($delsqlr);
-    $db->query($delsqli);
-    $db->query($delsqlb);
-    $db->query($delsqlc);
-}
 ?>

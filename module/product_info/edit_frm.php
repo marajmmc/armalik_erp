@@ -36,6 +36,22 @@ if ($_SESSION['warehouse_id']) {
                             Select Warehouse
                         </label>
                         <div class="controls">
+                            <select id="year_id" name="year_id" class="span5" placeholder="Select Crop" validate="Require">
+                                <?php
+                                $db_fiscal_year=new Database();
+                                $db_fiscal_year->get_fiscal_year($editrow['year_id']);
+                                ?>
+                            </select>
+                            <span class="help-inline">
+                                *
+                            </span>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="warehouse_id">
+                            Select Warehouse
+                        </label>
+                        <div class="controls">
                             <select id="warehouse_id" name="warehouse_id" class="span5" placeholder="Select Crop" validate="Require">
                                 <?php
                                 echo "<option value=''>Select</option>";

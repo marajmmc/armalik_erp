@@ -33,6 +33,9 @@ if ($db->open()) {
     while ($row = $db->fetchAssoc($result)) {
         $elm_id = $row['id'];
         $status = $row['status'];
+        $warehouse_id = $row['warehouse_id'];
+        $year_id = $row['year_id'];
+        $zilla_id = $row['zilla_id'];
         $purchase_order_id = $row['purchase_order_id'];
         $purchase_order_date = $row['purchase_order_date'];
         $zone_id = $row['zone_id'];
@@ -88,6 +91,22 @@ if ($status != "Approved") {
                             </div>
                         </div>
                         <div class="control-group">
+                            <label class="control-label">
+                                Year
+                            </label>
+                            <div class="controls">
+                                <select disabled id="year_id" name="year_id" class="span5" validate="Require">
+                                    <?php
+                                    $db_fiscal_year=new Database();
+                                    $db_fiscal_year->get_fiscal_year($year_id);
+                                    ?>
+                                </select>
+                            <span class="help-inline">
+                                *
+                            </span>
+                            </div>
+                        </div>
+                        <div class="control-group">
                             <label class="control-label" for="zone_id">
                                 Zone
                             </label>
@@ -108,10 +127,27 @@ if ($status != "Approved") {
                                 Territory
                             </label>
                             <div class="controls">
-                                <select disabled="" id="territory_id" name="territory_id" class="span5" placeholder="Territory" onchange="load_distributor_fnc()" validate="Require">
+                                <select disabled="" id="territory_id" name="territory_id" class="span5" placeholder="Territory" onchange="load_district_fnc()" validate="Require">
                                     <?php
                                     echo $sql_uesr_group = "select territory_id as fieldkey, territory_name as fieldtext from $tbl" . "territory_info where status='Active' AND del_status='0' AND territory_id='$territory_id' ";
                                     echo $db->SelectList($sql_uesr_group);
+                                    ?>
+                                </select>
+                                <span class="help-inline">
+                                    *
+                                </span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="">
+                                District
+                            </label>
+                            <div class="controls">
+                                <select disabled id="zilla_id" name="zilla_id" class="span5" placeholder="" validate="Require" onchange="load_distributor_fnc()">
+                                    <option value="">Select</option>
+                                    <?php
+                                    $db_zilla=new Database();
+                                    $db_zilla->get_zone_assign_district($zilla_id,'', $zone_id, $territory_id);
                                     ?>
                                 </select>
                                 <span class="help-inline">

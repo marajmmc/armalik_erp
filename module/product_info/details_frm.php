@@ -28,6 +28,22 @@ $editrow = $db->single_data($tbl . "product_info", "*", "product_id", $_POST['ro
                 <div class="widget-body">
                     <div class="control-group">
                         <label class="control-label" for="warehouse_id">
+                            Select Year
+                        </label>
+                        <div class="controls">
+                            <select disabled id="year_id" name="year_id" class="span5" placeholder="Select Crop" validate="Require">
+                                <?php
+                                $db_fiscal_year=new Database();
+                                $db_fiscal_year->get_fiscal_year($editrow['year_id']);
+                                ?>
+                            </select>
+                            <span class="help-inline">
+                                *
+                            </span>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="warehouse_id">
                             Select Warehouse
                         </label>
                         <div class="controls">
@@ -136,10 +152,18 @@ $editrow = $db->single_data($tbl . "product_info", "*", "product_id", $_POST['ro
                     </div>
                     <div class="control-group">
                         <label class="control-label" for="quantity">
-                            Qty(pieces)
+                            Purchase Qty(pieces)
                         </label>
                         <div class="controls">
                             <input class="span3" type="text" name="quantity" id="quantity" disabled="" value="<?php echo $editrow['quantity'] ?>" placeholder="Qty" >
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="quantity">
+                            Opening Balance(pieces)
+                        </label>
+                        <div class="controls">
+                            <input class="span3" type="text" name="opening_balance" id="opening_balance" disabled="" value="<?php echo $editrow['opening_balance'] ?>" placeholder="Qty" >
                         </div>
                     </div>
                     <div class="control-group">

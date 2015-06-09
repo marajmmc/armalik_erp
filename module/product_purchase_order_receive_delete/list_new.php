@@ -115,7 +115,7 @@ $tbl = _DB_PREFIX;
                                     <td>
                                         <?php echo $i; ?>
                                     </td>
-                                    <td><?php echo $result_array['challan_id']; ?></td>
+                                    <td><?php echo substr($result_array['purchase_order_id'], 3); ?></td>
                                     <td><?php echo $db->date_formate($result_array['challan_date']); ?></td>
                                     <td><?php echo $result_array['distributor_name']; ?></td>
                                     <td><?php echo $result_array['quantity']; ?></td>

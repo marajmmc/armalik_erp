@@ -37,9 +37,24 @@ function Save_Rec()
                 }
             });
         }else if(SaveStatus==2){
-            $.post("update.php",$("#frm_area").serialize(), function(result){
-                if (result){
-                    //$("#edit_rec").html(result);
+            $.post("update.php",$("#frm_area").serialize(), function(result)
+            {
+                alert (result)
+                if (result=="Not_Successfully_Delivery")
+                {
+                    //                                        $("#edit_rec").html(result);
+                    list();
+                    loader_close();
+                    reset();
+                    alertify.set({
+                        delay: 3000
+                    });
+                    alertify.error("Data Update Not Successfully");
+                    return false;
+                }
+                else
+                {
+                    //                                        $("#edit_rec").html(result);
                     list();
                     loader_close();
                     reset();
@@ -129,11 +144,15 @@ function load_territory_fnc(){
 
 function load_distributor_fnc(){
     $("#distributor_id").html('');
-    $.post("../../libraries/ajax_load_file/load_distributor.php",{
+    $.post("../../libraries/ajax_load_file/load_distributor.php",
+    {
         zone_id:$("#zone_id").val(),
         territory_id:$("#territory_id").val()
-    }, function(result){
-        if (result){
+    },
+    function(result)
+    {
+        if (result)
+        {
             $("#distributor_id").append(result);
         }
     });

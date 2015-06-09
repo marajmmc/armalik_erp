@@ -623,21 +623,21 @@ class Database {
     function get_product_stock($year=NULL, $warehouse = NULL, $crop = NULL, $product_type = NULL, $variety = NULL, $pack_size = NULL, $quantity = NULL)
     {
         $tbl = _DB_PREFIX;
-        if ($warehouse != "" && $crop != "" && $product_type != "" && $variety != "" && $pack_size != "")
+        if ($year != "" && $warehouse != "" && $crop != "" && $product_type != "" && $variety != "" && $pack_size != "")
         {
             $sql="SELECT
                         pi.id,
-                        ait_warehouse_info.warehouse_name,
-                        ait_crop_info.crop_name,
-                        ait_product_type.product_type,
-                        ait_varriety_info.varriety_name,
-                        ait_product_pack_size.pack_size_name,
+                        $tbl"."warehouse_info.warehouse_name,
+                        $tbl"."crop_info.crop_name,
+                        $tbl"."product_type.product_type,
+                        $tbl"."varriety_info.varriety_name,
+                        $tbl"."product_pack_size.pack_size_name,
                         pi.crop_id,
                         pi.product_type_id,
                         pi.varriety_id,
                         pi.pack_size,
                         (
-                        SELECT SUM(ppi.quantity) FROM ait_product_purchase_info AS ppi
+                        SELECT SUM(ppi.quantity) FROM $tbl"."product_purchase_info AS ppi
                         WHERE
                         ppi.year_id=pi.year_id AND
                         ppi.warehouse_id=pi.warehouse_id AND
@@ -647,7 +647,7 @@ class Database {
                         ppi.pack_size = pi.pack_size
                         ) AS Total_HQ_Purchase_Quantity,
                         (
-                        SELECT SUM(ppoi.approved_quantity) FROM ait_product_purchase_order_invoice AS ppoi
+                        SELECT SUM(ppoi.approved_quantity) FROM $tbl"."product_purchase_order_invoice AS ppoi
                         WHERE
                         ppoi.year_id=pi.year_id AND
                         ppoi.warehouse_id=pi.warehouse_id AND
@@ -657,7 +657,7 @@ class Database {
                         ppoi.pack_size = pi.pack_size
                         ) AS Total_Sales_Quantity,
                         (
-                        SELECT SUM(ppob.quantity) FROM ait_product_purchase_order_bonus AS ppob
+                        SELECT SUM(ppob.quantity) FROM $tbl"."product_purchase_order_bonus AS ppob
                         WHERE
                         ppob.year_id=pi.year_id AND
                         ppob.warehouse_id=pi.warehouse_id AND
@@ -667,8 +667,9 @@ class Database {
                         ppob.pack_size = pi.pack_size
                         ) AS Total_Bonus_Quantity,
                         (
-                        SELECT SUM(pin.damage_quantity) FROM ait_product_inventory AS pin
+                        SELECT SUM(pin.damage_quantity) FROM $tbl"."product_inventory AS pin
                         WHERE
+                        pin.year_id=pi.year_id AND
                         pin.warehouse_id=pi.warehouse_id AND
                         pin.crop_id=pi.crop_id AND
                         pin.product_type_id = pi.product_type_id AND
@@ -676,8 +677,9 @@ class Database {
                         pin.pack_size = pi.pack_size
                         ) AS Total_Short_Quantity,
                         (
-                        SELECT SUM(pin.access_quantity) FROM ait_product_inventory AS pin
+                        SELECT SUM(pin.access_quantity) FROM $tbl"."product_inventory AS pin
                         WHERE
+                        pin.year_id=pi.year_id AND
                         pin.warehouse_id=pi.warehouse_id AND
                         pin.crop_id=pi.crop_id AND
                         pin.product_type_id = pi.product_type_id AND
@@ -685,22 +687,27 @@ class Database {
                         pin.pack_size = pi.pack_size
                         ) AS Total_Access_Quantity
                     FROM
-                        ait_product_info AS pi
-                        LEFT JOIN ait_warehouse_info ON ait_warehouse_info.warehouse_id = pi.warehouse_id
-                        LEFT JOIN ait_crop_info ON ait_crop_info.crop_id = pi.crop_id
-                        LEFT JOIN ait_product_type ON ait_product_type.product_type_id = pi.product_type_id
-                        LEFT JOIN ait_varriety_info ON ait_varriety_info.varriety_id = pi.varriety_id
-                        LEFT JOIN ait_product_pack_size ON ait_product_pack_size.pack_size_id = pi.pack_size
+                        $tbl"."product_info AS pi
+                        LEFT JOIN $tbl"."warehouse_info ON $tbl"."warehouse_info.warehouse_id = pi.warehouse_id
+                        LEFT JOIN $tbl"."crop_info ON $tbl"."crop_info.crop_id = pi.crop_id
+                        LEFT JOIN $tbl"."product_type ON $tbl"."product_type.product_type_id = pi.product_type_id
+                        LEFT JOIN $tbl"."varriety_info ON $tbl"."varriety_info.varriety_id = pi.varriety_id
+                        LEFT JOIN $tbl"."product_pack_size ON $tbl"."product_pack_size.pack_size_id = pi.pack_size
                     WHERE
                         pi.del_status=0
-                        $crop $product_type $variety $pack_size $warehouse
+                        AND pi.year_id='$year'
+                        AND pi.warehouse_id='$warehouse'
+                        AND pi.crop_id='$crop'
+                        AND pi.product_type_id='$product_type'
+                        AND pi.pack_size='$pack_size'
+                        AND pi.varriety_id='$variety'
                     GROUP BY
                         pi.crop_id, pi.product_type_id, pi.varriety_id, pi.pack_size
                     ORDER BY
-                        ait_warehouse_info.warehouse_id,
-                        ait_crop_info.order_crop,
-                        ait_product_type.order_type,
-                        ait_varriety_info.order_variety";
+                        $tbl"."warehouse_info.warehouse_id,
+                        $tbl"."crop_info.order_crop,
+                        $tbl"."product_type.order_type,
+                        $tbl"."varriety_info.order_variety";
             $result = $this->query($sql);
             $row_result = $this->fetchAssoc($result);
             $current_stock=($row_result['Total_HQ_Purchase_Quantity']-(($row_result['Total_Sales_Quantity']+$row_result['Total_Bonus_Quantity']+$row_result['Total_Access_Quantity'])-$row_result['Total_Short_Quantity']));
@@ -1220,7 +1227,7 @@ class Database {
         $this->close();
     }
 
-    function get_crop_warehouse($selected='', $crop_id='', $warehouse_id)
+    function get_crop_warehouse($selected='', $crop_id='', $warehouse_id, $year_id)
     {
         $this->open();
         $tbl=_DB_PREFIX;
@@ -1241,6 +1248,7 @@ class Database {
                             LEFT JOIN $tbl" . "crop_info ON $tbl" . "crop_info.crop_id = $tbl" . "product_info.crop_id
                         WHERE
                                 $tbl" . "product_info.warehouse_id='".$warehouse_id."'
+                                AND $tbl" . "product_info.year_id='".$year_id."'
                                 $crop_id
                                 AND $tbl" . "crop_info.`status`='Active' AND $tbl" . "product_info.crop_id IN (SELECT $tbl" . "product_pricing.crop_id FROM $tbl" . "product_pricing WHERE $tbl" . "product_pricing.`status`='Active')
                         GROUP BY $tbl" . "crop_info.crop_id

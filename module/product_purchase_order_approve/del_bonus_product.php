@@ -14,8 +14,8 @@ $user_id = $_SESSION['user_id'];
 $ei_id = $_SESSION['employee_id'];
 $tbl = _DB_PREFIX;
 
-echo $delsql="DELETE FROM $tbl" . "product_purchase_order_bonus WHERE id='".$_POST['elm_id']."'";
-//echo $delsql="UPDATE $tbl" . "product_purchase_order_request SET del_status='1' WHERE id='".$_POST['elm_id']."'";
+//echo $delsql="DELETE FROM $tbl" . "product_purchase_order_bonus WHERE id='".$_POST['elm_id']."'";
+echo $delsql="UPDATE $tbl" . "product_purchase_order_bonus SET status='In-Active', del_status='1' WHERE id='".$_POST['elm_id']."'";
 if($db->open()){
     echo $result=$db->query($delsql);
     echo "ok";

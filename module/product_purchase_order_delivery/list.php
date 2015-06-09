@@ -7,24 +7,33 @@ require_once("../../libraries/lib/functions.inc.php");
 $db = new Database();
 $dbcn = new Database();
 $tbl = _DB_PREFIX;
-if ($_SESSION['user_level'] == "Zone") {
+if ($_SESSION['user_level'] == "Zone")
+{
     $zone_id = "AND $tbl" . "product_purchase_order_invoice.zone_id='" . $_SESSION['zone_id'] . "'";
     $territory = '';
     $distributor = '';
-} else if ($_SESSION['user_level'] == "Territory") {
+}
+else if ($_SESSION['user_level'] == "Territory")
+{
     $zone_id = "AND $tbl" . "product_purchase_order_invoice.zone_id='" . $_SESSION['zone_id'] . "'";
     $territory = "AND $tbl" . "product_purchase_order_invoice.territory_id='" . $_SESSION['territory_id'] . "'";
     $distributor = '';
-} else if ($_SESSION['user_level'] == "Distributor") {
+}
+else if ($_SESSION['user_level'] == "Distributor")
+{
     $zone_id = "AND $tbl" . "product_purchase_order_invoice.zone_id='" . $_SESSION['zone_id'] . "'";
     $territory = "AND $tbl" . "product_purchase_order_invoice.territory_id='" . $_SESSION['territory_id'] . "'";
     $distributor = "AND $tbl" . "product_purchase_order_invoice.distributor_id='" . $_SESSION['employee_id'] . "'";
-} else if ($_SESSION['user_level'] == "Warehouse") {
+}
+else if ($_SESSION['user_level'] == "Warehouse")
+{
     $zone_id = '';
     $territory = '';
     $distributor = '';
     $warehouse = "AND $tbl" . "product_purchase_order_invoice.warehouse_id='" . $_SESSION['warehouse_id'] . "'";
-} else {
+}
+else
+{
     $zone_id = '';
     $territory = '';
     $distributor = '';
@@ -98,18 +107,25 @@ if ($_SESSION['user_level'] == "Zone") {
                                     FROM
                                         $tbl" . "product_purchase_order_invoice
                                         LEFT JOIN $tbl" . "distributor_info ON $tbl" . "distributor_info.distributor_id = $tbl" . "product_purchase_order_invoice.distributor_id
+                                        LEFT JOIN $tbl" . "year ON $tbl" . "year.year_id = $tbl" . "product_purchase_order_invoice.year_id
                                     WHERE $tbl" . "product_purchase_order_invoice.del_status='0' AND $tbl" . "product_purchase_order_invoice.status='Pending'
-                                      $zone_id $territory $distributor $warehouse  " . $db->get_zone_access($tbl . "product_purchase_order_invoice") . " 
+                                      $zone_id $territory $distributor $warehouse  " . $db->get_zone_access($tbl . "product_purchase_order_invoice") . "
+                                      AND $tbl" . "year.del_status=0 AND $tbl" . "year.status='Active'
                                     GROUP BY $tbl" . "product_purchase_order_invoice.invoice_id
                                     ORDER BY $tbl" . "product_purchase_order_invoice.invoice_id DESC
-                        ";
-                            if ($db->open()) {
+                                    ";
+                            if ($db->open())
+                            {
                                 $result = $db->query($sql);
                                 $i = 1;
-                                while ($result_array = $db->fetchAssoc()) {
-                                    if ($i % 2 == 0) {
+                                while ($result_array = $db->fetchAssoc())
+                                {
+                                    if ($i % 2 == 0)
+                                    {
                                         $rowcolor = "gradeC";
-                                    } else {
+                                    }
+                                    else
+                                    {
                                         $rowcolor = "gradeA success";
                                     }
                                     $challan = $dbcn->single_data_w($tbl . "product_purchase_order_challan", "challan_id", "invoice_id='" . $result_array['invoice_id'] . "'");
@@ -118,7 +134,7 @@ if ($_SESSION['user_level'] == "Zone") {
                                         <td>
                                             <?php echo $i; ?>
                                         </td>
-                                        <td><?php echo $result_array['purchase_order_id']; ?></td>
+                                        <td><?php echo substr($result_array['purchase_order_id'],3); ?></td>
                                         <td><?php echo $db->date_formate($result_array['invoice_date']); ?></td>
                                         <td><?php echo $result_array['distributor_name']; ?></td>
                                         <td><?php echo $result_array['approved_quantity']; ?></td>

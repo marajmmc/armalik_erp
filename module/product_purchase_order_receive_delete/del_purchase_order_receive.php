@@ -41,7 +41,8 @@ echo $sqlchallan = "SELECT
 
 if ($dbc->open()) {
     $resultc = $dbc->query($sqlchallan);
-    while ($rowc = $dbc->fetchAssoc($resultc)) {
+    while ($rowc = $dbc->fetchAssoc($resultc))
+    {
         $current_stock_qunatity = ($rowc["quantity"] - $rowc["loss_quantity"]) + $rowc["extra_quantity"];
         $mSQL_task = "update `$tbl" . "distributor_product_stock` set
                                 `purchase_quantity`=purchase_quantity-'" . $rowc["quantity"] . "', 
@@ -52,10 +53,11 @@ if ($dbc->open()) {
 				`del_status`='0', 
 				`entry_by`='" . $user_id . "', 
 				`entry_date`='" . $db->ToDayDate() . "'
-			where crop_id='" . $rowc['crop_id'] . "' AND product_type_id='" . $rowc['product_type_id'] . "' AND varriety_id='" . $rowc['varriety_id'] . "' AND pack_size='" . $rowc['pack_size'] . "' AND distributor_id='" . $rowc['distributor_id'] . "'
+			where year_id='" . $_POST['year_id'] . "' AND crop_id='" . $rowc['crop_id'] . "' AND product_type_id='" . $rowc['product_type_id'] . "' AND varriety_id='" . $rowc['varriety_id'] . "' AND pack_size='" . $rowc['pack_size'] . "' AND distributor_id='" . $rowc['distributor_id'] . "'
 				";
 
-        if ($db->open()) {
+        if ($db->open())
+        {
             $db->query($mSQL_task);
             $db->freeResult();
         }
@@ -68,15 +70,17 @@ if ($dbc->open()) {
 				`del_status`='0', 
 				`entry_by`='" . $user_id . "', 
 				`entry_date`='" . $db->ToDayDate() . "'
-			where crop_id='" . $rowc['crop_id'] . "' AND product_type_id='" . $rowc['product_type_id'] . "' AND varriety_id='" . $rowc['varriety_id'] . "' AND pack_size='" . $rowc['pack_size'] . "' AND warehouse_id='" . $rowc['warehouse_id'] . "'";
+			where year_id='" . $_POST['year_id'] . "' AND crop_id='" . $rowc['crop_id'] . "' AND product_type_id='" . $rowc['product_type_id'] . "' AND varriety_id='" . $rowc['varriety_id'] . "' AND pack_size='" . $rowc['pack_size'] . "' AND warehouse_id='" . $rowc['warehouse_id'] . "'";
 
-        if ($db->open()) {
+        if ($db->open())
+        {
             $db->query($mSQL_task);
             $db->freeResult();
         }
         $db->system_event_log('', $user_id, $employee_id, $_POST['inv_id'], '', $tbl . 'product_stock', 'Update', '');
 
-        $rowfield = array(
+        $rowfield = array
+        (
             'credit_limit_amount' => "credit_limit_amount+'" . $rowc['total_price'] . "'",
             'balance_amount' => "balance_amount+'" . $rowc['total_price'] . "'",
             'due_amount' => "due_amount-'" . $rowc['total_price'] . "'",
@@ -101,9 +105,11 @@ $sqlchallan = "SELECT
                 quantity
             FROM `$tbl" . "product_purchase_order_bonus`
             WHERE status='Pending' AND del_status='0' AND invoice_id='" . $_POST['inv_id'] . "'";
-if ($dbc->open()) {
+if ($dbc->open())
+{
     $resultc = $dbc->query($sqlchallan);
-    while ($rowc = $dbc->fetchAssoc($resultc)) {
+    while ($rowc = $dbc->fetchAssoc($resultc))
+    {
         $mSQL_task = "update `$tbl" . "distributor_product_stock` set
                                 `bonus_quantity`=bonus_quantity-'" . $rowc["quantity"] . "', 
 				`current_stock_qunatity`=current_stock_qunatity-'" . $rowc["quantity"] . "', 
@@ -114,7 +120,8 @@ if ($dbc->open()) {
 			where crop_id='" . $rowc['crop_id'] . "' AND product_type_id='" . $rowc['product_type_id'] . "' AND varriety_id='" . $rowc['varriety_id'] . "' AND pack_size='" . $rowc['pack_size'] . "' AND distributor_id='" . $rowc['distributor_id'] . "'
 				";
 
-        if ($db->open()) {
+        if ($db->open())
+        {
             $db->query($mSQL_task);
             $db->freeResult();
         }
@@ -125,9 +132,10 @@ if ($dbc->open()) {
 				`del_status`='0', 
 				`entry_by`='" . $user_id . "', 
 				`entry_date`='" . $db->ToDayDate() . "'
-			where crop_id='" . $rowc['crop_id'] . "' AND product_type_id='" . $rowc['product_type_id'] . "' AND varriety_id='" . $rowc['varriety_id'] . "' AND pack_size='" . $rowc['pack_size'] . "' AND warehouse_id='" . $rowc['warehouse_id'] . "'";
+			where year_id='" . $_POST['year_id'] . "' AND  crop_id='" . $rowc['crop_id'] . "' AND product_type_id='" . $rowc['product_type_id'] . "' AND varriety_id='" . $rowc['varriety_id'] . "' AND pack_size='" . $rowc['pack_size'] . "' AND warehouse_id='" . $rowc['warehouse_id'] . "'";
 
-        if ($db->open()) {
+        if ($db->open())
+        {
             $db->query($mSQL_task);
             $db->freeResult();
         }
@@ -136,41 +144,55 @@ if ($dbc->open()) {
 }
 
 
-$sql = "INSERT INTO $tbl" . "product_purchase_order_challan_received_delete
-SELECT
-'',
-challan_received_id,
-challan_id,
-invoice_id,
-purchase_order_id,
-challan_received_date,
-zone_id,
-territory_id,
-distributor_id,
-crop_id,
-product_type_id,
-varriety_id,
-pack_size,
-price,
-approved_quantity,
-quantity,
-loss_quantity,
-total_price,
-extra_quantity,
-status,
-del_status,
-  '$user_id',
-  '" . $dbins->ToDayDate() . "'
-  FROM $tbl" . "product_purchase_order_challan_received WHERE invoice_id='" . $_POST['inv_id'] . "'";
-if ($dbins->open()) {
-    $dbins->query($sql);
-}
+//$sql = "INSERT INTO $tbl" . "product_purchase_order_challan_received_delete
+//SELECT
+//'',
+//challan_received_id,
+//challan_id,
+//invoice_id,
+//purchase_order_id,
+//challan_received_date,
+//zone_id,
+//territory_id,
+//distributor_id,
+//crop_id,
+//product_type_id,
+//varriety_id,
+//pack_size,
+//price,
+//approved_quantity,
+//quantity,
+//loss_quantity,
+//total_price,
+//extra_quantity,
+//status,
+//del_status,
+//  '$user_id',
+//  '" . $dbins->ToDayDate() . "'
+//  FROM $tbl" . "product_purchase_order_challan_received WHERE invoice_id='" . $_POST['inv_id'] . "'";
+//if ($dbins->open())
+//{
+//    $dbins->query($sql);
+//}
 
-//$delsqlr = "UPDATE $tbl" . "product_purchase_order_request SET del_status='1' WHERE invoice_id='" . $_POST['inv_id'] . "'";
-//$delsqli = "UPDATE $tbl" . "product_purchase_order_invoice SET del_status='1' WHERE invoice_id='" . $_POST['inv_id'] . "'";
-//$delsqlb = "UPDATE $tbl" . "product_purchase_order_bonus SET del_status='1' WHERE invoice_id='" . $_POST['inv_id'] . "'";
-//$delsqlc = "UPDATE $tbl" . "product_purchase_order_challan SET del_status='1' WHERE invoice_id='" . $_POST['inv_id'] . "'";
-//$delsqlcr = "UPDATE $tbl" . "product_purchase_order_challan_received SET del_status='1' WHERE invoice_id='" . $_POST['inv_id'] . "'";
+$delsqlr = "UPDATE $tbl" . "product_purchase_order_request SET status='In-Active', del_status='1', entry_date='".$db->ToDayDate()."' WHERE invoice_id='" . $_POST['inv_id'] . "'";
+$delsqli = "UPDATE $tbl" . "product_purchase_order_invoice SET status='In-Active', del_status='1', entry_date='".$db->ToDayDate()."' WHERE invoice_id='" . $_POST['inv_id'] . "'";
+$delsqlb = "UPDATE $tbl" . "product_purchase_order_bonus SET status='In-Active', del_status='1', entry_date='".$db->ToDayDate()."' WHERE invoice_id='" . $_POST['inv_id'] . "'";
+$delsqlc = "UPDATE $tbl" . "product_purchase_order_challan SET status='In-Active', del_status='1', entry_date='".$db->ToDayDate()."' WHERE invoice_id='" . $_POST['inv_id'] . "'";
+$delsqlcr = "UPDATE $tbl" . "product_purchase_order_challan_received SET status='In-Active', del_status='1', entry_date='".$db->ToDayDate()."' WHERE invoice_id='" . $_POST['inv_id'] . "'";
+if ($db->open())
+{
+    $db->query($delsqlr);
+    $db->query($delsqli);
+    $db->query($delsqlb);
+    $db->query($delsqlc);
+    $db->query($delsqlcr);
+}
+//echo $delsqlr = "DELETE FROM $tbl" . "product_purchase_order_request WHERE invoice_id='" . $_POST['inv_id'] . "'";
+//echo $delsqli = "DELETE FROM $tbl" . "product_purchase_order_invoice WHERE invoice_id='" . $_POST['inv_id'] . "'";
+//echo $delsqlb = "DELETE FROM $tbl" . "product_purchase_order_bonus WHERE invoice_id='" . $_POST['inv_id'] . "'";
+//echo $delsqlc = "DELETE FROM $tbl" . "product_purchase_order_challan WHERE invoice_id='" . $_POST['inv_id'] . "'";
+//echo $delsqlcr = "DELETE FROM $tbl" . "product_purchase_order_challan_received WHERE invoice_id='" . $_POST['inv_id'] . "'";
 //if ($db->open()) {
 //    $db->query($delsqlr);
 //    $db->query($delsqli);
@@ -178,16 +200,4 @@ if ($dbins->open()) {
 //    $db->query($delsqlc);
 //    $db->query($delsqlcr);
 //}
-echo $delsqlr = "DELETE FROM $tbl" . "product_purchase_order_request WHERE invoice_id='" . $_POST['inv_id'] . "'";
-echo $delsqli = "DELETE FROM $tbl" . "product_purchase_order_invoice WHERE invoice_id='" . $_POST['inv_id'] . "'";
-echo $delsqlb = "DELETE FROM $tbl" . "product_purchase_order_bonus WHERE invoice_id='" . $_POST['inv_id'] . "'";
-echo $delsqlc = "DELETE FROM $tbl" . "product_purchase_order_challan WHERE invoice_id='" . $_POST['inv_id'] . "'";
-echo $delsqlcr = "DELETE FROM $tbl" . "product_purchase_order_challan_received WHERE invoice_id='" . $_POST['inv_id'] . "'";
-if ($db->open()) {
-    $db->query($delsqlr);
-    $db->query($delsqli);
-    $db->query($delsqlb);
-    $db->query($delsqlc);
-    $db->query($delsqlcr);
-}
 ?>

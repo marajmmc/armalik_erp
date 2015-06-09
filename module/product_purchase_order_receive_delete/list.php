@@ -57,15 +57,15 @@ $tbl = _DB_PREFIX;
                                 <th style="width:5%">
                                     Date
                                 </th>
-<!--                                <th style="width:10%">-->
-<!--                                    Distributor-->
-<!--                                </th>-->
-<!--                                <th style="width:5%">-->
-<!--                                    Total Qty(pieces)-->
-<!--                                </th>-->
-<!--                                <th style="width:5%">-->
-<!--                                    Total Value-->
-<!--                                </th>-->
+                                <!--                                <th style="width:10%">-->
+                                <!--                                    Distributor-->
+                                <!--                                </th>-->
+                                <!--                                <th style="width:5%">-->
+                                <!--                                    Total Qty(pieces)-->
+                                <!--                                </th>-->
+                                <!--                                <th style="width:5%">-->
+                                <!--                                    Total Value-->
+                                <!--                                </th>-->
                                 <th style="width:5%">
                                     Status
                                 </th>
@@ -95,7 +95,7 @@ $tbl = _DB_PREFIX;
                                     GROUP BY $tbl" . "product_purchase_order_challan.challan_id
                                     ORDER BY $tbl" . "product_purchase_order_challan.challan_id DESC
                         ";
-//                              AND $tbl" . "product_purchase_order_challan.warehouse_id!=''
+                            //AND $tbl" . "product_purchase_order_challan.warehouse_id!=''
                             if ($db->open()) {
                                 $result = $db->query($sql);
                                 $i = 1;
@@ -110,11 +110,11 @@ $tbl = _DB_PREFIX;
                                         <td>
                                             <?php echo $i; ?>
                                         </td>
-                                        <td><?php echo $result_array['challan_id']; ?></td>
+                                        <td><?php echo substr($result_array['purchase_order_id'],3); ?></td>
                                         <td><?php echo $db->date_formate($result_array['challan_date']); ?></td>
-<!--                                        <td>--><?php //echo $result_array['distributor_name']; ?><!--</td>-->
-<!--                                        <td>--><?php //echo $result_array['quantity']; ?><!--</td>-->
-<!--                                        <td>--><?php //echo $result_array['total_price']; ?><!--</td>-->
+                                        <!--                                        <td>--><?php //echo $result_array['distributor_name']; ?><!--</td>-->
+                                        <!--                                        <td>--><?php //echo $result_array['quantity']; ?><!--</td>-->
+                                        <!--                                        <td>--><?php //echo $result_array['total_price']; ?><!--</td>-->
                                         <td><?php echo $result_array['status']; ?></td>
                                         <td>
                                             <a class="btn btn-small btn-warning2" data-original-title="" onclick="po_delete_fnc('<?php echo $result_array["invoice_id"] ?>', '<?php echo $i ?>');">

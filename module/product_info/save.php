@@ -12,15 +12,17 @@ $employee_id = $_SESSION['employee_id'];
 $tbl = _DB_PREFIX;
 
 ///////////  START PRODUCT QUANTITY ////////////////////
+$year_id=$_POST["year_id"];
 $warehouse_id=$_POST["warehouse_id"];
 $crop_id=$_POST["crop_id"];
 $product_type_id=$_POST["product_type_id"];
 $variety_id=$_POST["varriety_id"];
 $pack_size=$_POST["pack_size"];
 $quantity=$_POST["quantity"];
-if(empty($warehouse_id) && empty($crop_id) && empty($product_type_id) && empty($variety_id) && empty($pack_size) && empty($quantity))
+$opening_balance=$_POST["opening_balance"];
+if(empty($year_id) &&empty($warehouse_id) && empty($crop_id) && empty($product_type_id) && empty($variety_id) && empty($pack_size))
 {
-    echo "Please check warehouse, crop, product type, variety, pack size, quantity.";
+    echo "Please check year, warehouse, crop, product type, variety, pack size.";
     die();
 }
 
@@ -72,7 +74,7 @@ else
 ///////////  END PRODUCT QUANTITY ////////////////////
 ///////////  START PRODUCT STOCK UPDATE ////////////////////
 
-$pid = $db->single_data_w($tbl . 'product_stock', "count(id) as product_id", "crop_id='" . $crop_id . "' AND product_type_id='" . $product_type_id . "' AND varriety_id='" . $variety_id . "' AND pack_size='" . $pack_size . "' AND warehouse_id='" . $warehouse_id . "'");
+$pid = $db->single_data_w($tbl . 'product_stock', "count(id) as product_id", "year_id='$year_id' AND crop_id='" . $crop_id . "' AND product_type_id='" . $product_type_id . "' AND varriety_id='" . $variety_id . "' AND pack_size='" . $pack_size . "' AND warehouse_id='" . $warehouse_id . "'");
 if ($pid['product_id'] != 0)
 {
     $mSQL_task = "update `$tbl" . "product_stock` set
@@ -82,7 +84,7 @@ if ($pid['product_id'] != 0)
 				`del_status`='0', 
 				`entry_by`='" . $user_id . "', 
 				`entry_date`='" . $db->ToDayDate() . "'
-			where crop_id='" . $crop_id . "' AND product_type_id='" . $product_type_id . "' AND varriety_id='" . $variety_id . "' AND pack_size='" . $pack_size . "' AND warehouse_id='" . $warehouse_id . "'
+			where year_id='$year_id' AND crop_id='" . $crop_id . "' AND product_type_id='" . $product_type_id . "' AND varriety_id='" . $variety_id . "' AND pack_size='" . $pack_size . "' AND warehouse_id='" . $warehouse_id . "'
 				";
 
     if ($db->open())
@@ -97,6 +99,7 @@ else
     $rowfield = array
     (
         'warehouse_id,' => "'" . $warehouse_id . "',",
+        'year_id,' => "'" . $year_id . "',",
         'crop_id,' => "'" . $crop_id . "',",
         'product_type_id,' => "'" . $product_type_id . "',",
         'varriety_id,' => "'" . $variety_id . "',",
@@ -119,12 +122,14 @@ else
 $rowfield = array
 (
     'product_id,' => "'$maxID',",
+    'year_id,' => "'" . $year_id . "',",
     'warehouse_id,' => "'" . $warehouse_id . "',",
     'crop_id,' => "'" . $crop_id . "',",
     'product_type_id,' => "'" . $product_type_id . "',",
     'varriety_id,' => "'" . $variety_id . "',",
     'pack_size,' => "'" . $pack_size . "',",
     'quantity,' => "'" . $quantity . "',",
+    'opening_balance,' => "'" . $opening_balance . "',",
     'mfg_date,' => "'" . $db->date_formate($_POST["mfg_date"]) . "',",
     'exp_date,' => "'" . $db->date_formate($_POST["exp_date"]) . "',",
     'status,' => "'Active',",

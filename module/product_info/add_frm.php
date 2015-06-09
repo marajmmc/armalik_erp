@@ -34,6 +34,22 @@ if ($_SESSION['warehouse_id']) {
                 <div class="widget-body">
                     <div class="control-group">
                         <label class="control-label" for="warehouse_id">
+                            Select Year
+                        </label>
+                        <div class="controls">
+                            <select id="year_id" name="year_id" class="span5" placeholder="Select Crop" validate="Require">
+                                <?php
+                                $db_fiscal_year=new Database();
+                                $db_fiscal_year->get_fiscal_year();
+                                ?>
+                            </select>
+                            <span class="help-inline">
+                                *
+                            </span>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="warehouse_id">
                             Select Warehouse
                         </label>
                         <div class="controls">
@@ -125,10 +141,18 @@ if ($_SESSION['warehouse_id']) {
                     </div>
                     <div class="control-group">
                         <label class="control-label" for="quantity">
-                            Qty(pieces)
+                            Purchase Qty(pieces)
                         </label>
                         <div class="controls">
                             <input class="span3" type="text" name="quantity" id="quantity" placeholder="Qty" >
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="quantity">
+                            Opening Balance (pieces)
+                        </label>
+                        <div class="controls">
+                            <input class="span3" type="text" name="opening_balance" id="opening_balance" placeholder="Qty" >
                         </div>
                     </div>
                     <div class="control-group">

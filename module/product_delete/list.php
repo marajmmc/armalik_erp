@@ -39,6 +39,9 @@ $tbl = _DB_PREFIX;
                                     Sl No
                                 </th>
                                 <th style="width:10%">
+                                    Year
+                                </th>
+                                <th style="width:10%">
                                     Warehouse Name
                                 </th>
                                 <th style="width:10%">
@@ -76,9 +79,11 @@ $tbl = _DB_PREFIX;
                                         $tbl" . "product_pack_size.pack_size_name,
                                         $tbl" . "crop_info.crop_name,
                                         $tbl" . "product_type.product_type as ptype,
-                                        $tbl" . "varriety_info.varriety_name
+                                        $tbl" . "varriety_info.varriety_name,
+                                        $tbl" . "year.year_name
                                     FROM
                                         $tbl" . "product_purchase_info
+                                        LEFT JOIN $tbl" . "year ON $tbl" . "year.year_id = $tbl" . "product_purchase_info.year_id
                                         LEFT JOIN $tbl" . "warehouse_info ON $tbl" . "warehouse_info.warehouse_id = $tbl" . "product_purchase_info.warehouse_id
                                         LEFT JOIN $tbl" . "crop_info ON $tbl" . "crop_info.crop_id = $tbl" . "product_purchase_info.crop_id
                                         LEFT JOIN $tbl" . "product_type ON $tbl" . "product_type.product_type_id = $tbl" . "product_purchase_info.product_type_id
@@ -104,6 +109,7 @@ $tbl = _DB_PREFIX;
                                         <td>
                                             <?php echo $i; ?>
                                         </td>
+                                        <td><?php echo $result_array['year_name']; ?></td>
                                         <td><?php echo $result_array['warehouse_name']; ?></td>
                                         <td><?php echo $result_array['crop_name']; ?></td>
                                         <td><?php echo $result_array['ptype']; ?></td>

@@ -146,11 +146,13 @@ function load_variety_view(){
     })
 }
 
-function load_district()
+function load_district_fnc()
 {
     $("#district_id").html('');
-    $.post("../../libraries/ajax_load_file/load_zone_assign_district.php",{zone_id: $('#zone_id').val()},function(result){
-        if (result){
+    $.post("../../libraries/ajax_load_file/load_territory_assign_district.php",{zone_id: $('#zone_id').val(), territory_id: $('#territory_id').val()},function(result)
+    {
+        if (result)
+        {
             $("#district_id").append(result);
         }
     });

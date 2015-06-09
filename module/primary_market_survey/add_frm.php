@@ -30,7 +30,7 @@ $tbl = _DB_PREFIX;
                             Zone
                         </label>
                         <div class="controls">
-                            <select id="zone_id" name="zone_id" class="span5" placeholder="Zone" validate="Require" onchange="load_district();load_territory_fnc();" >
+                            <select id="zone_id" name="zone_id" class="span5" placeholder="Zone" validate="Require" onchange="load_territory_fnc();" >
                                 <option value="">Select</option>
                                 <?php
                                 echo $sql_uesr_group = "select zone_id as fieldkey, zone_name as fieldtext from $tbl" . "zone_info WHERE status='Active' AND del_status='0' ".$db->get_zone_access($tbl. "zone_info")." ";
@@ -47,7 +47,7 @@ $tbl = _DB_PREFIX;
                             Territory
                         </label>
                         <div class="controls">
-                            <select id="territory_id" name="territory_id" class="span5" placeholder="Territory" validate="Require">
+                            <select id="territory_id" name="territory_id" class="span5" placeholder="Territory" validate="Require" onchange="load_district();">
                                 <option value="">Select</option>
 
                             </select>

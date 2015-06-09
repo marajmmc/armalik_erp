@@ -122,7 +122,7 @@ function session_load_fnc()
     {
         session_load_zone();
         session_load_territory();
-        load_district();
+        //load_district();
     }
     else
     {
@@ -149,7 +149,7 @@ function session_load_territory(){
 function load_district()
 {
     $("#district_id").html('');
-    $.post("../../libraries/ajax_load_file/load_zone_assign_district.php",{zone_id: $('#zone_id').val()},function(result){
+    $.post("../../libraries/ajax_load_file/load_territory_assign_district.php",{zone_id: $('#zone_id').val(), territory_id: $('#territory_id').val()},function(result){
         if (result){
             $("#district_id").append(result);
         }

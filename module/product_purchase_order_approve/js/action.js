@@ -103,8 +103,8 @@ function Save_Rec()
                     }
                     else
                     {
-                                                $("#edit_rec").html(result);
-                        //list();
+                        //$("#edit_rec").html(result);
+                        list();
                         loader_close();
                         reset();
                         alertify.set({
@@ -379,13 +379,14 @@ function load_current_stock_fnc(crop_id, product_type_id, varriety_id, pack_size
         varriety_id:varriety_id,
         pack_size:pack_size,
         purchase_order_id: $("#purchase_order_id").val(),
-        warehouse_id: $("#warehouse_id").val()
+        warehouse_id: $("#warehouse_id").val(),
+        year_id: $("#year_id").val()
     },
     function(result)
     {
         if(result)
         {
-            //            alert (result)
+            //alert (result)
             var stock=parseFloat(result);
             var rp_qnty=parseFloat($("#quantity_"+serial).val());
             var current_stock=parseFloat(($("#pack_size_name_"+serial).val()*rp_qnty)/1000);
@@ -447,16 +448,21 @@ function send_status(){
 }
 
 
-function load_bonus_current_stock_fnc(serial){
+function load_bonus_current_stock_fnc(serial)
+{
     $("#bonus_stock"+serial).val('');
-    $.post("../../libraries/ajax_load_file/load_po_bonus_current_stock_in_kg.php", {
+    $.post("../../libraries/ajax_load_file/load_po_bonus_current_stock_in_kg.php",
+    {
+        year_id:$("#year_id").val(),
         warehouse_id:$("#warehouse_id").val(),
         purchase_order_id:$("#purchase_order_id").val(),
         crop_id:$("#bonus_crop_id"+serial).val(),
         product_type_id:$("#bonus_product_type_id"+serial).val(),
         varriety_id:$("#bonus_varriety_id"+serial).val(),
         pack_size:$("#bonus_pack_size"+serial).val()
-    }, function(result){
+    },
+    function(result)
+    {
         if(result)
         {
             var stock=parseFloat(result);
@@ -475,15 +481,19 @@ function load_pack_size_name(serial){
     })
 }
 
-function load_bonus_product_qnantity(serial){
+function load_bonus_product_qnantity(serial)
+{
 
     var quantity=parseFloat($("#bonus_quantity"+serial).val());
     var bonus=parseFloat($("#bonus_stock"+serial).val());
     var current_stock=parseFloat(($("#bonus_pack_size_name"+serial).val()*quantity)/1000);
-    if(bonus<current_stock){
+    if(bonus<current_stock)
+    {
         $("#bonus_quantity"+serial).css("background", "#FF4A4A");
         MenuOffOn('off','off','off','off','off','off','on','off','on','on');
-    }else{
+    }
+    else
+    {
         $("#bonus_quantity"+serial).css("background", "");
         MenuOffOn('off','on','off','off','on','on','on','on','on','on');
     }  
@@ -575,11 +585,16 @@ function distributor_total_buy_amount(){
 //    })
 }
 
-function load_pack_size_name_(serial){
-    $.post("../../libraries/ajax_load_file/load_pack_size_name.php", {
+function load_pack_size_name_(serial)
+{
+    $.post("../../libraries/ajax_load_file/load_pack_size_name.php",
+    {
         pack_size_id:$("#bonus_pack_size_"+serial).val()
-    }, function(result){
-        if(result){
+    },
+    function(result)
+    {
+        if(result)
+        {
             $("#bonus_pack_size_name_"+serial).val(result);
         }
     })
@@ -595,7 +610,8 @@ function load_current_stock_bonus_fnc(crop_id, product_type_id, varriety_id, pac
         product_type_id:product_type_id,
         varriety_id:varriety_id,
         pack_size:pack_size,
-        warehouse_id: $("#warehouse_id").val()
+        warehouse_id: $("#warehouse_id").val(),
+        year_id: $("#year_id").val()
     },
     function(result)
     {

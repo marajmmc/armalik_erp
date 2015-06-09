@@ -251,7 +251,7 @@ if ($status != "Edit_Ready") {
                                             <select id='crop_id_<?php echo $i; ?>' name='crop_id[]' class='span12' placeholder='Crop' onchange='load_product_type_("<?php echo $i; ?>")' validate='Require'>
                                                 <?php
                                                 $db_crop=new Database();
-                                                $db_crop->get_crop_warehouse($crop_id[$i],'',$warehouse_id);
+                                                $db_crop->get_crop_warehouse($crop_id[$i],'',$warehouse_id, $year_id);
                                                 ?>
                                             </select>
                                             <input type='hidden' id='id[]' name='id[]' value='<?php echo $elm_id[$i]; ?>'/>
@@ -363,7 +363,7 @@ if ($status != "Edit_Ready") {
                                                 <select id='bonus_crop_id_<?php echo $i; ?>' name='bonus_crop_id[]' class='span12' placeholder='Crop' onchange='bonus_load_product_type_("<?php echo $i; ?>")'  validate='Require'>
                                                     <?php
                                                     $db_crop=new Database();
-                                                    $db_crop->get_crop_warehouse($row['crop_id'],'',$warehouse_id);
+                                                    $db_crop->get_crop_warehouse($row['crop_id'],'',$warehouse_id, $year_id);
                                                     ?>
                                                 </select>
                                                 <input type='hidden' id='bonus_id[]' name='bonus_id[]' value='<?php echo $row['id']; ?>'/>

@@ -6,6 +6,14 @@ require_once("../../libraries/lib/config.inc.php");
 require_once("../../libraries/lib/functions.inc.php");
 $db = new Database();
 $tbl = _DB_PREFIX;
+if ($_SESSION['user_level'] == "Zone")
+{
+    $zone_id = "AND $tbl" . "primary_market_survey.zone_id='" . $_SESSION['zone_id'] . "'";
+}
+else
+{
+    $zone_id='';
+}
 ?>
 <div class="row-fluid">
     <div class="span12">
@@ -77,7 +85,9 @@ $tbl = _DB_PREFIX;
                                         LEFT JOIN $tbl"."territory_info ON $tbl"."territory_info.zone_id = $tbl"."primary_market_survey.zone_id AND $tbl"."territory_info.territory_id = $tbl"."primary_market_survey.territory_id
                                         LEFT JOIN $tbl"."crop_info ON $tbl"."crop_info.crop_id = $tbl"."primary_market_survey.crop_id
                                         LEFT JOIN $tbl"."product_type ON $tbl"."product_type.product_type_id = $tbl"."primary_market_survey.product_type_id
-                                    WHERE $tbl"."primary_market_survey.del_status='0'
+                                    WHERE
+                                    $tbl"."primary_market_survey.del_status='0'
+                                    $zone_id
                                     GROUP BY $tbl"."primary_market_survey.market_survey_group_id
                         ";
                             if ($db->open()) {

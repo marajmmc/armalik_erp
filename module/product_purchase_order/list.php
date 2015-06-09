@@ -88,10 +88,12 @@ if ($_SESSION['user_level'] == "Zone") {
                                     FROM
                                         $tbl" . "product_purchase_order_request
                                         LEFT JOIN $tbl" . "distributor_info ON $tbl" . "distributor_info.distributor_id = $tbl" . "product_purchase_order_request.distributor_id
+                                        LEFT JOIN $tbl" . "year ON $tbl" . "year.year_id = $tbl" . "product_purchase_order_request.year_id
                                     WHERE
                                         $tbl" . "product_purchase_order_request.del_status='0'  AND
                                         $tbl" . "product_purchase_order_request.status='Edit_Ready'
                                         $zone_id $territory $distributor   " . $db->get_zone_access($tbl . "product_purchase_order_request") . "
+                                        AND $tbl" . "year.del_status=0 AND $tbl" . "year.status='Active'
                                     GROUP BY $tbl" . "product_purchase_order_request.purchase_order_id
                                     ORDER BY $tbl" . "product_purchase_order_request.purchase_order_id DESC
                         ";
@@ -109,7 +111,7 @@ if ($_SESSION['user_level'] == "Zone") {
                                         <td>
                                             <?php echo $i; ?>
                                         </td>
-                                        <td><?php echo $result_array['purchase_order_id']; ?></td>
+                                        <td><?php echo substr($result_array['purchase_order_id'],3); ?></td>
                                         <td><?php echo $db->date_formate($result_array['purchase_order_date']); ?></td>
                                         <td><?php echo $result_array['distributor_name']; ?></td>
                                         <td><?php echo $result_array['quantity']; ?></td>

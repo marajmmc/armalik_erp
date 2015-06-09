@@ -140,7 +140,7 @@ if($dbws_details->open())
                             <select id="territory_id" name="territory_id" class="span5" placeholder="Territory" validate="Require">
                                 <?php
                                 $sql_uesr_group = "select territory_id as fieldkey, territory_name as fieldtext from $tbl" . "territory_info where status='Active' AND del_status='0'  AND territory_id='".$editrow['territory_id']."'  AND zone_id='".$editrow['zone_id']."' ORDER BY territory_name";
-                                echo $db->SelectList($sql_uesr_group);
+                                echo $db->SelectList($sql_uesr_group, $editrow['territory_id']);
                                 ?>
                             </select>
                             <span class="help-inline">
@@ -155,20 +155,22 @@ if($dbws_details->open())
                         <div class="controls">
                             <select id="district_id" name="district_id" class="span5" placeholder="" validate="Require" onchange="load_upazilla_fnc()">
                                 <?php
-                                $sql_district_group = "SELECT
-                                                        $tbl" . "zilla.zillaid as fieldkey,
-                                                        $tbl" . "zilla.zillanameeng as fieldtext
-                                                    FROM
-                                                        $tbl" . "zone_assign_district
-                                                        LEFT JOIN $tbl" . "zilla ON $tbl" . "zilla.zillaid = $tbl" . "zone_assign_district.zilla_id
-                                                    WHERE
-                                                        $tbl" . "zone_assign_district.del_status=0
-                                                        AND $tbl" . "zilla.visible=0
-                                                        AND $tbl" . "zone_assign_district.status='Active'
-                                                        AND $tbl" . "zone_assign_district.zone_id='".$editrow['zone_id']."'
-                                                        AND $tbl" . "zone_assign_district.zilla_id='".$editrow['district_id']."'
-                                                    ";
-                                echo $db->SelectList($sql_district_group, $editrow['district_id']);
+
+                                //echo "<option value=''>Select</option>";
+                                $sql_uesr_group = "SELECT
+                                        $tbl" . "zilla.zillaid as fieldkey,
+                                        $tbl" . "zilla.zillanameeng as fieldtext
+                                    FROM
+                                        $tbl" . "territory_assign_district
+                                        LEFT JOIN $tbl" . "zilla ON $tbl" . "zilla.zillaid = $tbl" . "territory_assign_district.zilla_id
+                                    WHERE
+                                        $tbl" . "territory_assign_district.del_status=0
+                                        AND $tbl" . "zilla.visible=0
+                                        AND $tbl" . "territory_assign_district.status='Active'
+                                        AND $tbl" . "territory_assign_district.territory_id='" . $editrow['territory_id'] . "'
+                                        AND $tbl" . "territory_assign_district.zilla_id='" . $editrow['district_id'] . "'
+";
+                                echo $db->SelectList($sql_uesr_group,$editrow['district_id']);
                                 ?>
                             </select>
                             <span class="help-inline">
@@ -326,6 +328,8 @@ if($dbws_details->open())
                                         $tbl" . "pdo_product_characteristic_setting_zone.del_status=0
                                         AND $tbl"."varriety_info.type=0
                                         AND $tbl" . "pdo_product_characteristic_setting_zone.zone_id='$zone_id'
+                                        AND $tbl" . "pdo_product_characteristic_setting_zone.crop_id='".$editrow['crop_id']."'
+                                        AND $tbl" . "pdo_product_characteristic_setting_zone.product_type_id='".$editrow['product_type_id']."'
                                     ORDER BY
                                         $tbl"."pdo_product_characteristic_setting_zone.crop_id,
                                         $tbl"."pdo_product_characteristic_setting_zone.product_type_id,
@@ -502,7 +506,7 @@ if($dbws_details->open())
 
 <script>
     $(document).ready(function(){
-        session_load_fnc()
+        //session_load_fnc()
     });
 
 

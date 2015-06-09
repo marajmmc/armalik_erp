@@ -16,6 +16,7 @@ FROM
     LEFT JOIN $tbl" . "crop_info ON $tbl" . "crop_info.crop_id = $tbl" . "product_info.crop_id
 WHERE 
         $tbl" . "product_info.warehouse_id='".$_POST['warehouse_id']."'
+        AND $tbl" . "product_info.year_id='".$_POST['year_id']."'
         AND $tbl" . "crop_info.`status`='Active' AND $tbl" . "product_info.crop_id IN (SELECT $tbl" . "product_pricing.crop_id FROM $tbl" . "product_pricing WHERE $tbl" . "product_pricing.`status`='Active')
 GROUP BY $tbl" . "crop_info.crop_id
 ORDER BY $tbl" . "crop_info.order_crop";

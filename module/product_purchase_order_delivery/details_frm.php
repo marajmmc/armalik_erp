@@ -16,7 +16,8 @@ $sqli = "SELECT
             $tbl" . "product_purchase_order_invoice.purchase_order_id,
             $tbl" . "distributor_info.distributor_name,
             $tbl" . "product_purchase_order_challan.challan_id,
-            $tbl" . "employee_basic_info.employee_id_no
+            $tbl" . "employee_basic_info.employee_id_no,
+            $tbl" . "zilla.zillanameeng
         FROM
             $tbl" . "product_purchase_order_invoice
             LEFT JOIN $tbl" . "distributor_info ON $tbl" . "distributor_info.distributor_id = $tbl" . "product_purchase_order_invoice.distributor_id
@@ -24,15 +25,20 @@ $sqli = "SELECT
             LEFT JOIN $tbl" . "product_purchase_order_request ON $tbl" . "product_purchase_order_request.invoice_id = $tbl" . "product_purchase_order_invoice.invoice_id
             LEFT JOIN $tbl" . "user_login ON $tbl" . "user_login.user_id = $tbl" . "product_purchase_order_request.entry_by
             LEFT JOIN $tbl" . "employee_basic_info ON $tbl" . "employee_basic_info.employee_id = $tbl" . "user_login.employee_id
+            LEFT JOIN $tbl" . "zilla ON $tbl" . "zilla.zillaid = $tbl" . "product_purchase_order_invoice.zilla_id
         WHERE $tbl" . "product_purchase_order_invoice.invoice_id='" . $_POST['rowID'] . "' AND $tbl" . "product_purchase_order_invoice.approved_quantity!='0'
         GROUP BY $tbl" . "product_purchase_order_invoice.invoice_id";
-if ($db->open()) {
+if ($db->open())
+{
     $resulti = $db->query($sqli);
     $rowi = $db->fetchAssoc($resulti);
 }
-if ($rowi['invoice_id'] == "") {
+if ($rowi['invoice_id'] == "")
+{
     echo "<div style='text-align: center; color: red;'><b>Invoice No Not Found! Please Try Again.</b></div>";
-} else {
+}
+else
+{
     ?>
 
     <a class="btn btn-small btn-success" data-original-title="" onclick="print_rpt()" style="float: right;">
@@ -50,7 +56,7 @@ if ($rowi['invoice_id'] == "") {
         </div>
 
         <div style="text-align: center;">
-            <b>Customer: <?php echo $rowi['distributor_name'] ?></b>
+            <b>Customer: <?php echo $rowi['distributor_name']." ( ".$rowi['zillanameeng']." )"; ?></b>
         </div>
         <label style="float: right; font-size: 11px;">Print Date: <?php echo $db->date_formate($db->ToDayDate()) ?></label>
         Invoice Date: <?php echo $db->date_formate($rowi['invoice_date']) ?><br />
@@ -136,16 +142,12 @@ if ($rowi['invoice_id'] == "") {
                     $result = $db->query($sql);
                     $i = 1;
                     while ($result_array = $db->fetchAssoc()) {
-                        if ($i % 2 == 0) {
-                            $rowcolor = "gradeC";
-                        } else {
-                            $rowcolor = "gradeA success";
-                        }
+
                         $price = $price + $result_array['price'];
                         $qnty = $qnty + $result_array['quantity'];
                         $tprice = $tprice + $result_array['total_price'];
                         ?>
-                        <tr class="<?php echo $rowcolor; ?> pointer" id="tr_id<?php echo $i; ?>" onclick="get_rowID('<?php echo $result_array["id"] ?>', '<?php echo $i; ?>')">
+                        <tr class=" pointer" id="tr_id<?php echo $i; ?>" onclick="get_rowID('<?php echo $result_array["id"] ?>', '<?php echo $i; ?>')">
                             <td>
                                 <?php
                                 if ($zone_name == '') {
@@ -214,20 +216,26 @@ if ($rowi['invoice_id'] == "") {
                     ";
                 if ($db->open()) {
                     $resultb = $db->query($sqlb);
-                    while ($rowb = $db->fetchAssoc($resultb)) {
+                    while ($rowb = $db->fetchAssoc($resultb))
+                    {
                         $bqnty = $bqnty + $rowb['quantity'];
                         ?>
-                        <tr class="<?php echo $rowcolor; ?> pointer" id="tr_id<?php echo $i; ?>" onclick="get_rowID('<?php echo $rowb["id"] ?>', '<?php echo $i; ?>')">
+                        <tr class="pointer" id="tr_id<?php echo $i; ?>" >
                             <td>
                                 <?php
-                                if ($zone_name == '') {
+                                if ($zone_name == '')
+                                {
                                     echo $rowb['zone_name'];
                                     $zone_name = $rowb['zone_name'];
                                     //$currentDate = $preDate;
-                                } else if ($zone_name == $rowb['zone_name']) {
+                                }
+                                else if ($zone_name == $rowb['zone_name'])
+                                {
                                     //exit;
                                     echo "&nbsp;";
-                                } else {
+                                }
+                                else
+                                {
                                     echo $rowb['zone_name'];
                                     $zone_name = $rowb['zone_name'];
                                 }
@@ -235,14 +243,19 @@ if ($rowi['invoice_id'] == "") {
                             </td>
                             <td>
                                 <?php
-                                if ($territory_name == '') {
+                                if ($territory_name == '')
+                                {
                                     echo $rowb['territory_name'];
                                     $territory_name = $rowb['territory_name'];
                                     //$currentDate = $preDate;
-                                } else if ($territory_name == $rowb['territory_name']) {
+                                }
+                                else if ($territory_name == $rowb['territory_name'])
+                                {
                                     //exit;
                                     echo "&nbsp;";
-                                } else {
+                                }
+                                else
+                                {
                                     echo $rowb['territory_name'];
                                     $territory_name = $rowb['territory_name'];
                                 }
