@@ -11,6 +11,10 @@ if($_POST['zone_id']!="" && $_POST['territory_id']!="")
 {
    $territory="AND $tbl" . "territory_assign_district.zone_id='".$_POST['zone_id']."' AND $tbl" . "territory_assign_district.territory_id='".$_POST['territory_id']."' ";
 }
+elseif(strlen($_POST['zone_id'])==0 && $_POST['territory_id'] !="")
+{
+    $territory="AND $tbl" . "territory_assign_district.territory_id='".$_POST['territory_id']."' ";
+}
 else
 {
     $territory="";

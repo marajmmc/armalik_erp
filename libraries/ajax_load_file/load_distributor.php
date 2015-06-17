@@ -15,6 +15,7 @@ else
 {
     $territory="";
 }
+
 if($_POST['zilla_id']!="")
 {
    $zilla_id="AND zilla_id='".$_POST['zilla_id']."'";
@@ -24,8 +25,19 @@ else
     $zilla_id="";
 }
 
+if(strlen($_POST['zone_id'])>0)
+{
+   $zone_id="AND zone_id='".$_POST['zone_id']."'";
+}
+else
+{
+    $zone_id="";
+}
+
+
+
 echo "<option value=''>Select</option>";
 //echo $sql_uesr_group = "select distributor_id as fieldkey, CONCAT_WS(' - ', customer_code, distributor_name) as fieldtext from $tbl" . "distributor_info where status='Active' AND del_status='0' AND zone_id='".$_POST['zone_id']."' $territory order by distributor_name";
-$sql_uesr_group = "select distributor_id as fieldkey, distributor_name as fieldtext from $tbl" . "distributor_info where status='Active' AND del_status='0' AND zone_id='".$_POST['zone_id']."' $territory $zilla_id order by distributor_name";
+echo $sql_uesr_group = "select distributor_id as fieldkey, distributor_name as fieldtext from $tbl" . "distributor_info where status='Active' AND del_status='0' $zone_id $territory $zilla_id order by distributor_name";
 echo $db->SelectList($sql_uesr_group);
 ?>
