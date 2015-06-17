@@ -11,6 +11,8 @@ $user_id = $_SESSION['user_id'];
 $ei_id = $_SESSION['ei_id'];
 $tbl = _DB_PREFIX;
 
+print_r($_POST);
+exit;
 $maxID = "ED-".$db->getMaxID_six_digit($tbl . 'employee_designation', 'designation_id');
 $rowfield = array(
     'designation_id,' => "'$maxID',",

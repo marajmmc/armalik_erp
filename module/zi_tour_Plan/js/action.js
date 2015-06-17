@@ -188,6 +188,12 @@ function Existin_data(elm){
         });
     }
 
+    function turn_off_trigger()
+    {
+        $(document).off("change", ".territory_id");
+        $(document).off("change", ".district_id");
+    }
+
 
 
 

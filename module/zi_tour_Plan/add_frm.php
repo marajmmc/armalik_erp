@@ -6,13 +6,17 @@ require_once("../../libraries/lib/config.inc.php");
 require_once("../../libraries/lib/functions.inc.php");
 $db = new Database();
 $tbl = _DB_PREFIX;
+session_start();
+
+//echo $_SESSION['sm_id'];
+
 ?>
 <div class="row-fluid">
     <div class="span12">
         <div class="widget">
             <div class="widget-header">
                 <div class="title">
-                    <a id="dynamicTable"><?php echo 'Zone In-charge Tour Plan'; ?></a>
+                    <a id="dynamicTable"><?php echo $db->Get_Auto_TaskName(); ?></a>
                     <span class="mini-title">
 
                     </span>
@@ -133,7 +137,7 @@ $tbl = _DB_PREFIX;
                                     </select>
                                 </td>
                                 <td class="distributor_td_elm">
-                                    <select name="distributor_id[<?php echo $val;?>][1]" class="span12 distributor_id" multiple="multiple" placeholder="Distributor" validate="Require" onchange="load_dealer_fnc()">
+                                    <select name="distributor_id[<?php echo $val;?>][1][]" class="span12 distributor_id" multiple="multiple" placeholder="Distributor" validate="Require" onchange="load_dealer_fnc()">
                                         <option value="">Select</option>
 
                                     </select>
@@ -158,7 +162,7 @@ $tbl = _DB_PREFIX;
                                     </select>
                                 </td>
                                 <td class="distributor_td_elm">
-                                    <select name="distributor_id[<?php echo $val;?>][2]" class="span12 distributor_id" multiple="multiple" placeholder="Distributor" validate="Require" onchange="load_dealer_fnc()">
+                                    <select name="distributor_id[<?php echo $val;?>][2][]" class="span12 distributor_id" multiple="multiple" placeholder="Distributor" validate="Require" onchange="load_dealer_fnc()">
                                         <option value="">Select</option>
 
                                     </select>
@@ -179,7 +183,8 @@ $tbl = _DB_PREFIX;
 
 <script>
     $(document).ready(function(){
-        session_load_fnc()
+        session_load_fnc();
+        turn_off_trigger();
 
         $(document).on("change",".territory_id",function()
         {
