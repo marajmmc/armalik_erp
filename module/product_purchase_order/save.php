@@ -66,31 +66,32 @@ $total_value=$_POST["price"][$i]*$_POST["quantity"][$i];
     $db->system_event_log('', $user_id, $ei_id, $maxID, '', $tbl . 'product_purchase_order_request', 'Save', '');
 }
 
-$bonus_count = count($_POST['bonus_id']);
-for ($i = 0; $i < $bonus_count; $i++)
-{
-    $rowfield = array
-    (
-        'purchase_order_id,' => "'" . $maxID . "',",
-        'invoice_date,' => "'" . $db->date_formate($_POST["invoice_date"]) . "',",
-        'warehouse_id,' => "'" . $warehouse_id . "',",
-        'year_id,' => "'" . $_POST["year_id"] . "',",
-        'zone_id,' => "'" . $_POST["zone_id"] . "',",
-        'territory_id,' => "'" . $_POST["territory_id"] . "',",
-        'zilla_id,' => "'" . $_POST["zilla_id"] . "',",
-        'distributor_id,' => "'" . $_POST["distributor_id"] . "',",
-        'crop_id,' => "'" . $_POST["bonus_crop_id"][$i] . "',",
-        'product_type_id,' => "'" . $_POST["bonus_product_type_id"][$i] . "',",
-        'varriety_id,' => "'" . $_POST["bonus_varriety_id"][$i] . "',",
-        'pack_size,' => "'" . $_POST["bonus_pack_size"][$i] . "',",
-        'quantity,' => "'" . $_POST["bonus_quantity"][$i] . "',",
-        'status,' => "'Active',",
-        'del_status,' => "'0',",
-        'entry_by,' => "'$user_id',",
-        'entry_date' => "'" . $db->ToDayDate() . "'"
-    );
 
-    $db->data_insert($tbl . 'product_purchase_order_bonus', $rowfield);
-    $db->system_event_log('', $user_id, $ei_id, $maxID, '', $tbl . 'product_purchase_order_bonus', 'Save', '');
-}
+//$bonus_count = count($_POST['bonus_id']);
+//for ($i = 0; $i < $bonus_count; $i++)
+//{
+//    $rowfield = array
+//    (
+//        'purchase_order_id,' => "'" . $maxID . "',",
+//        'invoice_date,' => "'" . $db->date_formate($_POST["invoice_date"]) . "',",
+//        'warehouse_id,' => "'" . $warehouse_id . "',",
+//        'year_id,' => "'" . $_POST["year_id"] . "',",
+//        'zone_id,' => "'" . $_POST["zone_id"] . "',",
+//        'territory_id,' => "'" . $_POST["territory_id"] . "',",
+//        'zilla_id,' => "'" . $_POST["zilla_id"] . "',",
+//        'distributor_id,' => "'" . $_POST["distributor_id"] . "',",
+//        'crop_id,' => "'" . $_POST["bonus_crop_id"][$i] . "',",
+//        'product_type_id,' => "'" . $_POST["bonus_product_type_id"][$i] . "',",
+//        'varriety_id,' => "'" . $_POST["bonus_varriety_id"][$i] . "',",
+//        'pack_size,' => "'" . $_POST["bonus_pack_size"][$i] . "',",
+//        'quantity,' => "'" . $_POST["bonus_quantity"][$i] . "',",
+//        'status,' => "'Active',",
+//        'del_status,' => "'0',",
+//        'entry_by,' => "'$user_id',",
+//        'entry_date' => "'" . $db->ToDayDate() . "'"
+//    );
+//
+//    $db->data_insert($tbl . 'product_purchase_order_bonus', $rowfield);
+//    $db->system_event_log('', $user_id, $ei_id, $maxID, '', $tbl . 'product_purchase_order_bonus', 'Save', '');
+//}
 ?>

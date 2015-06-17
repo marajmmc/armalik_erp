@@ -249,9 +249,10 @@ function load_product_price_fnc(serial){
     });
 }
 
-function load_product_total_price(serial){
-    var price=parseInt($("#price"+serial).val());
-    var quantity=parseInt($("#quantity"+serial).val());
+function load_product_total_price(serial)
+{
+    var price=parseFloat($("#price"+serial).val());
+    var quantity=parseFloat($("#quantity"+serial).val());
     var total_price=(price*quantity);
     $("#total_price"+serial).val(total_price);
 }
@@ -311,8 +312,8 @@ function load_product_price_fnc_(serial){
 }
 
 function load_product_total_price_(serial){
-    var price=parseInt($("#price_"+serial).val());
-    var quantity=parseInt($("#quantity_"+serial).val());
+    var price=parseFloat($("#price_"+serial).val());
+    var quantity=parseFloat($("#quantity_"+serial).val());
     var total_price=(price*quantity);
     $("#total_price_"+serial).val(total_price);
 }

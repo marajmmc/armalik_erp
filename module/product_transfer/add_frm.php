@@ -48,11 +48,27 @@ if ($_SESSION['warehouse_id']) {
                         </div>
                     </div>
                     <div class="control-group">
+                        <label class="control-label">
+                            Year
+                        </label>
+                        <div class="controls">
+                            <select id="year_id" name="year_id" class="span5" validate="Require">
+                                <?php
+                                $db_fiscal_year=new Database();
+                                $db_fiscal_year->get_fiscal_year();
+                                ?>
+                            </select>
+                            <span class="help-inline">
+                                *
+                            </span>
+                        </div>
+                    </div>
+                    <div class="control-group">
                         <label class="control-label" for="from_warehouse_id">
                             From Warehouse
                         </label>
                         <div class="controls">
-                            <select id="from_warehouse_id" name="from_warehouse_id" class="span5" placeholder="Select Crop" validate="Require" onchange="load_varriety_fnc()">
+                            <select id="from_warehouse_id" name="from_warehouse_id" class="span5" placeholder="Select Crop" validate="Require" onchange="load_crop()">
                                 <?php
                                 echo "<option value=''>Select</option>";
                                 $sql_uesr_group = "select warehouse_id as fieldkey, warehouse_name as fieldtext from $tbl" . "warehouse_info where status='Active' $warehouse";

@@ -175,35 +175,35 @@ $tbl = _DB_PREFIX;
                         </table>
                         <input type='hidden' name='total_value' maxlength='50' id='total_value' class='span12'/>
                         <input type='hidden' name='txt_distributor_due_balance' maxlength='50' id='txt_distributor_due_balance' class='span12' />
-                        <h3><u>Product Bonus Information</u></h3>
-                        <div class="controls controls-row">
-                            <span class="label label label-info" style="cursor: pointer; float: right" onclick="RowIncrement_bonus()"> + Add More </span>
-                        </div>
-                        <table class="table table-condensed table-striped table-bordered table-hover no-margin" id="TaskTable_bonus">
-                            <thead>
-                                <tr>
-                                    <th style="width:10%">
-                                        Crop 
-                                    </th>
-                                    <th style="width:10%">
-                                        Product Type
-                                    </th>
-                                    <th style="width:10%">
-                                        Variety
-                                    </th>
-                                    <th style="width:10%">
-                                        Pack Size(gm)
-                                    </th>
-                                    <th style="width:10%">
-                                        Qty(pieces)
-                                    </th>
-                                    <th style="width:5%">
-                                        Action
-                                    </th>
-                                </tr>
-                            </thead>
-
-                        </table>
+                        <!--                        <h3><u>Product Bonus Information</u></h3>-->
+                        <!--                        <div class="controls controls-row">-->
+                        <!--                            <span class="label label label-info" style="cursor: pointer; float: right" onclick="RowIncrement_bonus()"> + Add More </span>-->
+                        <!--                        </div>-->
+                        <!--                        <table class="table table-condensed table-striped table-bordered table-hover no-margin" id="TaskTable_bonus">-->
+                        <!--                            <thead>-->
+                        <!--                                <tr>-->
+                        <!--                                    <th style="width:10%">-->
+                        <!--                                        Crop -->
+                        <!--                                    </th>-->
+                        <!--                                    <th style="width:10%">-->
+                        <!--                                        Product Type-->
+                        <!--                                    </th>-->
+                        <!--                                    <th style="width:10%">-->
+                        <!--                                        Variety-->
+                        <!--                                    </th>-->
+                        <!--                                    <th style="width:10%">-->
+                        <!--                                        Pack Size(gm)-->
+                        <!--                                    </th>-->
+                        <!--                                    <th style="width:10%">-->
+                        <!--                                        Qty(pieces)-->
+                        <!--                                    </th>-->
+                        <!--                                    <th style="width:5%">-->
+                        <!--                                        Action-->
+                        <!--                                    </th>-->
+                        <!--                                </tr>-->
+                        <!--                            </thead>-->
+                        <!---->
+                        <!--                        </table>-->
                     </div>
                 </div>
             </div>

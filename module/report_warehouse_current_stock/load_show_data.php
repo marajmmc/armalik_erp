@@ -23,28 +23,19 @@ else
 {
     $product_type_id = "";
 }
-if ($_POST['varriety_id'] != "")
-{
+if ($_POST['varriety_id'] != "") {
     $varriety_id = "AND $tbl" . "product_stock.varriety_id='" . $_POST['varriety_id'] . "'";
-}
-else
-{
+} else {
     $varriety_id = "";
 }
-if ($_POST['pack_size'] != "")
-{
+if ($_POST['pack_size'] != "") {
     $pack_size = "AND $tbl" . "product_stock.pack_size='" . $_POST['pack_size'] . "'";
-}
-else
-{
+} else {
     $pack_size = "";
 }
-if ($_POST['warehouse_id'] != "")
-{
+if ($_POST['warehouse_id'] != "") {
     $warehouse = "AND $tbl" . "product_stock.warehouse_id='" . $_POST['warehouse_id'] . "'";
-}
-else
-{
+} else {
     $warehouse = "";
 }
 ?>
@@ -73,15 +64,8 @@ else
                 <th style="width:5%">
                     Pack Size(gm)
                 </th>
-<!--                <th style="width:5%; text-align: right">
-                    Issued Qty(pieces)
-                </th>-->
-
                 <th style="width:5%; text-align: right">
-                    Transfer Qty(pieces)
-                </th>
-                <th style="width:5%; text-align: right">
-                    Transfer Received Qty(pieces)
+                    Purchase Qty(pieces)
                 </th>
                 <th style="width:5%; text-align: right">
                     Delivery Qty(pieces)
@@ -96,59 +80,89 @@ else
                     Access Qty(pieces)
                 </th>
                 <th style="width:5%; text-align: right">
-                    Return Qty(pieces)
-                </th>
-                <th style="width:5%; text-align: right">
                     Current Stock
                 </th>
             </tr>
         </thead>
         <tbody>
             <?php
-            $INQ = '0';
-            $CQ = '0';
-            $TQ = '0';
-            $TRQ = '0';
-            $DQ = '0';
-            $BQ = '0';
-            $DaQ = '0';
-            $AcQ = '0';
-            $ReQ = '0';
+            $current_stock=0;
             $warehouse_name = '';
             $crop_name = '';
             $product_type = '';
             $sql = "SELECT
-                        $tbl" . "product_stock.id,
-                        $tbl" . "warehouse_info.warehouse_name,
-                        $tbl" . "warehouse_info.warehouse_id,
-                        $tbl" . "crop_info.crop_name,
-                        $tbl" . "product_type.product_type,
-                        $tbl" . "varriety_info.varriety_name,
-                        $tbl" . "product_pack_size.pack_size_name,
-                        $tbl" . "product_stock.crop_id,
-                        $tbl" . "product_stock.product_type_id,
-                        $tbl" . "product_stock.varriety_id,
-                        $tbl" . "product_stock.pack_size,
-                        $tbl" . "product_stock.inventory_quantity,
-                        $tbl" . "product_stock.current_stock_qunatity,
-                        $tbl" . "product_stock.transfer_quantity,
-                        $tbl" . "product_stock.transert_receive_quantity,
-                        $tbl" . "product_stock.delivery_quantity,
-                        $tbl" . "product_stock.bonus_quantity,
-                        $tbl" . "product_stock.damage_quantity,
-                        $tbl" . "product_stock.access_quantity,
-                        $tbl" . "product_stock.return_quantity
-                    FROM
-                        $tbl" . "product_stock
-                        LEFT JOIN $tbl" . "warehouse_info ON $tbl" . "warehouse_info.warehouse_id = $tbl" . "product_stock.warehouse_id
-                        LEFT JOIN $tbl" . "crop_info ON $tbl" . "crop_info.crop_id = $tbl" . "product_stock.crop_id
-                        LEFT JOIN $tbl" . "product_type ON $tbl" . "product_type.product_type_id = $tbl" . "product_stock.product_type_id
-                        LEFT JOIN $tbl" . "varriety_info ON $tbl" . "varriety_info.varriety_id = $tbl" . "product_stock.varriety_id
-                        LEFT JOIN $tbl" . "product_pack_size ON $tbl" . "product_pack_size.pack_size_id = $tbl" . "product_stock.pack_size
-                    WHERE
-                        $tbl" . "product_stock.del_status='0'
+                        pi.id,
+                        ait_warehouse_info.warehouse_name,
+                        ait_crop_info.crop_name,
+                        ait_product_type.product_type,
+                        ait_varriety_info.varriety_name,
+                        ait_product_pack_size.pack_size_name,
+                        pi.crop_id,
+                        pi.product_type_id,
+                        pi.varriety_id,
+                        pi.pack_size,
+                        (
+                        SELECT SUM(ppi.quantity) FROM ait_product_purchase_info AS ppi
+                        WHERE
+                        ppi.warehouse_id=pi.warehouse_id AND
+                        ppi.crop_id=pi.crop_id AND
+                        ppi.product_type_id = pi.product_type_id AND
+                        ppi.varriety_id = pi.varriety_id AND
+                        ppi.pack_size = pi.pack_size
+                        ) AS total_product,
+                        (
+                        SELECT SUM(ppoi.approved_quantity) FROM ait_product_purchase_order_invoice AS ppoi
+                        WHERE
+                        ppoi.warehouse_id=pi.warehouse_id AND
+                        ppoi.crop_id=pi.crop_id AND
+                        ppoi.product_type_id = pi.product_type_id AND
+                        ppoi.varriety_id = pi.varriety_id AND
+                        ppoi.pack_size = pi.pack_size
+                        ) AS total_delivery,
+                        (
+                        SELECT SUM(ppob.quantity) FROM ait_product_purchase_order_bonus AS ppob
+                        WHERE
+                        ppob.warehouse_id=pi.warehouse_id AND
+                        ppob.crop_id=pi.crop_id AND
+                        ppob.product_type_id = pi.product_type_id AND
+                        ppob.varriety_id = pi.varriety_id AND
+                        ppob.pack_size = pi.pack_size
+                        ) AS total_bonus,
+                        (
+                        SELECT SUM(pin.damage_quantity) FROM ait_product_inventory AS pin
+                        WHERE
+                        pin.warehouse_id=pi.warehouse_id AND
+                        pin.crop_id=pi.crop_id AND
+                        pin.product_type_id = pi.product_type_id AND
+                        pin.varriety_id = pi.varriety_id AND
+                        pin.pack_size = pi.pack_size
+                        ) AS total_short_qnty,
+                        (
+                        SELECT SUM(pin.access_quantity) FROM ait_product_inventory AS pin
+                        WHERE
+                        pin.warehouse_id=pi.warehouse_id AND
+                        pin.crop_id=pi.crop_id AND
+                        pin.product_type_id = pi.product_type_id AND
+                        pin.varriety_id = pi.varriety_id AND
+                        pin.pack_size = pi.pack_size
+                        ) AS total_access_qnty
+                        FROM
+                        ait_product_info AS pi
+                        LEFT JOIN ait_warehouse_info ON ait_warehouse_info.warehouse_id = pi.warehouse_id
+                        LEFT JOIN ait_crop_info ON ait_crop_info.crop_id = pi.crop_id
+                        LEFT JOIN ait_product_type ON ait_product_type.product_type_id = pi.product_type_id
+                        LEFT JOIN ait_varriety_info ON ait_varriety_info.varriety_id = pi.varriety_id
+                        LEFT JOIN ait_product_pack_size ON ait_product_pack_size.pack_size_id = pi.pack_size
+                        WHERE
+                        pi.del_status=0
                         $crop_id $product_type_id $varriety_id $pack_size $warehouse
-                    ORDER BY $tbl" . "product_stock.warehouse_id, $tbl" . "product_stock.crop_id, $tbl" . "product_stock.product_type_id, $tbl" . "product_stock.varriety_id,$tbl" . "product_stock.pack_size 
+                        GROUP BY
+                        pi.crop_id, pi.product_type_id, pi.varriety_id, pi.pack_size
+                        ORDER BY
+                        ait_warehouse_info.warehouse_id,
+                        ait_crop_info.crop_id,
+                        ait_product_type.product_type_id,
+                        ait_product_pack_size.pack_size_id
 ";
             if ($db->open()) {
                 $result = $db->query($sql);
@@ -159,23 +173,11 @@ else
                     } else {
                         $rowcolor = "gradeA success";
                     }
-                    $INQ = $INQ + $result_array['inventory_quantity'];
-                    $CQ = $CQ + $result_array['current_stock_qunatity'];
-                    $TQ = $TQ + $result_array['transfer_quantity'];
-                    $TRQ = $TRQ + $result_array['transert_receive_quantity'];
-                    $DQ = $DQ + $result_array['delivery_quantity'];
-                    $BQ = $BQ + $result_array['bonus_quantity'];
-                    $DaQ = $DaQ + $result_array['damage_quantity'];
-                    $AcQ = $AcQ + $result_array['access_quantity'];
-                    $ReQ = $ReQ + $result_array['return_quantity'];
-                    if ($TQ == "0" && $TRQ == "0" && $DQ == "0" && $BQ == "0" && $DaQ == "0" && $AcQ == "0" && $ReQ == "0") {
-                        
-                    } else {
+                    $current_stock=($result_array['total_product']-(($result_array['total_delivery']+$result_array['total_bonus']+$result_array['total_access_qnty'])-$result_array['total_short_qnty']));
                         ?>
                         <tr class="<?php echo $rowcolor; ?> pointer" id="tr_id<?php echo $i; ?>" onclick="get_rowID('<?php echo $result_array["id"] ?>', '<?php echo $i; ?>')">
                             <td>
                                 <?php
-                                echo $result_array['warehouse_id'];
                                 if ($warehouse_name == '') {
                                     echo $result_array['warehouse_name'];
                                     $warehouse_name = $result_array['warehouse_name'];
@@ -189,9 +191,8 @@ else
                                 }
                                 ?>
                             </td>
-                            <td>
+                           <td>
                                 <?php
-                                echo $result_array['crop_id'];
                                 if ($crop_name == '') {
                                     echo $result_array['crop_name'];
                                     $crop_name = $result_array['crop_name'];
@@ -207,7 +208,6 @@ else
                             </td>
                             <td>
                                 <?php
-                                echo $result_array['product_type_id'];
                                 if ($product_type == '') {
                                     echo $result_array['product_type'];
                                     $product_type = $result_array['product_type'];
@@ -221,38 +221,34 @@ else
                                 }
                                 ?>
                             </td>
-                            <td><?php echo $result_array['varriety_id'].'-'.$result_array['varriety_name']; ?></td>
-                            <td><?php echo $result_array['pack_size'].'-'.$result_array['pack_size_name']; ?></td>
-                            <!--<td style="text-align: right;"><?php // echo $result_array['inventory_quantity'];  ?></td>-->
-                            <td style="text-align: right;"><?php echo $result_array['transfer_quantity']; ?></td>
-                            <td style="text-align: right;"><?php echo $result_array['transert_receive_quantity']; ?></td>
-                            <td style="text-align: right;"><?php echo $result_array['delivery_quantity']; ?></td>
-                            <td style="text-align: right;"><?php echo $result_array['bonus_quantity']; ?></td>
-                            <td style="text-align: right;"><?php echo $result_array['damage_quantity']; ?></td>
-                            <td style="text-align: right;"><?php echo $result_array['access_quantity']; ?></td>
-                            <td style="text-align: right;"><?php echo $result_array['return_quantity']; ?></td>
-                            <td style="text-align: right;"><?php echo $result_array['current_stock_qunatity']; ?></td>
+                            <td><?php echo $result_array['varriety_name']; ?></td>
+                            <td><?php echo $result_array['pack_size_name']; ?></td>
+                            <td style="text-align: right;"><?php echo $result_array['total_product']; ?></td>
+                            <td style="text-align: right;"><?php echo $result_array['total_delivery']; ?></td>
+                            <td style="text-align: right;"><?php echo $result_array['total_bonus']; ?></td>
+                            <td style="text-align: right;"><?php echo $result_array['total_short_qnty']; ?></td>
+                            <td style="text-align: right;"><?php echo $result_array['total_access_qnty']; ?></td>
+                            <td style="text-align: right;"><?php echo $current_stock; ?></td>
                         </tr>
                         <?php
                         ++$i;
                     }
                 }
-            }
             ?>
-        <tfoot>
-            <tr>
-                <td colspan="5" style="text-align: right;">Total: </td>
-                <!--<td style="text-align: right;"><?php // echo number_format($INQ, 2)  ?></td>-->
-                <td style="text-align: right;"><?php echo number_format($TQ, 2) ?></td>
-                <td style="text-align: right;"><?php echo number_format($TRQ, 2) ?></td>
-                <td style="text-align: right;"><?php echo number_format($DQ, 2) ?></td>
-                <td style="text-align: right;"><?php echo number_format($BQ, 2) ?></td>
-                <td style="text-align: right;"><?php echo number_format($DaQ, 2) ?></td>
-                <td style="text-align: right;"><?php echo number_format($AcQ, 2) ?></td>
-                <td style="text-align: right;"><?php echo number_format($ReQ, 2) ?></td>
-                <td style="text-align: right;"><?php echo number_format($CQ, 2); ?></td>
-            </tr>
-        </tfoot>
+<!--        <tfoot>-->
+<!--            <tr>-->
+<!--                <td colspan="5" style="text-align: right;">Total: </td>-->
+<!--                <!--<td style="text-align: right;">--><?php //// echo number_format($INQ, 2)  ?><!--</td>-->
+<!--                <td style="text-align: right;">--><?php //echo number_format($TQ, 2) ?><!--</td>-->
+<!--                <td style="text-align: right;">--><?php //echo number_format($TRQ, 2) ?><!--</td>-->
+<!--                <td style="text-align: right;">--><?php //echo number_format($DQ, 2) ?><!--</td>-->
+<!--                <td style="text-align: right;">--><?php //echo number_format($BQ, 2) ?><!--</td>-->
+<!--                <td style="text-align: right;">--><?php //echo number_format($DaQ, 2) ?><!--</td>-->
+<!--                <td style="text-align: right;">--><?php //echo number_format($AcQ, 2) ?><!--</td>-->
+<!--                <td style="text-align: right;">--><?php //echo number_format($ReQ, 2) ?><!--</td>-->
+<!--                <td style="text-align: right;">--><?php //echo number_format($CQ, 2); ?><!--</td>-->
+<!--            </tr>-->
+<!--        </tfoot>-->
         </tbody>
     </table>
     <?php include_once '../../libraries/print_page/Print_footer.php'; ?>

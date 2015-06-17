@@ -39,8 +39,10 @@ for ($i = 0; $i < $count; $i++) {
     }
 }
 
-if ($valid_po && $valid_bonus)
-{
+if ($valid_po && $valid_bonus) {
+
+
+
     $count = count($_POST['id']);
 
     for ($i = 0; $i < $count; $i++) {

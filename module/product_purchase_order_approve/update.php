@@ -9,6 +9,8 @@ require_once("../../libraries/lib/functions.inc.php");
 $db = new Database();
 $dbchk = new Database();
 $dbud = new Database();
+$db_bonus = new Database();
+$db_bonus_product = new Database();
 $user_id = $_SESSION['user_id'];
 $employee_id = $_SESSION['employee_id'];
 $tbl = _DB_PREFIX;
@@ -47,6 +49,7 @@ if ($chk_inv['purchase_order_id'] != "")
 else
 {
     $valid_po = TRUE;
+    $valid_bonus = TRUE;
     $count_po = count($_POST['id']);
     for ($i = 0; $i < $count_po; $i++)
     {
@@ -56,19 +59,67 @@ else
             $valid_po = FALSE;
             break;
         }
+
+        $quantity_gm=($_POST["approved_quantity"][$i]*$_POST['pack_size_name'][$i]);
+        $bonus=$db_bonus->single_data_w($tbl."bonus_role_setup", "bonus_rule_id, from_quantity, to_quantity", "from_quantity='$quantity_gm' AND crop_id='".$_POST["crop_id"][$i]."' AND product_type_id='".$_POST["product_type_id"][$i]."' AND varriety_id='".$_POST["varriety_id"][$i]."' AND status='Active' AND del_status=0");
+        //$from_quantity=$bonus['from_quantity'];
+        //$to_quantity=$bonus['to_quantity'];
+        $sql_bonus_product="SELECT
+                                ait_bonus_role_setup_details.id,
+                                ait_bonus_role_setup_details.bonus_rule_id,
+                                ait_bonus_role_setup_details.crop_id,
+                                ait_bonus_role_setup_details.product_type_id,
+                                ait_bonus_role_setup_details.varriety_id,
+                                ait_bonus_role_setup_details.pack_size,
+                                ait_bonus_role_setup_details.bonus_quantity,
+                                ait_bonus_role_setup_details.`status`,
+                                ait_bonus_role_setup_details.del_status,
+                                ait_crop_info.crop_name,
+                                ait_product_type.product_type,
+                                ait_varriety_info.varriety_name,
+                                ait_product_pack_size.pack_size_name
+                            FROM
+                                ait_bonus_role_setup_details
+                                LEFT JOIN ait_crop_info ON ait_crop_info.crop_id = ait_bonus_role_setup_details.crop_id
+                                LEFT JOIN ait_product_type ON ait_product_type.product_type_id = ait_bonus_role_setup_details.product_type_id
+                                LEFT JOIN ait_varriety_info ON ait_varriety_info.varriety_id = ait_bonus_role_setup_details.varriety_id
+                                LEFT JOIN ait_product_pack_size ON ait_product_pack_size.pack_size_id = ait_bonus_role_setup_details.pack_size
+                            WHERE
+                                ait_bonus_role_setup_details.bonus_rule_id='".$bonus['bonus_rule_id']."'
+                                AND ait_bonus_role_setup_details.crop_id='".$_POST["crop_id"][$i]."'
+                                AND ait_bonus_role_setup_details.product_type_id='".$_POST["product_type_id"][$i]."'
+                                AND ait_bonus_role_setup_details.varriety_id='".$_POST["varriety_id"][$i]."'
+                                AND ait_bonus_role_setup_details.`status`='Active'
+                                AND ait_bonus_role_setup_details.del_status=0
+
+        ";
+        if($db_bonus_product->open())
+        {
+            $result_bonus=$db_bonus_product->query($sql_bonus_product);
+            while($row=$db_bonus_product->fetchAssoc($result_bonus))
+            {
+                $qnty = $db->get_product_stock($_POST["year_id"],$_POST["warehouse_id"], $row['crop_id'], $row['product_type_id'], $row['varriety_id'], $row['pack_size'], $row['bonus_quantity']);
+                if (!$qnty)
+                {
+                    $valid_bonus = FALSE;
+                    break;
+                }
+            }
+        }
+
     }
 
-    $valid_bonus = TRUE;
-    $bonus_count = count($_POST['bonus_id']);
-    for ($i = 0; $i < $bonus_count; $i++)
-    {
-        $qnty = $db->get_product_stock($_POST["year_id"],$_POST["warehouse_id"], $_POST["bonus_crop_id"][$i], $_POST["bonus_product_type_id"][$i], $_POST["bonus_varriety_id"][$i], $_POST["bonus_pack_size"][$i], $_POST["bonus_quantity"][$i]);
-        if (!$qnty)
-        {
-            $valid_bonus = FALSE;
-            break;
-        }
-    }
+    //    $valid_bonus = TRUE;
+    //    $bonus_count = count($_POST['bonus_id']);
+    //    for ($i = 0; $i < $bonus_count; $i++)
+    //    {
+    //        $qnty = $db->get_product_stock($_POST["year_id"],$_POST["warehouse_id"], $_POST["bonus_crop_id"][$i], $_POST["bonus_product_type_id"][$i], $_POST["bonus_varriety_id"][$i], $_POST["bonus_pack_size"][$i], $_POST["bonus_quantity"][$i]);
+    //        if (!$qnty)
+    //        {
+    //            $valid_bonus = FALSE;
+    //            break;
+    //        }
+    //    }
     if ($valid_po && $valid_bonus)
     {
 
@@ -136,7 +187,7 @@ else
                 $pid = $db->single_data_w($tbl . 'product_stock', "count(id) as product_id, id", "year_id='$year_id' AND crop_id='" . $_POST['crop_id'][$i] . "' AND product_type_id='" . $_POST['product_type_id'][$i] . "' AND pack_size='" . $_POST['pack_size'][$i] . "' AND warehouse_id='" . $warehouse_id . "'");
                 if ($pid['product_id'] != 0)
                 {
-                    echo $mSQL_task = "update `$tbl" . "product_stock` set
+                    $mSQL_task = "update `$tbl" . "product_stock` set
                                             `delivery_quantity`=delivery_quantity+'" . $_POST["approved_quantity"][$i] . "',
                                             `current_stock_qunatity`=current_stock_qunatity-'" . $_POST["approved_quantity"][$i] . "',
                                             `warehouse_id`='$warehouse_id',
@@ -182,6 +233,73 @@ else
                 }
 
                 ///////////  END PRODUCT STOCK UPDATE ////////////////////
+
+                ///////////  START PRODUCT BONUS UPDATE ////////////////////
+
+                $quantity_gm=($_POST["approved_quantity"][$i]*$_POST['pack_size_name'][$i]);
+                $bonus=$db_bonus->single_data_w($tbl."bonus_role_setup", "bonus_rule_id, from_quantity, to_quantity", "from_quantity='$quantity_gm' AND crop_id='".$_POST["crop_id"][$i]."' AND product_type_id='".$_POST["product_type_id"][$i]."' AND varriety_id='".$_POST["varriety_id"][$i]."' AND status='Active' AND del_status=0");
+                //$from_quantity=$bonus['from_quantity'];
+                //$to_quantity=$bonus['to_quantity'];
+                echo $sql_bonus_product="SELECT
+                                ait_bonus_role_setup_details.id,
+                                ait_bonus_role_setup_details.bonus_rule_id,
+                                ait_bonus_role_setup_details.crop_id,
+                                ait_bonus_role_setup_details.product_type_id,
+                                ait_bonus_role_setup_details.varriety_id,
+                                ait_bonus_role_setup_details.pack_size,
+                                ait_bonus_role_setup_details.bonus_quantity,
+                                ait_bonus_role_setup_details.`status`,
+                                ait_bonus_role_setup_details.del_status,
+                                ait_crop_info.crop_name,
+                                ait_product_type.product_type,
+                                ait_varriety_info.varriety_name,
+                                ait_product_pack_size.pack_size_name
+                            FROM
+                                ait_bonus_role_setup_details
+                                LEFT JOIN ait_crop_info ON ait_crop_info.crop_id = ait_bonus_role_setup_details.crop_id
+                                LEFT JOIN ait_product_type ON ait_product_type.product_type_id = ait_bonus_role_setup_details.product_type_id
+                                LEFT JOIN ait_varriety_info ON ait_varriety_info.varriety_id = ait_bonus_role_setup_details.varriety_id
+                                LEFT JOIN ait_product_pack_size ON ait_product_pack_size.pack_size_id = ait_bonus_role_setup_details.pack_size
+                            WHERE
+                                ait_bonus_role_setup_details.bonus_rule_id='".$bonus['bonus_rule_id']."'
+                                AND ait_bonus_role_setup_details.crop_id='".$_POST["crop_id"][$i]."'
+                                AND ait_bonus_role_setup_details.product_type_id='".$_POST["product_type_id"][$i]."'
+                                AND ait_bonus_role_setup_details.varriety_id='".$_POST["varriety_id"][$i]."'
+                                AND ait_bonus_role_setup_details.`status`='Active'
+                                AND ait_bonus_role_setup_details.del_status=0
+                ";
+                if($db_bonus_product->open())
+                {
+                    $result_bonus=$db_bonus_product->query($sql_bonus_product);
+                    while($row=$db_bonus_product->fetchAssoc($result_bonus))
+                    {
+                        $rowfield = array
+                        (
+                            'invoice_id,' => "'" . $maxID . "',",
+                            'purchase_order_id,' => "'" . $_POST['purchase_order_id'] . "',",
+                            'invoice_date,' => "'" . $db->date_formate($_POST["invoice_date"]) . "',",
+                            'year_id,' => "'" . $_POST["year_id"] . "',",
+                            'warehouse_id,' => "'" . $_POST["warehouse_id"] . "',",
+                            'zone_id,' => "'" . $_POST["zone_id"] . "',",
+                            'territory_id,' => "'" . $_POST["territory_id"] . "',",
+                            'zilla_id,' => "'" . $_POST["zilla_id"] . "',",
+                            'distributor_id,' => "'" . $_POST["distributor_id"] . "',",
+                            'crop_id,' => "'" . $row['crop_id'] . "',",
+                            'product_type_id,' => "'" . $row['product_type_id'] . "',",
+                            'varriety_id,' => "'" . $row['varriety_id'] . "',",
+                            'pack_size,' => "'" . $row['pack_size'] . "',",
+                            'quantity,' => "'" . $row['bonus_quantity'] . "',",
+                            'bonus_rule_id,' => "'" . $row['id'] . "',",
+                            'status,' => "'Active',",
+                            'del_status,' => "'0',",
+                            'entry_by,' => "'$user_id',",
+                            'entry_date' => "'" . $db->ToDayDate() . "'"
+                        );
+                        $db->data_insert($tbl . 'product_purchase_order_bonus', $rowfield);
+                        $db->system_event_log('', $user_id, $employee_id, $maxID, '', $tbl . 'product_purchase_order_bonus', 'Save', '');
+                    }
+                }
+                ///////////  END PRODUCT BONUS UPDATE ////////////////////
             }
 
 
@@ -226,115 +344,141 @@ else
             ///////////  END DISTRIBUTOR UPDATE ////////////////////
             ///////////  START BONUS TABLE UPDATE ////////////////////
 
-            $bonus_count = count($_POST['bonus_id']);
-            for ($i = 0; $i < $bonus_count; $i++)
-            {
-                if ($_POST['bonus_id'][$i] != "")
-                {
-                    $rowfield = array
-                    (
-                        'invoice_id' => "'" . $maxID . "'",
-                        'invoice_date' => "'" . $db->date_formate($_POST["invoice_date"]) . "'",
-                        'warehouse_id' => "'" . $_POST["warehouse_id"] . "'",
-                        'year_id' => "'" . $_POST["year_id"] . "'",
-                        'zone_id' => "'" . $_POST["zone_id"] . "'",
-                        'territory_id' => "'" . $_POST["territory_id"] . "'",
-                        'zilla_id' => "'" . $_POST["zilla_id"] . "'",
-                        'distributor_id' => "'" . $_POST["distributor_id"] . "'",
-                        'crop_id' => "'" . $_POST["bonus_crop_id"][$i] . "'",
-                        'product_type_id' => "'" . $_POST["bonus_product_type_id"][$i] . "'",
-                        'varriety_id' => "'" . $_POST["bonus_varriety_id"][$i] . "'",
-                        'pack_size' => "'" . $_POST["bonus_pack_size"][$i] . "'",
-                        'quantity' => "'" . $_POST["bonus_quantity"][$i] . "'",
-                        'status' => "'Active'",
-                        'del_status' => 0,
-                        'entry_by' => "'$user_id'",
-                        'entry_date' => "'" . $db->ToDayDate() . "'"
-                    );
-                    $wherefield = array('id' => "'" . $_POST["bonus_id"][$i] . "'");
-                    $db->data_update($tbl . 'product_purchase_order_bonus', $rowfield, $wherefield);
-                    $db->system_event_log('', $user_id, $employee_id, $maxID, '', $tbl . 'product_purchase_order_bonus', 'Save', '');
-                }
-                else
-                {
-                    $rowfield = array
-                    (
-                        'invoice_id,' => "'" . $maxID . "',",
-                        'purchase_order_id,' => "'" . $_POST['purchase_order_id'] . "',",
-                        'invoice_date,' => "'" . $db->date_formate($_POST["invoice_date"]) . "',",
-                        'year_id,' => "'" . $_POST["year_id"] . "',",
-                        'warehouse_id,' => "'" . $_POST["warehouse_id"] . "',",
-                        'zone_id,' => "'" . $_POST["zone_id"] . "',",
-                        'territory_id,' => "'" . $_POST["territory_id"] . "',",
-                        'zilla_id,' => "'" . $_POST["zilla_id"] . "',",
-                        'distributor_id,' => "'" . $_POST["distributor_id"] . "',",
-                        'crop_id,' => "'" . $_POST["bonus_crop_id"][$i] . "',",
-                        'product_type_id,' => "'" . $_POST["bonus_product_type_id"][$i] . "',",
-                        'varriety_id,' => "'" . $_POST["bonus_varriety_id"][$i] . "',",
-                        'pack_size,' => "'" . $_POST["bonus_pack_size"][$i] . "',",
-                        'quantity,' => "'" . $_POST["bonus_quantity"][$i] . "',",
-                        'status,' => "'Active',",
-                        'del_status,' => "'0',",
-                        'entry_by,' => "'$user_id',",
-                        'entry_date' => "'" . $db->ToDayDate() . "'"
-                    );
-
-                    $db->data_insert($tbl . 'product_purchase_order_bonus', $rowfield);
-                    $db->system_event_log('', $user_id, $employee_id, $maxID, '', $tbl . 'product_purchase_order_bonus', 'Save', '');
-                }
-            }
-
-            $bonus_count = count($_POST['bonus_id']);
-            for ($i = 0; $i < $bonus_count; $i++)
-            {
-                $pid = $db->single_data_w($tbl . 'product_stock', "count(id) as product_id", "year_id='$year_id' AND crop_id='" . $_POST['bonus_crop_id'][$i] . "' AND product_type_id='" . $_POST['bonus_product_type_id'][$i] . "' AND pack_size='" . $_POST['bonus_pack_size'][$i] . "' AND warehouse_id='" . $warehouse_id . "'");
-                if ($pid['product_id'] != 0)
-                {
-                    echo $mSQL_task = "update `$tbl" . "product_stock` set
-                                            `bonus_quantity`=bonus_quantity+'" . $_POST["bonus_quantity"][$i] . "',
-                                            `current_stock_qunatity`=current_stock_qunatity-'" . $_POST["bonus_quantity"][$i] . "',
-                                            `status`='Active',
-                                            `del_status`='0',
-                                            `entry_by`='" . $user_id . "',
-                                            `entry_date`='" . $db->ToDayDate() . "'
-                                        where
-                                            crop_id='" . $_POST['bonus_crop_id'][$i] . "'
-                                            AND product_type_id='" . $_POST['bonus_product_type_id'][$i] . "'
-                                            AND varriety_id='" . $_POST['bonus_varriety_id'][$i] . "'
-                                            AND pack_size='" . $_POST['bonus_pack_size'][$i] . "'
-                                            AND warehouse_id='$warehouse_id'
-                                            AND year_id='$year_id'
-                                        ";
-
-                    if ($db->open())
-                    {
-                        $db->query($mSQL_task);
-                        $db->freeResult();
-                    }
-                    $db->system_event_log('', $user_id, $employee_id, $maxID, '', $tbl . 'product_stock', 'Update', '');
-                }
-                else
-                {
-                    $rowfield = array
-                    (
-                        'year_id,' => "'" . $year_id . "',",
-                        'warehouse_id,' => "'" . $warehouse_id . "',",
-                        'crop_id,' => "'" . $_POST["bonus_crop_id"][$i] . "',",
-                        'product_type_id,' => "'" . $_POST["bonus_product_type_id"][$i] . "',",
-                        'varriety_id,' => "'" . $_POST["bonus_varriety_id"][$i] . "',",
-                        'pack_size,' => "'" . $_POST["bonus_pack_size"][$i] . "',",
-                        'bonus_quantity,' => "bonus_quantity+'" . $_POST["bonus_quantity"][$i] . "',",
-                        'current_stock_qunatity,' => "current_stock_qunatity-'" . $_POST["bonus_quantity"][$i] . "',",
-                        'status,' => "'Active',",
-                        'del_status,' => "'0',",
-                        'entry_by,' => "'$user_id',",
-                        'entry_date' => "'" . $db->ToDayDate() . "'"
-                    );
-
-                    $db->data_insert($tbl . 'product_stock', $rowfield);
-                    $db->system_event_log('', $user_id, $employee_id, '', '', $tbl . 'product_stock', 'Save', '');
-                }
-            }
+//            $bonus_count = count($_POST['bonus_id']);
+//            for ($i = 0; $i < $bonus_count; $i++)
+//            {
+//                $rowfield = array
+//                (
+//                    'invoice_id,' => "'" . $maxID . "',",
+//                    'purchase_order_id,' => "'" . $_POST['purchase_order_id'] . "',",
+//                    'invoice_date,' => "'" . $db->date_formate($_POST["invoice_date"]) . "',",
+//                    'year_id,' => "'" . $_POST["year_id"] . "',",
+//                    'warehouse_id,' => "'" . $_POST["warehouse_id"] . "',",
+//                    'zone_id,' => "'" . $_POST["zone_id"] . "',",
+//                    'territory_id,' => "'" . $_POST["territory_id"] . "',",
+//                    'zilla_id,' => "'" . $_POST["zilla_id"] . "',",
+//                    'distributor_id,' => "'" . $_POST["distributor_id"] . "',",
+//                    'crop_id,' => "'" . $_POST["bonus_crop_id"][$i] . "',",
+//                    'product_type_id,' => "'" . $_POST["bonus_product_type_id"][$i] . "',",
+//                    'varriety_id,' => "'" . $_POST["bonus_varriety_id"][$i] . "',",
+//                    'pack_size,' => "'" . $_POST["bonus_pack_size"][$i] . "',",
+//                    'quantity,' => "'" . $_POST["bonus_quantity"][$i] . "',",
+//                    'bonus_rule_id,' => "'" . $_POST["bonus_id"][$i] . "',",
+//                    'status,' => "'Active',",
+//                    'del_status,' => "'0',",
+//                    'entry_by,' => "'$user_id',",
+//                    'entry_date' => "'" . $db->ToDayDate() . "'"
+//                );
+//
+//                $db->data_insert($tbl . 'product_purchase_order_bonus', $rowfield);
+//                $db->system_event_log('', $user_id, $employee_id, $maxID, '', $tbl . 'product_purchase_order_bonus', 'Save', '');
+//
+//                //                if ($_POST['bonus_id'][$i] != "")
+//                //                {
+//                //                    $rowfield = array
+//                //                    (
+//                //                        'invoice_id' => "'" . $maxID . "'",
+//                //                        'invoice_date' => "'" . $db->date_formate($_POST["invoice_date"]) . "'",
+//                //                        'warehouse_id' => "'" . $_POST["warehouse_id"] . "'",
+//                //                        'year_id' => "'" . $_POST["year_id"] . "'",
+//                //                        'zone_id' => "'" . $_POST["zone_id"] . "'",
+//                //                        'territory_id' => "'" . $_POST["territory_id"] . "'",
+//                //                        'zilla_id' => "'" . $_POST["zilla_id"] . "'",
+//                //                        'distributor_id' => "'" . $_POST["distributor_id"] . "'",
+//                //                        'crop_id' => "'" . $_POST["bonus_crop_id"][$i] . "'",
+//                //                        'product_type_id' => "'" . $_POST["bonus_product_type_id"][$i] . "'",
+//                //                        'varriety_id' => "'" . $_POST["bonus_varriety_id"][$i] . "'",
+//                //                        'pack_size' => "'" . $_POST["bonus_pack_size"][$i] . "'",
+//                //                        'quantity' => "'" . $_POST["bonus_quantity"][$i] . "'",
+//                //                        'status' => "'Active'",
+//                //                        'del_status' => 0,
+//                //                        'entry_by' => "'$user_id'",
+//                //                        'entry_date' => "'" . $db->ToDayDate() . "'"
+//                //                    );
+//                //                    $wherefield = array('id' => "'" . $_POST["bonus_id"][$i] . "'");
+//                //                    $db->data_update($tbl . 'product_purchase_order_bonus', $rowfield, $wherefield);
+//                //                    $db->system_event_log('', $user_id, $employee_id, $maxID, '', $tbl . 'product_purchase_order_bonus', 'Save', '');
+//                //                }
+//                //                else
+//                //                {
+//                //                    $rowfield = array
+//                //                    (
+//                //                        'invoice_id,' => "'" . $maxID . "',",
+//                //                        'purchase_order_id,' => "'" . $_POST['purchase_order_id'] . "',",
+//                //                        'invoice_date,' => "'" . $db->date_formate($_POST["invoice_date"]) . "',",
+//                //                        'year_id,' => "'" . $_POST["year_id"] . "',",
+//                //                        'warehouse_id,' => "'" . $_POST["warehouse_id"] . "',",
+//                //                        'zone_id,' => "'" . $_POST["zone_id"] . "',",
+//                //                        'territory_id,' => "'" . $_POST["territory_id"] . "',",
+//                //                        'zilla_id,' => "'" . $_POST["zilla_id"] . "',",
+//                //                        'distributor_id,' => "'" . $_POST["distributor_id"] . "',",
+//                //                        'crop_id,' => "'" . $_POST["bonus_crop_id"][$i] . "',",
+//                //                        'product_type_id,' => "'" . $_POST["bonus_product_type_id"][$i] . "',",
+//                //                        'varriety_id,' => "'" . $_POST["bonus_varriety_id"][$i] . "',",
+//                //                        'pack_size,' => "'" . $_POST["bonus_pack_size"][$i] . "',",
+//                //                        'quantity,' => "'" . $_POST["bonus_quantity"][$i] . "',",
+//                //                        'status,' => "'Active',",
+//                //                        'del_status,' => "'0',",
+//                //                        'entry_by,' => "'$user_id',",
+//                //                        'entry_date' => "'" . $db->ToDayDate() . "'"
+//                //                    );
+//                //
+//                //                    $db->data_insert($tbl . 'product_purchase_order_bonus', $rowfield);
+//                //                    $db->system_event_log('', $user_id, $employee_id, $maxID, '', $tbl . 'product_purchase_order_bonus', 'Save', '');
+//                //                }
+//            }
+//
+//            $bonus_count = count($_POST['bonus_id']);
+//            for ($i = 0; $i < $bonus_count; $i++)
+//            {
+//                $pid = $db->single_data_w($tbl . 'product_stock', "count(id) as product_id", "year_id='$year_id' AND crop_id='" . $_POST['bonus_crop_id'][$i] . "' AND product_type_id='" . $_POST['bonus_product_type_id'][$i] . "' AND pack_size='" . $_POST['bonus_pack_size'][$i] . "' AND warehouse_id='" . $warehouse_id . "'");
+//                if ($pid['product_id'] != 0)
+//                {
+//                    echo $mSQL_task = "update `$tbl" . "product_stock` set
+//                                            `bonus_quantity`=bonus_quantity+'" . $_POST["bonus_quantity"][$i] . "',
+//                                            `current_stock_qunatity`=current_stock_qunatity-'" . $_POST["bonus_quantity"][$i] . "',
+//                                            `status`='Active',
+//                                            `del_status`='0',
+//                                            `entry_by`='" . $user_id . "',
+//                                            `entry_date`='" . $db->ToDayDate() . "'
+//                                        where
+//                                            crop_id='" . $_POST['bonus_crop_id'][$i] . "'
+//                                            AND product_type_id='" . $_POST['bonus_product_type_id'][$i] . "'
+//                                            AND varriety_id='" . $_POST['bonus_varriety_id'][$i] . "'
+//                                            AND pack_size='" . $_POST['bonus_pack_size'][$i] . "'
+//                                            AND warehouse_id='$warehouse_id'
+//                                            AND year_id='$year_id'
+//                                        ";
+//
+//                    if ($db->open())
+//                    {
+//                        $db->query($mSQL_task);
+//                        $db->freeResult();
+//                    }
+//                    $db->system_event_log('', $user_id, $employee_id, $maxID, '', $tbl . 'product_stock', 'Update', '');
+//                }
+//                else
+//                {
+//                    $rowfield = array
+//                    (
+//                        'year_id,' => "'" . $year_id . "',",
+//                        'warehouse_id,' => "'" . $warehouse_id . "',",
+//                        'crop_id,' => "'" . $_POST["bonus_crop_id"][$i] . "',",
+//                        'product_type_id,' => "'" . $_POST["bonus_product_type_id"][$i] . "',",
+//                        'varriety_id,' => "'" . $_POST["bonus_varriety_id"][$i] . "',",
+//                        'pack_size,' => "'" . $_POST["bonus_pack_size"][$i] . "',",
+//                        'bonus_quantity,' => "bonus_quantity+'" . $_POST["bonus_quantity"][$i] . "',",
+//                        'current_stock_qunatity,' => "current_stock_qunatity-'" . $_POST["bonus_quantity"][$i] . "',",
+//                        'status,' => "'Active',",
+//                        'del_status,' => "'0',",
+//                        'entry_by,' => "'$user_id',",
+//                        'entry_date' => "'" . $db->ToDayDate() . "'"
+//                    );
+//
+//                    $db->data_insert($tbl . 'product_stock', $rowfield);
+//                    $db->system_event_log('', $user_id, $employee_id, '', '', $tbl . 'product_stock', 'Save', '');
+//                }
+//            }
         }
 ///////////  START BONUS TABLE UPDATE ////////////////////
         echo "VALIDATE";

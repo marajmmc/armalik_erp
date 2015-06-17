@@ -41,7 +41,6 @@ function Save_Rec()
             $.post("update.php",$("#frm_area").serialize(), function(result){
                 if (result)
                 {
-                    //$("#edit_rec").html(result);
                     if(result=="VALIDATE")
                     {
                         //                        $("#edit_rec").html(result);
@@ -690,19 +689,6 @@ function load_district_fnc()
         if (result)
         {
             $("#zilla_id").append(result);
-        }
-    });
-}
-function load_bonus()
-{
-    $("#div_bonus").html("<div id='div_loader'><img src='../../system_images/fb_loader.gif' /></div>");
-    $("#div_bonus").html('');
-    $.post("load_bonus.php",{row_bonus_id:$("#rowID").val()},function(result)
-    {
-        if (result)
-        {
-            $('#div_loader').remove();
-            $("#div_bonus").append(result);
         }
     });
 }

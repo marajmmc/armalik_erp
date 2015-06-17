@@ -303,114 +303,114 @@ if ($status != "Edit_Ready") {
                                 ?>
                             </table>
 
-                            <h3><u>Product Bonus Information</u></h3>
-                            <div class="controls controls-row">
-                                <span class="label label label-info" style="cursor: pointer; float: right" onclick="RowIncrement_bonus()"> + Add More </span>
-                            </div>
-
-                            <table class="table table-condensed table-striped table-bordered table-hover no-margin" id="TaskTable_bonus">
-                                <thead>
-                                    <tr>
-                                        <th style="width:10%">
-                                            Crop 
-                                        </th>
-                                        <th style="width:10%">
-                                            Product Type
-                                        </th>
-                                        <th style="width:10%">
-                                            Variety
-                                        </th>
-                                        <th style="width:10%">
-                                            Pack Size(gm)
-                                        </th>
-                                        <th style="width:10%">
-                                            Qty(pieces)
-                                        </th>
-                                        <th style="width:5%">
-                                            Action
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <?php
-                                 $sqlb = "SELECT
-                                            ait_product_purchase_order_bonus.id,
-                                            ait_product_purchase_order_bonus.purchase_order_id,
-                                            ait_product_purchase_order_bonus.crop_id,
-                                            ait_product_purchase_order_bonus.product_type_id,
-                                            ait_product_purchase_order_bonus.varriety_id,
-                                            ait_product_purchase_order_bonus.pack_size,
-                                            ait_product_purchase_order_bonus.quantity
-                                        FROM `ait_product_purchase_order_bonus`
-                                        WHERE ait_product_purchase_order_bonus.status='Active' AND 
-                                            ait_product_purchase_order_bonus.del_status='0' AND 
-                                            ait_product_purchase_order_bonus.purchase_order_id='$purchase_order_id'";
-                                if ($dbbonus->open())
-                                {
-                                    $result = $dbbonus->query($sqlb);
-                                    while ($row = $dbbonus->fetchAssoc($result))
-                                    {
-                                        if ($i % 2 == 0)
-                                        {
-                                            $rowcolor = "gradeC";
-                                        }
-                                        else
-                                        {
-                                            $rowcolor = "gradeA success";
-                                        }
-                                        ?>
-                                        <tr class='<?php echo $rowcolor; ?>' id="tr_elm_bonus_id<?php echo $i; ?>">
-                                            <td>
-                                                <select id='bonus_crop_id_<?php echo $i; ?>' name='bonus_crop_id[]' class='span12' placeholder='Crop' onchange='bonus_load_product_type_("<?php echo $i; ?>")'  validate='Require'>
-                                                    <?php
-                                                    $db_crop=new Database();
-                                                    $db_crop->get_crop_warehouse($row['crop_id'],'',$warehouse_id, $year_id);
-                                                    ?>
-                                                </select>
-                                                <input type='hidden' id='bonus_id[]' name='bonus_id[]' value='<?php echo $row['id']; ?>'/>
-                                            </td>
-                                            <td>
-                                                <select id='bonus_product_type_id_<?php echo $i; ?>' name='bonus_product_type_id[]' class='span12' placeholder='Crop' onchange='bonus_load_varriety_fnc_("<?php echo $i; ?>")' validate='Require'>
-                                                    <?php
-                                                    echo "<option value=''>Select</option>";
-                                                    $sql_uesr_group = "select product_type_id as fieldkey, product_type as fieldtext from $tbl" . "product_type where status='Active' AND crop_id='$row[crop_id]'";
-                                                    echo $db->SelectList($sql_uesr_group, $row['product_type_id']);
-                                                    ?>
-                                                </select>
-                                            </td>
-                                            <td>
-                                                <select id='bonus_varriety_id_<?php echo $i; ?>' name='bonus_varriety_id[]' class='span12' placeholder='Zone' onchange='bonus_load_pack_size_fnc_("<?php echo $i; ?>")' validate='Require'>
-                                                    <?php
-                                                    echo "<option value=''>Select</option>";
-                                                    $sql_uesr_group = "select varriety_id as fieldkey, varriety_name as fieldtext from $tbl" . "varriety_info where status='Active' AND crop_id='$row[crop_id]'";
-                                                    echo $db->SelectList($sql_uesr_group, $row['varriety_id']);
-                                                    ?>
-                                                </select>
-                                            </td>
-                                            <td>
-                                                <select id='bonus_pack_size_<?php echo $i; ?>' name='bonus_pack_size[]' class='span12' placeholder='Zone' onchange='bonus_load_product_price_fnc_("<?php echo $i; ?>")' validate='Require'>
-                                                    <?php
-                                                    echo "<option value=''>Select</option>";
-                                                    $sql_uesr_group = "select pack_size_id as fieldkey, pack_size_name as fieldtext from $tbl" . "product_pack_size where status='Active' AND pack_size_id='$row[pack_size]'";
-                                                    echo $db->SelectList($sql_uesr_group, $row['pack_size']);
-                                                    ?>
-                                                </select>
-                                            </td>
-                                            <td>
-                                                <input type='text' name='bonus_quantity[]' maxlength='50' id='bonus_quantity_<?php echo $i; ?>' class='span12' value='<?php echo $row['quantity']; ?>' onblur='load_product_total_price_("<?php echo $i; ?>")' validate='Require' />
-                                            </td>
-                                            <td>
-                                                <a class='btn btn-warning2' data-original-title='' onclick="del_bonus_product('<?php echo $i; ?>','<?php echo $row['id']; ?>')">
-                                                    <i class='icon-white icon-trash'> </i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        <?php
-                                        ++$i;
-                                    }
-                                }
-                                ?>
-
-                            </table>
+                        <!--                            <h3><u>Product Bonus Information</u></h3>-->
+                        <!--                            <div class="controls controls-row">-->
+                        <!--                                <span class="label label label-info" style="cursor: pointer; float: right" onclick="RowIncrement_bonus()"> + Add More </span>-->
+                        <!--                            </div>-->
+                        <!---->
+                        <!--                            <table class="table table-condensed table-striped table-bordered table-hover no-margin" id="TaskTable_bonus">-->
+                        <!--                                <thead>-->
+                        <!--                                    <tr>-->
+                        <!--                                        <th style="width:10%">-->
+                        <!--                                            Crop -->
+                        <!--                                        </th>-->
+                        <!--                                        <th style="width:10%">-->
+                        <!--                                            Product Type-->
+                        <!--                                        </th>-->
+                        <!--                                        <th style="width:10%">-->
+                        <!--                                            Variety-->
+                        <!--                                        </th>-->
+                        <!--                                        <th style="width:10%">-->
+                        <!--                                            Pack Size(gm)-->
+                        <!--                                        </th>-->
+                        <!--                                        <th style="width:10%">-->
+                        <!--                                            Qty(pieces)-->
+                        <!--                                        </th>-->
+                        <!--                                        <th style="width:5%">-->
+                        <!--                                            Action-->
+                        <!--                                        </th>-->
+                        <!--                                    </tr>-->
+                        <!--                                </thead>-->
+                        <!--                                --><?php
+                        //                                 $sqlb = "SELECT
+                        //                                            ait_product_purchase_order_bonus.id,
+                        //                                            ait_product_purchase_order_bonus.purchase_order_id,
+                        //                                            ait_product_purchase_order_bonus.crop_id,
+                        //                                            ait_product_purchase_order_bonus.product_type_id,
+                        //                                            ait_product_purchase_order_bonus.varriety_id,
+                        //                                            ait_product_purchase_order_bonus.pack_size,
+                        //                                            ait_product_purchase_order_bonus.quantity
+                        //                                        FROM `ait_product_purchase_order_bonus`
+                        //                                        WHERE ait_product_purchase_order_bonus.status='Active' AND
+                        //                                            ait_product_purchase_order_bonus.del_status='0' AND
+                        //                                            ait_product_purchase_order_bonus.purchase_order_id='$purchase_order_id'";
+                        //                                if ($dbbonus->open())
+                        //                                {
+                        //                                    $result = $dbbonus->query($sqlb);
+                        //                                    while ($row = $dbbonus->fetchAssoc($result))
+                        //                                    {
+                        //                                        if ($i % 2 == 0)
+                        //                                        {
+                        //                                            $rowcolor = "gradeC";
+                        //                                        }
+                        //                                        else
+                        //                                        {
+                        //                                            $rowcolor = "gradeA success";
+                        //                                        }
+                        //                                        ?>
+                        <!--                                        <tr class='--><?php //echo $rowcolor; ?><!--' id="tr_elm_bonus_id--><?php //echo $i; ?><!--">-->
+                        <!--                                            <td>-->
+                        <!--                                                <select id='bonus_crop_id_--><?php //echo $i; ?><!--' name='bonus_crop_id[]' class='span12' placeholder='Crop' onchange='bonus_load_product_type_("--><?php //echo $i; ?><!--")'  validate='Require'>-->
+                        <!--                                                    --><?php
+                        //                                                    $db_crop=new Database();
+                        //                                                    $db_crop->get_crop_warehouse($row['crop_id'],'',$warehouse_id, $year_id);
+                        //                                                    ?>
+                        <!--                                                </select>-->
+                        <!--                                                <input type='hidden' id='bonus_id[]' name='bonus_id[]' value='--><?php //echo $row['id']; ?><!--'/>-->
+                        <!--                                            </td>-->
+                        <!--                                            <td>-->
+                        <!--                                                <select id='bonus_product_type_id_--><?php //echo $i; ?><!--' name='bonus_product_type_id[]' class='span12' placeholder='Crop' onchange='bonus_load_varriety_fnc_("--><?php //echo $i; ?><!--")' validate='Require'>-->
+                        <!--                                                    --><?php
+                        //                                                    echo "<option value=''>Select</option>";
+                        //                                                    $sql_uesr_group = "select product_type_id as fieldkey, product_type as fieldtext from $tbl" . "product_type where status='Active' AND crop_id='$row[crop_id]'";
+                        //                                                    echo $db->SelectList($sql_uesr_group, $row['product_type_id']);
+                        //                                                    ?>
+                        <!--                                                </select>-->
+                        <!--                                            </td>-->
+                        <!--                                            <td>-->
+                        <!--                                                <select id='bonus_varriety_id_--><?php //echo $i; ?><!--' name='bonus_varriety_id[]' class='span12' placeholder='Zone' onchange='bonus_load_pack_size_fnc_("--><?php //echo $i; ?><!--")' validate='Require'>-->
+                        <!--                                                    --><?php
+                        //                                                    echo "<option value=''>Select</option>";
+                        //                                                    $sql_uesr_group = "select varriety_id as fieldkey, varriety_name as fieldtext from $tbl" . "varriety_info where status='Active' AND crop_id='$row[crop_id]'";
+                        //                                                    echo $db->SelectList($sql_uesr_group, $row['varriety_id']);
+                        //                                                    ?>
+                        <!--                                                </select>-->
+                        <!--                                            </td>-->
+                        <!--                                            <td>-->
+                        <!--                                                <select id='bonus_pack_size_--><?php //echo $i; ?><!--' name='bonus_pack_size[]' class='span12' placeholder='Zone' onchange='bonus_load_product_price_fnc_("--><?php //echo $i; ?><!--")' validate='Require'>-->
+                        <!--                                                    --><?php
+                        //                                                    echo "<option value=''>Select</option>";
+                        //                                                    $sql_uesr_group = "select pack_size_id as fieldkey, pack_size_name as fieldtext from $tbl" . "product_pack_size where status='Active' AND pack_size_id='$row[pack_size]'";
+                        //                                                    echo $db->SelectList($sql_uesr_group, $row['pack_size']);
+                        //                                                    ?>
+                        <!--                                                </select>-->
+                        <!--                                            </td>-->
+                        <!--                                            <td>-->
+                        <!--                                                <input type='text' name='bonus_quantity[]' maxlength='50' id='bonus_quantity_--><?php //echo $i; ?><!--' class='span12' value='--><?php //echo $row['quantity']; ?><!--' onblur='load_product_total_price_("--><?php //echo $i; ?><!--")' validate='Require' />-->
+                        <!--                                            </td>-->
+                        <!--                                            <td>-->
+                        <!--                                                <a class='btn btn-warning2' data-original-title='' onclick="del_bonus_product('--><?php //echo $i; ?><!--','--><?php //echo $row['id']; ?><!--')">-->
+                        <!--                                                    <i class='icon-white icon-trash'> </i>-->
+                        <!--                                                </a>-->
+                        <!--                                            </td>-->
+                        <!--                                        </tr>-->
+                        <!--                                        --><?php
+                        //                                        ++$i;
+                        //                                    }
+                        //                                }
+                        //                                ?>
+                        <!---->
+                        <!--                            </table>-->
                         </div>
                     </div>
                 </div>
