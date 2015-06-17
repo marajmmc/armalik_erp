@@ -121,19 +121,19 @@ $tbl = _DB_PREFIX;
                                     <label class="label label-warning text-center">Morning</label>
                                 </td>
                                 <td class="territory_td_elm">
-                                    <select name="territory_id" class="span12 territory_id" placeholder="Territory" onchange="" >
+                                    <select name="territory_id[<?php echo $val;?>][1]" class="span12 territory_id" placeholder="Territory" onchange="" >
                                         <option value="">Select</option>
 
                                     </select>
                                 </td>
                                 <td class="district_td_elm">
-                                    <select name="district_id" class="span12 district_id" placeholder="District" onchange="" >
+                                    <select name="district_id[<?php echo $val;?>][1]" class="span12 district_id" placeholder="District" onchange="" >
                                         <option value="">Select</option>
 
                                     </select>
                                 </td>
                                 <td class="distributor_td_elm">
-                                    <select name="distributor_id" class="span12 distributor_id" multiple="multiple" placeholder="Distributor" validate="Require" onchange="load_dealer_fnc()">
+                                    <select name="distributor_id[<?php echo $val;?>][1]" class="span12 distributor_id" multiple="multiple" placeholder="Distributor" validate="Require" onchange="load_dealer_fnc()">
                                         <option value="">Select</option>
 
                                     </select>
@@ -141,26 +141,24 @@ $tbl = _DB_PREFIX;
                             </tr>
 
                             <tr>
-                                <td>
-
-                                </td>
+                                <td></td>
                                 <td>
                                     <label class="label label-success text-center">Afternoon</label>
                                 </td>
                                 <td class="territory_td_elm">
-                                    <select name="territory_id" class="span12 territory_id" placeholder="Territory" onchange="" >
+                                    <select name="territory_id[<?php echo $val;?>][2]" class="span12 territory_id" placeholder="Territory" onchange="" >
                                         <option value="">Select</option>
 
                                     </select>
                                 </td>
                                 <td class="district_td_elm">
-                                    <select name="district_id" class="span12 district_id" placeholder="District" onchange="" >
+                                    <select name="district_id[<?php echo $val;?>][2]" class="span12 district_id" placeholder="District" onchange="" >
                                         <option value="">Select</option>
 
                                     </select>
                                 </td>
                                 <td class="distributor_td_elm">
-                                    <select name="distributor_id" class="span12 distributor_id" multiple="multiple" placeholder="Distributor" validate="Require" onchange="load_dealer_fnc()">
+                                    <select name="distributor_id[<?php echo $val;?>][2]" class="span12 distributor_id" multiple="multiple" placeholder="Distributor" validate="Require" onchange="load_dealer_fnc()">
                                         <option value="">Select</option>
 
                                     </select>
