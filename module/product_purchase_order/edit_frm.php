@@ -302,6 +302,7 @@ if ($status != "Edit_Ready") {
                                 }
                                 ?>
                             </table>
+                            <div id="div_bonus"></div>
 
                         <!--                            <h3><u>Product Bonus Information</u></h3>-->
                         <!--                            <div class="controls controls-row">-->
@@ -596,8 +597,10 @@ if ($status != "Edit_Ready") {
         });
         cal.manageFields("calcbtn_purchase_order_date", "purchase_order_date", "%d-%m-%Y");
                                     
-        $(document).ready(function(){
+        $(document).ready(function()
+        {
             setTimeout(function(){distributor_due_balance();},1000);
+            load_bonus();
         });
                                         
     </script>

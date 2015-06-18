@@ -89,7 +89,7 @@ else
                                     $tbl"."primary_market_survey.del_status='0'
                                     $zone_id
                                     GROUP BY $tbl"."primary_market_survey.market_survey_group_id
-                        ";
+                                    ";
                             if ($db->open()) {
                                 $result = $db->query($sql);
                                 $i = 1;

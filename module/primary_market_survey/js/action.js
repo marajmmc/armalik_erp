@@ -13,7 +13,7 @@ function list(){
             $("#list_rec").html(result);
             $(".mini-title").html('List');
             loader_close();
-            MenuOffOn('on','off','on','on','on','on','on','off','on','on');
+            MenuOffOn('off','off','on','on','on','on','on','off','on','on');
         }
     });
 }

@@ -580,3 +580,16 @@ function load_district_fnc()
         }
     });
 }
+function load_bonus()
+{
+    $("#div_bonus").html("<div id='div_loader'><img src='../../system_images/fb_loader.gif' /></div>");
+    $("#div_bonus").html('');
+    $.post("load_bonus.php",{row_bonus_id:$("#rowID").val()},function(result)
+    {
+        if (result)
+        {
+            $('#div_loader').remove();
+            $("#div_bonus").append(result);
+        }
+    });
+}
