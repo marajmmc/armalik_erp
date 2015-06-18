@@ -25,7 +25,7 @@ function Save_Rec()
         if (SaveStatus==1){
             $.post("save.php",$("#frm_area").serialize(), function(result){
                 if (result){
-//                    $("#new_rec").html(result);
+                    $("#new_rec").html(result);
                     list();
                     loader_close();
                     reset();
@@ -147,18 +147,18 @@ function Existin_data(elm){
         if($("#userLevel").val()=="Zone")
         {
             session_load_zone();
-            session_load_territory();
+            //session_load_territory();
         }
         else if($("#userLevel").val()=="Territory")
         {
             session_load_zone();
-            session_load_territory();
+            //session_load_territory();
             session_load_distributor();
         }
         else if($("#userLevel").val()=="Distributor")
         {
             session_load_zone();
-            session_load_territory();
+            //session_load_territory();
             session_load_distributor();
         }
         else
@@ -167,15 +167,15 @@ function Existin_data(elm){
         }
     }
 
-    function session_load_territory()
-    {
-        $(".territory_id").html('');
-        $.post("../../libraries/ajax_load_file/session_load_territory.php", function(result){
-            if (result){
-                $(".territory_id").append(result);
-            }
-        });
-    }
+//    function session_load_territory()
+//    {
+//        $(".territory_id").html('');
+//        $.post("../../libraries/ajax_load_file/session_load_territory.php", function(result){
+//            if (result){
+//                $(".territory_id").append(result);
+//            }
+//        });
+//    }
     function session_load_distributor()
     {
         $("#distributor_id").html('');

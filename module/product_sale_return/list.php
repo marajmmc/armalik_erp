@@ -6,6 +6,7 @@ require_once("../../libraries/lib/config.inc.php");
 require_once("../../libraries/lib/functions.inc.php");
 $db = new Database();
 $tbl = _DB_PREFIX;
+
 if ($_SESSION['user_level'] == "Zone")
 {
     $zone_id = "AND $tbl" . "product_purchase_order_invoice.zone_id='" . $_SESSION['zone_id'] . "'";

@@ -194,6 +194,24 @@ class Database {
         $this->close();
     }
 
+    function return_result_array()
+    {
+        $data=array();
+
+        if($this->open())
+        {
+            $sql="SELECT * FROM ait_zi_tour_plan";
+            $result=$this->query($sql);
+            $row=$this->fetchAssoc($result);
+            $data[]=$row;
+            while($row=$this->fetchAssoc($result))
+            {
+                $data[]=$row;
+            }
+        }
+        return $data;
+    }
+
     function system_event_log($comid, $user_id, $ei_id, $maxID, $ref_no, $tbl_name, $event, $remarks) {
         $tbl = _DB_PREFIX;
         $taskname = $this->Get_Auto_TaskName();
@@ -246,7 +264,7 @@ class Database {
         $this->open();
         $sql = "SELECT $field FROM `$table_name` WHERE $find_field";
         $result = $this->query($sql);
-        return $row_result = $this->fetchAssoc($result);
+        return $row_result[] = $this->fetchArray($result);
         $this->close();
     }
 

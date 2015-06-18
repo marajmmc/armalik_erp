@@ -4,11 +4,6 @@ $db = new Database();
 ?>
 
 <html lang="en">
-
-    <!--
-  <![endif]-->
-
-    <!-- Mirrored from iamsrinu.com/bluemoon-admin-theme/ui-elements.html by HTTrack Website Copier/3.x [XR&CO'2010], Thu, 14 Nov 2013 14:20:41 GMT -->
     <head>
         <meta charset="utf-8">
         <meta name="description" content="">

@@ -31,48 +31,76 @@ $tbl = _DB_PREFIX;
                         <thead>
                             <tr>
                                 <th style="width:5%">
-                                    No
+                                    Sl.
                                 </th>
                                 <th style="width:20%">
-                                    Designation Name [EN]
+                                    Territory
                                 </th>
                                 <th style="width:20%">
-                                    Designation Name [BN]
+                                    Date
                                 </th>
-                                <th style="width:10%">
-                                    Status
+                                <th style="width:20%">
+                                    Year
+                                </th>
+                                <th style="width:20%">
+                                    From Month
+                                </th>
+                                <th style="width:20%">
+                                    To Month
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
+
                             $sql = "SELECT
-                                designation_id,
-                                designation_title_en,
-                                designation_title_bn,
-                                status                                
-                            FROM
-                                $tbl" . "employee_designation
-                            WHERE del_status='0'
-                        ";
-                            if ($db->open()) {
+                                ztp.id,
+                                ztp.year,
+                                ztp.start_month,
+                                ztp.end_month,
+                                ztp.status,
+                                ztp.del_status,
+                                ztp.entry_by,
+                                ztp.entry_date,
+                                ztp.zone_id,
+                                ztp.territory_id,
+                                ati.territory_name,
+                                ztp.status
+
+                                FROM
+                                $tbl" . "zi_tour_plan ztp
+
+                                LEFT JOIN $tbl" . "territory_info ati ON ati.territory_id = ztp.territory_id
+
+                                WHERE ztp.zone_id ='".$_SESSION['zone_id']."'
+                                GROUP BY ztp.year, ztp.start_month, ztp.end_month
+                                ";
+
+                            if($db->open())
+                            {
                                 $result = $db->query($sql);
                                 $i = 1;
-                                while ($result_array = $db->fetchAssoc()) {
-                                    if ($i % 2 == 0) {
+                                while ($result_array = $db->fetchAssoc())
+                                {
+                                    if ($i % 2 == 0)
+                                    {
                                         $rowcolor = "gradeC";
-                                    } else {
+                                    }
+                                    else
+                                    {
                                         $rowcolor = "gradeA success";
                                     }
                                     ?>
-                                    <tr class="<?php echo $rowcolor ?> pointer" id="tr_id<?php echo $i; ?>" onclick="get_rowID('<?php echo $result_array["designation_id"] ?>', '<?php echo $i; ?>')" ondblclick="details_form();">
-                                        <td>
-                                            <?php echo $i; ?>
-                                        </td>
-                                        <td><?php echo $result_array['designation_title_en']; ?></td>
-                                        <td><?php echo $result_array['designation_title_bn']; ?></td>
-                                        <td><?php echo $result_array['status']; ?></td>
-                                    </tr>
+                                        <tr class="<?php echo $rowcolor ?> pointer" id="tr_id<?php echo $i; ?>" onclick="get_rowID('<?php echo $result_array["year"].'~'. $result_array["zone_id"].'~'.$result_array["start_month"].'~'.$result_array["end_month"]?>', '<?php echo $i; ?>')" ondblclick="details_form();">
+                                            <td>
+                                                <?php echo $i; ?>
+                                            </td>
+                                            <td><?php echo $result_array['territory_name']; ?></td>
+                                            <td><?php echo $result_array['entry_date']; ?></td>
+                                            <td><?php echo $result_array['year']; ?></td>
+                                            <td><?php echo $result_array['start_month']; ?></td>
+                                            <td><?php echo $result_array['end_month']; ?></td>
+                                        </tr>
                                     <?php
                                     ++$i;
                                 }
