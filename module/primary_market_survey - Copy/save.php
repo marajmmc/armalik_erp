@@ -51,8 +51,7 @@ if(!empty($zone_id) || !empty($territory_id) || !empty($district_id) || !empty($
         $count=count($_POST['self_variety_id']);
         for($z=0; $z<$count; $z++)
         {
-            $rowfield = array
-            (
+            $rowfield = array(
                 'market_survey_group_id,' => "'$group_maxID',",
                 'market_survey_id,' => "'$pms_maxID',",
                 //'type,' => "'" . $_POST["type"][$z] . "',",

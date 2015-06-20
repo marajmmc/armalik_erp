@@ -54,7 +54,10 @@ else
                                     Upazilla
                                 </th>
                                 <th style="width:20%">
-                                    Year
+                                    Crop
+                                </th>
+                                <th style="width:20%">
+                                    Product Type
                                 </th>
                                 <th style="width:10%">
                                     Status
@@ -64,39 +67,36 @@ else
                         <tbody>
                             <?php
                             $sql = "SELECT
-                                            $tbl"."primary_market_survey.market_survey_group_id,
-                                            $tbl"."zone_info.zone_name,
-                                            $tbl"."zilla.zillanameeng,
-                                            $tbl"."upazilla_new.upazilla_name,
-                                            $tbl"."primary_market_survey.wholesaler_name,
-                                            $tbl"."primary_market_survey.`status`,
-                                            $tbl"."primary_market_survey.del_status,
-                                            $tbl"."territory_info.territory_name,
-                                            $tbl"."pdo_year.pdo_year_name
-                                            FROM
-                                            $tbl"."primary_market_survey
-                                            LEFT JOIN $tbl"."zone_info ON $tbl"."zone_info.zone_id = $tbl"."primary_market_survey.zone_id
-                                            LEFT JOIN $tbl"."zilla ON $tbl"."zilla.zillaid = $tbl"."primary_market_survey.district_id
-                                            LEFT JOIN $tbl"."upazilla_new ON $tbl"."upazilla_new.upazilla_id = $tbl"."primary_market_survey.upazilla_id
-                                            LEFT JOIN $tbl"."territory_info ON $tbl"."territory_info.zone_id = $tbl"."primary_market_survey.zone_id AND $tbl"."territory_info.territory_id = $tbl"."primary_market_survey.territory_id
-                                            LEFT JOIN $tbl"."pdo_year ON $tbl"."pdo_year.pdo_year_id = $tbl"."primary_market_survey.pdo_year_id
-                                        WHERE
-                                        $tbl"."primary_market_survey.del_status='0'
-                                        $zone_id
-                                        GROUP BY $tbl"."primary_market_survey.market_survey_group_id
+                                        $tbl"."primary_market_survey.market_survey_group_id,
+                                        $tbl"."zone_info.zone_name,
+                                        $tbl"."zilla.zillanameeng,
+                                        $tbl"."upazilla_new.upazilla_name,
+                                        $tbl"."primary_market_survey.wholesaler_name,
+                                        $tbl"."primary_market_survey.`status`,
+                                        $tbl"."primary_market_survey.del_status,
+                                        $tbl"."territory_info.territory_name,
+                                        $tbl"."crop_info.crop_name,
+                                        $tbl"."product_type.product_type
+                                    FROM
+                                        $tbl"."primary_market_survey
+                                        LEFT JOIN $tbl"."zone_info ON $tbl"."zone_info.zone_id = $tbl"."primary_market_survey.zone_id
+                                        LEFT JOIN $tbl"."zilla ON $tbl"."zilla.zillaid = $tbl"."primary_market_survey.district_id
+                                        LEFT JOIN $tbl"."upazilla_new ON $tbl"."upazilla_new.upazilla_id = $tbl"."primary_market_survey.upazilla_id
+                                        LEFT JOIN $tbl"."territory_info ON $tbl"."territory_info.zone_id = $tbl"."primary_market_survey.zone_id AND $tbl"."territory_info.territory_id = $tbl"."primary_market_survey.territory_id
+                                        LEFT JOIN $tbl"."crop_info ON $tbl"."crop_info.crop_id = $tbl"."primary_market_survey.crop_id
+                                        LEFT JOIN $tbl"."product_type ON $tbl"."product_type.product_type_id = $tbl"."primary_market_survey.product_type_id
+                                    WHERE
+                                    $tbl"."primary_market_survey.del_status='0'
+                                    $zone_id
+                                    GROUP BY $tbl"."primary_market_survey.market_survey_group_id
                                     ";
-                            if ($db->open())
-                            {
+                            if ($db->open()) {
                                 $result = $db->query($sql);
                                 $i = 1;
-                                while ($result_array = $db->fetchAssoc())
-                                {
-                                    if ($i % 2 == 0)
-                                    {
+                                while ($result_array = $db->fetchAssoc()) {
+                                    if ($i % 2 == 0) {
                                         $rowcolor = "gradeC";
-                                    }
-                                    else
-                                    {
+                                    } else {
                                         $rowcolor = "gradeA success";
                                     }
                                     ?>
@@ -108,7 +108,8 @@ else
                                         <td><?php echo $result_array['territory_name']; ?></td>
                                         <td><?php echo $result_array['zillanameeng']; ?></td>
                                         <td><?php echo $result_array['upazilla_name']; ?></td>
-                                        <td><?php echo $result_array['pdo_year_name']; ?></td>
+                                        <td><?php echo $result_array['crop_name']; ?></td>
+                                        <td><?php echo $result_array['product_type']; ?></td>
                                         <td><?php echo $result_array['status']; ?></td>
                                     </tr>
                                     <?php

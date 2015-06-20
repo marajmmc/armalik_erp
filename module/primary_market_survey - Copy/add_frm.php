@@ -89,7 +89,7 @@ $tbl = _DB_PREFIX;
                             Year
                         </label>
                         <div class="controls">
-                            <select id="pdo_year_id" name="pdo_year_id" class="span5" placeholder="" validate="Require" onchange="check_exist_data()">
+                            <select id="pdo_year_id" name="pdo_year_id" class="span5" placeholder="" validate="Require">
                                 <?php
                                 echo "<option value=''>Select</option>";
                                 $sql_uesr_group = "select pdo_year_id as fieldkey, pdo_year_name as fieldtext from $tbl" . "pdo_year where status='Active' ORDER BY $tbl"."pdo_year.pdo_year_name";
@@ -122,7 +122,7 @@ $tbl = _DB_PREFIX;
                             Product Type
                         </label>
                         <div class="controls">
-                            <select id="product_master_type_id" name="product_master_type_id" class="span5" placeholder="Product Type" onchange="load_product_list_add()" validate="Require">
+                            <select id="product_master_type_id" name="product_master_type_id" class="span5" placeholder="Product Type" onchange="check_exist_data()" validate="Require">
                                 <option value="">Select</option>
                             </select>
                             <span class="help-inline">

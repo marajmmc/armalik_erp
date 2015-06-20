@@ -56,8 +56,7 @@ function Save_Rec()
     }
 }
 
-function Load_form()
-{
+function Load_form(){
     hide_div();
     $("#new_rec").show();
     loader_start();
@@ -263,7 +262,7 @@ function check_exist_data()
             if (result)
             {
                 $("#product_list").hide();
-                MenuOffOn('off','off','off','off','on','on','on','on','on','on');
+                MenuOffOn('off','off','off','off','on','on','on','off','on','on');
                 reset();
                 alertify.set({
                     delay: 3000
@@ -273,38 +272,20 @@ function check_exist_data()
             }
             else
             {
+                $("#product_list").show();
+                $("#product_list").html('');
                 MenuOffOn('off','on','off','off','on','on','on','on','on','on');
+                $.post("load_product_list.php",$("#frm_area").serialize(), function(result)
+                {
+                    if (result)
+                    {
+                        $("#product_list").html(result);
+                    }
+                });
             }
         });
     }
 }
-
-function load_product_list_add()
-{
-    $("#product_list").show();
-    $("#product_list").html('');
-    $.post("load_product_list_add.php",$("#frm_area").serialize(), function(result)
-    {
-        if (result)
-        {
-            $("#product_list").html(result);
-        }
-    });
-}
-
-function load_product_list_edit()
-{
-    $("#product_list").show();
-    $("#product_list").html('');
-    $.post("load_product_list_edit.php",$("#frm_area").serialize(), function(result)
-    {
-        if (result)
-        {
-            $("#product_list").html(result);
-        }
-    });
-}
-
 function load_product_type()
 {
 
