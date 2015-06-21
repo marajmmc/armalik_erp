@@ -6,6 +6,8 @@ require_once("../../libraries/lib/config.inc.php");
 require_once("../../libraries/lib/functions.inc.php");
 $db = new Database();
 $tbl = _DB_PREFIX;
+
+$user_division = $_SESSION['division_id'];
 ?>
 <div class="row-fluid">
     <div class="span12">
@@ -48,11 +50,39 @@ $tbl = _DB_PREFIX;
                             Zone
                         </label>
                         <div class="controls">
-                            <select id="zone" name="zone" class="span5">
+                            <select id="zone_id" name="zone_id" class="span5" onchange="load_territory_by_zone()">
                                 <option value="">Select</option>
                                 <?php
-                                //$sql = "select zone_id as fieldkey, zone_name_en as fieldtext from $tbl" . "zone_info";
-                                //echo $db->SelectList($sql);
+                                $sql = "select zone_id as fieldkey, zone_name as fieldtext from $tbl" . "zone_info where division_id='$user_division'";
+                                echo $db->SelectList($sql);
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+
+<!--                    <div class="control-group">-->
+<!--                        <label class="control-label">-->
+<!--                            Zone In-charge-->
+<!--                        </label>-->
+<!--                        <div class="controls">-->
+<!--                            <select id="zone_in_charge" name="zone_in_charge" class="span5">-->
+<!--                                <option value="">Select</option>-->
+<!--                                --><?php
+//
+//                                ?>
+<!--                            </select>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+                    <div class="control-group">
+                        <label class="control-label">
+                            Territory
+                        </label>
+                        <div class="controls">
+                            <select id="territory_id" name="territory_id" class="span5" onchange="load_district_by_territory()">
+                                <option value="">Select</option>
+                                <?php
+
                                 ?>
                             </select>
                         </div>
@@ -63,21 +93,7 @@ $tbl = _DB_PREFIX;
                             District
                         </label>
                         <div class="controls">
-                            <select id="district" name="district" class="span5">
-                                <option value="">Select</option>
-                                <?php
-
-                                ?>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="control-group">
-                        <label class="control-label">
-                            Zone In-charge
-                        </label>
-                        <div class="controls">
-                            <select id="zone_in_charge" name="zone_in_charge" class="span5">
+                            <select id="district_id" name="district_id" class="span5" onchange="load_distributor_by_district()">
                                 <option value="">Select</option>
                                 <?php
 
@@ -91,7 +107,7 @@ $tbl = _DB_PREFIX;
                             Distributor
                         </label>
                         <div class="controls">
-                            <select id="distributor" name="distributor" class="span5">
+                            <select id="distributor_id" name="distributor_id" class="span5">
                                 <option value="">Select</option>
                                 <?php
 
@@ -183,6 +199,7 @@ $tbl = _DB_PREFIX;
         fdow :0,
         minuteStep:1
     });
+
     cal.manageFields("start_date", "start_date", "%d-%m-%Y");
     cal.manageFields("end_date", "end_date", "%d-%m-%Y");
 

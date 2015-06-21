@@ -134,3 +134,54 @@ function Existin_data(elm){
     });
 }
 
+function load_territory_by_zone()
+{
+    $("#territory_id").html('');
+    $.post("../../libraries/ajax_load_file/load_territory.php",
+        {
+            zone_id : $("#zone_id").val()
+        },
+
+        function(result)
+        {
+            if(result)
+            {
+                $("#territory_id").append(result);
+            }
+    });
+}
+
+function load_district_by_territory()
+{
+    $("#district_id").html('');
+    $.post("../../libraries/ajax_load_file/load_territory_assign_district.php",
+        {
+            zone_id : $("#zone_id").val(), territory_id: $("#territory_id").val()
+        },
+
+        function(result)
+        {
+            if(result)
+            {
+                $("#district_id").append(result);
+            }
+    });
+}
+
+function load_distributor_by_district()
+{
+    $("#distributor_id").html('');
+    $.post("../../libraries/ajax_load_file/load_distributor.php",
+    {
+        zone_id : $("#zone_id").val(), territory_id: $("#territory_id").val(), zilla_id: $("#district_id").val()
+    },
+
+    function(result)
+    {
+        if(result)
+        {
+            $("#distributor_id").append(result);
+        }
+    });
+}
+
