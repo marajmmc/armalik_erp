@@ -7,13 +7,6 @@ require_once("../../libraries/lib/functions.inc.php");
 $db = new Database();
 $tbl = _DB_PREFIX;
 
-
-$rslt = $db->return_result_array();
-
-echo "<pre>";
-print_r($rslt);
-echo "</pre>";
-
 $user_zone = $_SESSION['zone_id'];
 $postData = explode('~', $_POST['rowID']);
 $year = $postData[0];
@@ -88,18 +81,19 @@ if ($db->open())
                     <tr>
                         <td>
                             <div class="controls">
-                                <select id="year" name="year" class="span12" validate="Require">
+                                <select id="year" name="year" class="span12" disabled>
                                     <option value="">Select</option>
                                     <?php
                                     $sql = "select year_id as fieldkey, year_name as fieldtext from $tbl" . "year";
                                     echo $db->SelectList($sql, $year);
                                     ?>
                                 </select>
+                                <input type="hidden" name="year" value="<?php echo $year;?>">
                             </div>
                         </td>
                         <td>
                             <div class="controls">
-                                <select id="from_month" name="from_month" class="span12" validate="Require">
+                                <select id="from_month" name="from_month" class="span12" disabled>
                                     <option value="">Select</option>
                                     <?php
                                     $monthArray = $db->get_month_array();
@@ -111,11 +105,12 @@ if ($db->open())
                                     }
                                     ?>
                                 </select>
+                                <input type="hidden" name="from_month" value="<?php echo $start_month;?>">
                             </div>
                         </td>
                         <td>
                             <div class="controls">
-                                <select id="to_month" name="to_month" class="span12" validate="Require">
+                                <select id="to_month" name="to_month" class="span12" disabled>
                                     <option value="">Select</option>
                                     <?php
                                     $monthArray = $db->get_month_array();
@@ -127,6 +122,7 @@ if ($db->open())
                                     }
                                     ?>
                                 </select>
+                                <input type="hidden" name="to_month" value="<?php echo $end_month;?>">
                             </div>
                         </td>
                     </tr>
@@ -170,7 +166,7 @@ if ($db->open())
                                     <select name="plan[<?php echo $val;?>][1][territory_id]" class="span12 territory_id" placeholder="Territory" onchange="" >
                                         <option value="">Select</option>
                                         <?php
-                                        $territory = $db->single_data_w($tbl.'zi_tour_plan','territory_id', "year='$year' AND start_month=$start_month AND end_month=$end_month AND zone_id='$user_zone' AND week_day='$val' AND day_time=1");
+                                        $territory = $db->single_data_w($tbl.'zi_tour_plan','territory_id', "year='$year' AND start_month=$start_month AND end_month=$end_month AND zone_id='$user_zone' AND week_day='$val' AND day_time=1 AND status=1");
                                         $sql = "select territory_id as fieldkey, territory_name as fieldtext from $tbl" . "territory_info where zone_id='$user_zone'";
                                         echo $db->SelectList($sql, $territory['territory_id']);
                                         ?>
@@ -180,7 +176,7 @@ if ($db->open())
                                     <select name="plan[<?php echo $val;?>][1][district_id]" class="span12 district_id" placeholder="District" onchange="" >
                                         <option value="">Select</option>
                                         <?php
-                                        $district = $db->single_data_w($tbl.'zi_tour_plan','district_id', "year='$year' AND start_month=$start_month AND end_month=$end_month AND zone_id='$user_zone' AND week_day='$val' AND day_time=1");
+                                        $district = $db->single_data_w($tbl.'zi_tour_plan','district_id', "year='$year' AND start_month=$start_month AND end_month=$end_month AND zone_id='$user_zone' AND week_day='$val' AND day_time=1 AND status=1");
                                         $sql_user_group = "SELECT
                                             $tbl" . "zilla.zillaid as fieldkey,
                                             $tbl" . "zilla.zillanameeng as fieldtext
@@ -201,9 +197,23 @@ if ($db->open())
                                     <select name="plan[<?php echo $val;?>][1][distributor_id][]" class="span12 distributor_id" multiple="multiple" placeholder="Distributor">
                                         <option value="">Select</option>
                                         <?php
-                                        $distributor = $db->single_data_w($tbl.'zi_tour_plan','distributor_id', "year='$year' AND start_month=$start_month AND end_month=$end_month AND zone_id='$user_zone' AND week_day='$val' AND day_time=1");
-                                        $sql_user_group = "select distributor_id as fieldkey, distributor_name as fieldtext from $tbl" . "distributor_info where status='Active' AND del_status='0' AND zone_id='$user_zone' AND territory_id='".$territory['territory_id']."' AND zilla_id='".$district['district_id']."' order by distributor_name";
-                                        echo $db->SelectList($sql_user_group, $distributor['distributor_id']);
+                                        $distributorQuery = "SELECT distributor_id FROM $tbl" . "zi_tour_plan WHERE year='$year' AND start_month='$start_month' AND end_month='$end_month' AND zone_id='$user_zone' AND week_day='$val' AND day_time=1 AND status=1";
+                                        $distributors = $db->return_result_array($distributorQuery);
+
+                                        $customers = array();
+                                        foreach($distributors as $distributor)
+                                        {
+                                            $customers[] = $distributor['distributor_id'];
+                                        }
+
+                                        $sql = "select distributor_id as fieldkey, distributor_name as fieldtext from $tbl" . "distributor_info where status='Active' AND del_status='0' AND zone_id='$user_zone' AND territory_id='".$territory['territory_id']."' AND zilla_id='".$district['district_id']."' order by distributor_name";
+                                        $distributorDropDownArray = $db->return_result_array($sql);
+                                        foreach($distributorDropDownArray as $DropDown)
+                                        {
+                                        ?>
+                                            <option value="<?php echo $DropDown['fieldkey'];?>" <?php if(in_array($DropDown['fieldkey'], $customers) && isset($DropDown['fieldkey'])){echo 'selected';}?>><?php echo $DropDown['fieldtext'];?></option>
+                                        <?php
+                                        }
                                         ?>
                                     </select>
                                 </td>
@@ -218,21 +228,56 @@ if ($db->open())
                                     <select name="plan[<?php echo $val;?>][2][territory_id]" class="span12 territory_id" placeholder="Territory" onchange="" >
                                         <option value="">Select</option>
                                         <?php
+                                        $territory = $db->single_data_w($tbl.'zi_tour_plan','territory_id', "year='$year' AND start_month=$start_month AND end_month=$end_month AND zone_id='$user_zone' AND week_day='$val' AND day_time=2 AND status=1");
                                         $sql = "select territory_id as fieldkey, territory_name as fieldtext from $tbl" . "territory_info where zone_id='$user_zone'";
-                                        echo $db->SelectList($sql);
+                                        echo $db->SelectList($sql, $territory['territory_id']);
                                         ?>
                                     </select>
                                 </td>
                                 <td class="district_td_elm">
                                     <select name="plan[<?php echo $val;?>][2][district_id]" class="span12 district_id" placeholder="District" onchange="" >
                                         <option value="">Select</option>
-
+                                        <?php
+                                        $district = $db->single_data_w($tbl.'zi_tour_plan','district_id', "year='$year' AND start_month=$start_month AND end_month=$end_month AND zone_id='$user_zone' AND week_day='$val' AND day_time=2 AND status=1");
+                                        $sql_user_group = "SELECT
+                                            $tbl" . "zilla.zillaid as fieldkey,
+                                            $tbl" . "zilla.zillanameeng as fieldtext
+                                        FROM
+                                            $tbl" . "territory_assign_district
+                                            LEFT JOIN $tbl" . "zilla ON $tbl" . "zilla.zillaid = $tbl" . "territory_assign_district.zilla_id
+                                        WHERE
+                                            $tbl" . "territory_assign_district.del_status=0
+                                            AND $tbl" . "zilla.visible=0
+                                            AND $tbl" . "territory_assign_district.status='Active'
+                                            AND $tbl" . "territory_assign_district.territory_id='".$territory['territory_id']."'
+                                            ";
+                                        echo $db->SelectList($sql_user_group, $district['district_id']);
+                                        ?>
                                     </select>
                                 </td>
                                 <td class="distributor_td_elm">
                                     <select name="plan[<?php echo $val;?>][2][distributor_id][]" class="span12 distributor_id" multiple="multiple" placeholder="Distributor">
                                         <option value="">Select</option>
+                                        <?php
+                                        $distributorQuery = "SELECT distributor_id FROM $tbl" . "zi_tour_plan WHERE year='$year' AND start_month='$start_month' AND end_month='$end_month' AND zone_id='$user_zone' AND week_day='$val' AND day_time=2 AND status=1";
 
+                                        $distributors = $db->return_result_array($distributorQuery);
+
+                                        $customers=array();
+                                        foreach($distributors as $distributor)
+                                        {
+                                            $customers[] = $distributor['distributor_id'];
+                                        }
+
+                                        $sql = "select distributor_id as fieldkey, distributor_name as fieldtext from $tbl" . "distributor_info where status='Active' AND del_status='0' AND zone_id='$user_zone' AND territory_id='".$territory['territory_id']."' AND zilla_id='".$district['district_id']."' order by distributor_name";
+                                        $distributorDropDownArray = $db->return_result_array($sql);
+                                        foreach($distributorDropDownArray as $DropDown)
+                                        {
+                                            ?>
+                                            <option value="<?php echo $DropDown['fieldkey'];?>" <?php if(in_array($DropDown['fieldkey'], $customers) && isset($DropDown['fieldkey'])){echo 'selected';}?>><?php echo $DropDown['fieldtext'];?></option>
+                                        <?php
+                                        }
+                                        ?>
                                     </select>
                                 </td>
                             </tr>

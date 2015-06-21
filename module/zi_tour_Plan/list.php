@@ -65,14 +65,16 @@ $tbl = _DB_PREFIX;
                                 ztp.zone_id,
                                 ztp.territory_id,
                                 ati.territory_name,
+                                ay.year_name,
                                 ztp.status
 
                                 FROM
                                 $tbl" . "zi_tour_plan ztp
 
                                 LEFT JOIN $tbl" . "territory_info ati ON ati.territory_id = ztp.territory_id
+                                LEFT JOIN $tbl" . "year ay ON ay.year_id = ztp.year
 
-                                WHERE ztp.zone_id ='".$_SESSION['zone_id']."'
+                                WHERE ztp.zone_id ='".$_SESSION['zone_id']."' AND ztp.status=1
                                 GROUP BY ztp.year, ztp.start_month, ztp.end_month
                                 ";
 
@@ -97,9 +99,33 @@ $tbl = _DB_PREFIX;
                                             </td>
                                             <td><?php echo $result_array['territory_name']; ?></td>
                                             <td><?php echo $result_array['entry_date']; ?></td>
-                                            <td><?php echo $result_array['year']; ?></td>
-                                            <td><?php echo $result_array['start_month']; ?></td>
-                                            <td><?php echo $result_array['end_month']; ?></td>
+                                            <td><?php echo $result_array['year_name']; ?></td>
+                                            <td>
+                                                <?php
+                                                    $months = $db->get_month_array();
+                                                    foreach($months as $val=>$month)
+                                                    {
+                                                        if($val==$result_array['start_month'])
+                                                        {
+                                                            echo $month;
+                                                            break;
+                                                        }
+                                                    }
+                                                ?>
+                                            </td>
+                                            <td>
+                                                <?php
+                                                $months = $db->get_month_array();
+                                                foreach($months as $val=>$month)
+                                                {
+                                                    if($val==$result_array['end_month'])
+                                                    {
+                                                        echo $month;
+                                                        break;
+                                                    }
+                                                }
+                                                ?>
+                                            </td>
                                         </tr>
                                     <?php
                                     ++$i;

@@ -245,6 +245,26 @@ $user_zone = $_SESSION['zone_id'];
                 $(this).parents().next(".distributor_td_elm").find(".distributor_id").html('');
             }
         });
+
+        $(document).on("change","#to_month",function()
+        {
+            $.post("../../libraries/ajax_load_file/check_existing_month_span.php",
+            {
+                year:$("#year").val(), from_month: $("#from_month").val(), to_month: $(this).val()
+            },
+            function(result)
+            {
+                if(result)
+                {
+                    if(result==1)
+                    {
+                        $("#from_month").val('');
+                        $("#to_month").val('');
+                        alert('Month Span Overlapped!');
+                    }
+                }
+            });
+        });
     });
 
 </script>

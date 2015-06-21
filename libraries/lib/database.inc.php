@@ -194,13 +194,12 @@ class Database {
         $this->close();
     }
 
-    function return_result_array()
+    function return_result_array($sql)
     {
         $data=array();
 
         if($this->open())
         {
-            $sql="SELECT * FROM ait_zi_tour_plan";
             $result=$this->query($sql);
             $row=$this->fetchAssoc($result);
             $data[]=$row;
