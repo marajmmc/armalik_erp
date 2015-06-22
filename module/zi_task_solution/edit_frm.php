@@ -30,10 +30,10 @@ $editRow = $db->single_data($tbl . "zi_task", "*", "id", $_POST['rowID']);
                             Territory
                         </label>
                         <div class="controls">
-                            <select id="territory_id" name="territory_id" class="span5" onchange="load_district_by_territory()">
+                            <select id="territory_id" name="territory_id" class="span5" disabled>
                                 <option value="">Select</option>
                                 <?php
-                                $sql = "select territory_id as fieldkey, territory_name as fieldtext from $tbl" . "territory_info where zone_id='$user_zone'";
+                                $sql = "select territory_id as fieldkey, territory_name as fieldtext from $tbl" . "territory_info";
                                 echo $db->SelectList($sql, $editRow['territory_id']);
                                 ?>
                             </select>
@@ -45,7 +45,7 @@ $editRow = $db->single_data($tbl . "zi_task", "*", "id", $_POST['rowID']);
                             District
                         </label>
                         <div class="controls">
-                            <select id="district_id" name="district_id" class="span5" onchange="load_distributor_by_district()">
+                            <select id="district_id" name="district_id" class="span5" disabled>
                                 <option value="">Select</option>
                                 <?php
                                 $sql_user_group = "SELECT
@@ -71,10 +71,10 @@ $editRow = $db->single_data($tbl . "zi_task", "*", "id", $_POST['rowID']);
                             Distributor
                         </label>
                         <div class="controls">
-                            <select id="distributor_id" name="distributor_id" class="span5">
+                            <select id="distributor_id" name="distributor_id" class="span5" disabled>
                                 <option value="">Select</option>
                                 <?php
-                                $sql = "select distributor_id as fieldkey, distributor_name as fieldtext from $tbl" . "distributor_info where status='Active' AND del_status='0' AND zone_id='$user_zone' AND territory_id='".$editRow['territory_id']."' AND zilla_id='".$editRow['district_id']."' order by distributor_name";
+                                $sql = "select distributor_id as fieldkey, distributor_name as fieldtext from $tbl" . "distributor_info where status='Active' AND del_status='0' AND territory_id='".$editRow['territory_id']."' AND zilla_id='".$editRow['district_id']."' order by distributor_name";
                                 $distributorDropDownArray = $db->return_result_array($sql);
                                 foreach($distributorDropDownArray as $DropDown)
                                 {
@@ -92,7 +92,7 @@ $editRow = $db->single_data($tbl . "zi_task", "*", "id", $_POST['rowID']);
                             Purchase Order
                         </label>
                         <div class="controls">
-                            <input type="text" class="span5" name="purchase_order" value="<?php echo $editRow['purchase_order'];?>"/>
+                            <input type="text" class="span5" disabled name="purchase_order" value="<?php echo $editRow['purchase_order'];?>"/>
                         </div>
                     </div>
 
@@ -101,7 +101,7 @@ $editRow = $db->single_data($tbl . "zi_task", "*", "id", $_POST['rowID']);
                             Collection
                         </label>
                         <div class="controls">
-                            <input type="text" class="span5" name="collection" value="<?php echo $editRow['collection'];?>"/>
+                            <input type="text" class="span5" disabled name="collection" value="<?php echo $editRow['collection'];?>"/>
                         </div>
                     </div>
 
@@ -110,7 +110,7 @@ $editRow = $db->single_data($tbl . "zi_task", "*", "id", $_POST['rowID']);
                             date
                         </label>
                         <div class="controls">
-                            <input class="span5" type="text" name="entry_date" id="entry_date" value="<?php echo $editRow['task_entry_date'];?>" placeholder="Entry date">
+                            <input class="span5" type="text"  disabled name="entry_date" id="entry_date" value="<?php echo $editRow['task_entry_date'];?>" placeholder="Entry date">
                         </div>
                     </div>
 
@@ -119,8 +119,7 @@ $editRow = $db->single_data($tbl . "zi_task", "*", "id", $_POST['rowID']);
                             Activities
                         </label>
                         <div class="controls">
-                            <textarea name="activities" class="span6"><?php echo $editRow['activities'];?></textarea>
-                            <input type="file" name="activities_file" class="span3" />
+                            <textarea name="activities" disabled class="span6"><?php echo $editRow['activities'];?></textarea>
                             <div class="span2"><img src="../../system_images/zi_task/<?php echo $editRow['activities_image']?>" /></div>
                         </div>
                     </div>
@@ -130,8 +129,7 @@ $editRow = $db->single_data($tbl . "zi_task", "*", "id", $_POST['rowID']);
                             Problem
                         </label>
                         <div class="controls">
-                            <textarea name="problem" class="span6"><?php echo $editRow['problem'];?></textarea>
-                            <input type="file" name="problem_file" class="span3" />
+                            <textarea name="problem" disabled class="span6"><?php echo $editRow['problem'];?></textarea>
                             <div class="span2"><img src="../../system_images/zi_task/<?php echo $editRow['problem_image']?>" /></div>
                         </div>
                     </div>
@@ -141,7 +139,7 @@ $editRow = $db->single_data($tbl . "zi_task", "*", "id", $_POST['rowID']);
                             Recommendation
                         </label>
                         <div class="controls">
-                            <textarea name="recommendation" class="span6"><?php echo $editRow['recommendation'];?></textarea>
+                            <textarea name="recommendation" disabled class="span6"><?php echo $editRow['recommendation'];?></textarea>
                         </div>
                     </div>
 
@@ -150,7 +148,7 @@ $editRow = $db->single_data($tbl . "zi_task", "*", "id", $_POST['rowID']);
                             Solution
                         </label>
                         <div class="controls">
-                            <textarea name="solution" class="span6" <?php if($_SESSION['user_level']=='Zone'){echo 'disabled';}?>><?php echo $editRow['solution'];?></textarea>
+                            <textarea name="solution" class="span6"><?php echo $editRow['solution'];?></textarea>
                         </div>
                     </div>
                 </div>

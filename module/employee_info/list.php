@@ -27,7 +27,6 @@ $tbl = _DB_PREFIX;
             <div class="widget-body">
                 <div id="dt_example" class="example_alt_pagination">
                     <table class="table table-condensed table-striped table-hover table-bordered pull-left" id="data-table">
-
                         <thead>
                             <tr>
                                 <th style="width:5%">

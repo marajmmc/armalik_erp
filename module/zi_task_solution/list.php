@@ -6,6 +6,8 @@ require_once("../../libraries/lib/config.inc.php");
 require_once("../../libraries/lib/functions.inc.php");
 $db = new Database();
 $tbl = _DB_PREFIX;
+
+$user_division = $_SESSION['division_id'];
 ?>
 <div class="row-fluid">
     <div class="span12">
@@ -61,6 +63,16 @@ $tbl = _DB_PREFIX;
                         </thead>
                         <tbody>
                             <?php
+
+                            if(isset($user_division))
+                            {
+                                $where = "WHERE azt.division_id = '$user_division'";
+                            }
+                            else
+                            {
+                                $where = '';
+                            }
+
                             $sql = "SELECT
                                 azt.*,
                                 ati.territory_name,
@@ -73,11 +85,14 @@ $tbl = _DB_PREFIX;
                             LEFT JOIN $tbl" . "zone_info azi ON azi.zone_id = azt.zone_id
                             LEFT JOIN $tbl" . "zilla az ON az.zillaid = azt.district_id
                             LEFT JOIN $tbl" . "distributor_info adi ON adi.distributor_id = azt.distributor_id
+                            $where
                         ";
-                            if ($db->open()) {
+                            if ($db->open())
+                            {
                                 $result = $db->query($sql);
                                 $i = 1;
-                                while ($result_array = $db->fetchAssoc()) {
+                                while ($result_array = $db->fetchAssoc())
+                                {
                                     if ($i % 2 == 0) {
                                         $rowcolor = "gradeC";
                                     } else {

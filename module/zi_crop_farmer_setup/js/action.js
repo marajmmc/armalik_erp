@@ -160,19 +160,19 @@ function load_district_by_territory()
     });
 }
 
-function load_distributor_by_district()
+function load_upazilla_by_district()
 {
-    $("#distributor_id").html('');
-    $.post("../../libraries/ajax_load_file/load_distributor.php",
+    $("#upazilla_id").html('');
+    $.post("../../libraries/ajax_load_file/load_upazilla.php",
     {
-        zone_id : $("#zone_id").val(), territory_id: $("#territory_id").val(), zilla_id: $("#district_id").val()
+        zilla_id: $("#district_id").val()
     },
 
     function(result)
     {
         if(result)
         {
-            $("#distributor_id").append(result);
+            $("#upazilla_id").append(result);
         }
     });
 }
