@@ -8,6 +8,7 @@ $db = new Database();
 $tbl = _DB_PREFIX;
 
 $user_division = $_SESSION['division_id'];
+$user_zone = $_SESSION['zone_id'];
 ?>
 <div class="row-fluid">
     <div class="span12">
@@ -27,68 +28,14 @@ $user_division = $_SESSION['division_id'];
                 <div class="widget-body">
                     <div class="control-group">
                         <label class="control-label">
-                            Start Date
-                        </label>
-                        <div class="controls">
-                            <input class="span5" type="text" name="start_date" id="start_date" placeholder="Start Date" validate="Require">
-                            <span class="add-on" id="calcbtn_start_date">
-                                <i class="icon-calendar"></i>
-                            </span>
-                            <span class="help-inline">*</span>
-                        </div>
-                    </div>
-
-                    <div class="control-group">
-                        <label class="control-label">
-                            End Date
-                        </label>
-                        <div class="controls">
-                            <input class="span5" type="text" name="end_date" id="end_date" placeholder="End Date" validate="Require">
-                            <span class="add-on" id="calcbtn_start_date">
-                                <i class="icon-calendar"></i>
-                            </span>
-                            <span class="help-inline">*</span>
-                        </div>
-                    </div>
-
-                    <div class="control-group">
-                        <label class="control-label">
-                            Zone
-                        </label>
-                        <div class="controls">
-                            <select id="zone_id" name="zone_id" class="span5" onchange="load_territory_by_zone()">
-                                <option value="">Select</option>
-                                <?php
-                                $sql = "select zone_id as fieldkey, zone_name as fieldtext from $tbl" . "zone_info where division_id='$user_division'";
-                                echo $db->SelectList($sql);
-                                ?>
-                            </select>
-                        </div>
-                    </div>
-
-<!--                    <div class="control-group">-->
-<!--                        <label class="control-label">-->
-<!--                            Zone In-charge-->
-<!--                        </label>-->
-<!--                        <div class="controls">-->
-<!--                            <select id="zone_in_charge" name="zone_in_charge" class="span5">-->
-<!--                                <option value="">Select</option>-->
-<!--                                --><?php
-//
-//                                ?>
-<!--                            </select>-->
-<!--                        </div>-->
-<!--                    </div>-->
-
-                    <div class="control-group">
-                        <label class="control-label">
                             Territory
                         </label>
                         <div class="controls">
                             <select id="territory_id" name="territory_id" class="span5" onchange="load_district_by_territory()">
                                 <option value="">Select</option>
                                 <?php
-
+                                $sql = "select territory_id as fieldkey, territory_name as fieldtext from $tbl" . "territory_info where zone_id='$user_zone'";
+                                echo $db->SelectList($sql);
                                 ?>
                             </select>
                         </div>
@@ -124,15 +71,19 @@ $user_division = $_SESSION['division_id'];
 
                     <div class="control-group">
                         <label class="control-label">
-                            Product
+                            Purchase Order
                         </label>
                         <div class="controls">
-                            <select id="product" name="product" class="span5">
-                                <option value="">Select</option>
-                                <?php
+                            <input type="text" class="span5" name="purchase_order" />
+                        </div>
+                    </div>
 
-                                ?>
-                            </select>
+                    <div class="control-group">
+                        <label class="control-label">
+                            Collection
+                        </label>
+                        <div class="controls">
+                            <input type="text" class="span5" name="collection" />
                         </div>
                     </div>
 
@@ -141,16 +92,7 @@ $user_division = $_SESSION['division_id'];
                             date
                         </label>
                         <div class="controls">
-                            <input class="span5" type="text" name="entry_date" disabled id="entry_date" value="<?php echo $db->date_formate($db->ToDayDate()) ?>" placeholder="Entry date">
-                        </div>
-                    </div>
-
-                    <div class="control-group">
-                        <label class="control-label">
-                            Distributor Others
-                        </label>
-                        <div class="controls">
-                            <textarea name="distributor_others" class="span6"></textarea>
+                            <input class="span5" type="text" name="entry_date" id="entry_date" value="<?php echo $db->date_formate($db->ToDayDate()) ?>" placeholder="Entry date">
                         </div>
                     </div>
 
@@ -160,6 +102,7 @@ $user_division = $_SESSION['division_id'];
                         </label>
                         <div class="controls">
                             <textarea name="activities" class="span6"></textarea>
+                            <input type="file" name="activities_file" class="span3" />
                         </div>
                     </div>
 
@@ -169,6 +112,7 @@ $user_division = $_SESSION['division_id'];
                         </label>
                         <div class="controls">
                             <textarea name="problem" class="span6"></textarea>
+                            <input type="file" name="problem_file" class="span3" />
                         </div>
                     </div>
 
@@ -186,7 +130,7 @@ $user_division = $_SESSION['division_id'];
                             Solution
                         </label>
                         <div class="controls">
-                            <textarea name="solution" class="span6"></textarea>
+                            <textarea name="solution" class="span6" <?php if($_SESSION['user_level']=='Zone'){echo 'disabled';}?>></textarea>
                         </div>
                     </div>
                 </div>
@@ -201,13 +145,12 @@ $user_division = $_SESSION['division_id'];
 //
 //    });
 
-    var cal = Calendar.setup({
-        onSelect: function(cal) { cal.hide() },
-        fdow :0,
-        minuteStep:1
-    });
-
-    cal.manageFields("calcbtn_start_date", "start_date", "%d-%m-%Y");
-    cal.manageFields("calcbtn_end_date", "end_date", "%d-%m-%Y");
+//    var cal = Calendar.setup({
+//        onSelect: function(cal) { cal.hide() },
+//        fdow :0,
+//        minuteStep:1
+//    });
+//
+//    cal.manageFields("entry_date", "entry_date", "%d-%m-%Y");
 
 </script>
