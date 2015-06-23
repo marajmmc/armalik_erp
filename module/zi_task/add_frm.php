@@ -103,6 +103,9 @@ $user_zone = $_SESSION['zone_id'];
                         </label>
                         <div class="controls">
                             <input class="span5" type="text" name="entry_date" id="entry_date" value="<?php echo $db->ToDayDate();?>" placeholder="Entry date">
+                            <span class="add-on" id="calcbtn_entry_date">
+                                <i class="icon-calendar"></i>
+                            </span>
                         </div>
                     </div>
 
@@ -155,12 +158,11 @@ $user_zone = $_SESSION['zone_id'];
 //
 //    });
 
-//    var cal = Calendar.setup({
-//        onSelect: function(cal) { cal.hide() },
-//        fdow :0,
-//        minuteStep:1
-//    });
-//
-//    cal.manageFields("entry_date", "entry_date", "%d-%m-%Y");
+//var cal = Calendar.setup({
+//    onSelect: function(cal) { cal.hide() },
+//    fdow :0,
+//    minuteStep:1
+//});
+//cal.manageFields("calcbtn_entry_date", "entry_date", "%d-%m-%Y");
 
 </script>
