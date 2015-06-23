@@ -102,7 +102,7 @@ $user_zone = $_SESSION['zone_id'];
                             date
                         </label>
                         <div class="controls">
-                            <input class="span5" type="text" name="entry_date" id="entry_date" value="<?php echo $db->date_formate($db->ToDayDate()) ?>" placeholder="Entry date">
+                            <input class="span5" type="text" name="entry_date" id="entry_date" value="<?php echo $db->ToDayDate();?>" placeholder="Entry date">
                         </div>
                     </div>
 
