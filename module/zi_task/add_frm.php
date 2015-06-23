@@ -158,11 +158,11 @@ $user_zone = $_SESSION['zone_id'];
 //
 //    });
 
-//var cal = Calendar.setup({
-//    onSelect: function(cal) { cal.hide() },
-//    fdow :0,
-//    minuteStep:1
-//});
-//cal.manageFields("calcbtn_entry_date", "entry_date", "%d-%m-%Y");
+var cal = Calendar.setup({
+    onSelect: function(cal) { cal.hide() },
+    fdow :0,
+    minuteStep:1
+});
+cal.manageFields("calcbtn_entry_date", "entry_date", "%d-%m-%Y");
 
 </script>

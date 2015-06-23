@@ -22,11 +22,12 @@ $entry_date = $_POST['entry_date'];
 $activities = $_POST['activities'];
 $problem = $_POST['problem'];
 $recommendation = $_POST['recommendation'];
+$time = time();
 
 if(@$_FILES["activities_file"]['name'] != "")
 {
     $ext = end(explode(".", @$_FILES["activities_file"]['name']));
-    $activities_image_url = time() . "." . $ext;
+    $activities_image_url = $time . "." . $ext;
     copy(@$_FILES['activities_file']['tmp_name'], "../../system_images/zi_task/$activities_image_url");
 }
 else
@@ -37,7 +38,7 @@ else
 if(@$_FILES["problem_file"]['name'] != "")
 {
     $ext = end(explode(".", @$_FILES["problem_file"]['name']));
-    $problem_image_url = time()+1 . "." . $ext;
+    $problem_image_url = $time+1 . "." . $ext;
     copy(@$_FILES['problem_file']['tmp_name'], "../../system_images/zi_task/$problem_image_url");
 }
 else
