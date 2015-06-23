@@ -60,7 +60,7 @@ $user_zone = $_SESSION['zone_id'];
                             Distributor
                         </label>
                         <div class="controls">
-                            <select id="distributor_id" name="distributor_id" class="span5">
+                            <select id="distributor_id" name="distributor_id" class="span5" onchange="load_po_and_collection()">
                                 <option value="">Select</option>
                                 <?php
 
@@ -74,7 +74,12 @@ $user_zone = $_SESSION['zone_id'];
                             Purchase Order
                         </label>
                         <div class="controls">
-                            <input type="text" class="span5" name="purchase_order" />
+                            <select id="purchase_order" name="purchase_order" class="span5">
+                                <option value="">Select</option>
+                                <?php
+
+                                ?>
+                            </select>
                         </div>
                     </div>
 
@@ -83,7 +88,12 @@ $user_zone = $_SESSION['zone_id'];
                             Collection
                         </label>
                         <div class="controls">
-                            <input type="text" class="span5" name="collection" />
+                            <select id="collection" name="collection" class="span5">
+                                <option value="">Select</option>
+                                <?php
+
+                                ?>
+                            </select>
                         </div>
                     </div>
 

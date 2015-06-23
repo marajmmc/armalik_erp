@@ -177,3 +177,34 @@ function load_distributor_by_district()
     });
 }
 
+function load_po_and_collection()
+{
+    $("#purchase_order").html('');
+    $.post("../../libraries/ajax_load_file/load_purchase_order.php",
+    {
+        territory_id: $("#territory_id").val(), zilla_id: $("#district_id").val(), distributor_id:$("#distributor_id").val()
+    },
+
+    function(result)
+    {
+        if(result)
+        {
+            $("#purchase_order").append(result);
+        }
+    });
+
+    $("#collection").html('');
+    $.post("../../libraries/ajax_load_file/load_collection_amount.php",
+    {
+        territory_id: $("#territory_id").val(), zilla_id: $("#district_id").val(), distributor_id:$("#distributor_id").val()
+    },
+
+    function(result)
+    {
+        if(result)
+        {
+            $("#collection").append(result);
+        }
+    });
+}
+

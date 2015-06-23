@@ -22,8 +22,8 @@ $tbl = _DB_PREFIX;
                         <i class="icon-list-alt" data-original-title="Share"> </i>
                     </a>
                 </span>
-
             </div>
+
             <div class="widget-body">
                 <div id="dt_example" class="example_alt_pagination">
                     <table class="table table-condensed table-striped table-hover table-bordered pull-left" id="data-table">
@@ -59,26 +59,26 @@ $tbl = _DB_PREFIX;
                         <?php
 
                         $sql = "SELECT
-                                zcf.*,
-                                ati.territory_name,
-                                zilla.zillanameeng,
-                                upa.upazilanameeng,
-                                crop.crop_name,
-                                ptype.product_type,
-                                variety.varriety_name
+                            zcf.*,
+                            ati.territory_name,
+                            zilla.zillanameeng,
+                            upa.upazilanameeng,
+                            crop.crop_name,
+                            ptype.product_type,
+                            variety.varriety_name
 
-                                FROM
-                                $tbl" . "zi_crop_farmer_setup zcf
+                            FROM
+                            $tbl" . "zi_crop_farmer_setup zcf
 
-                                LEFT JOIN $tbl" . "territory_info ati ON ati.territory_id = zcf.territory_id
-                                LEFT JOIN $tbl" . "zilla zilla ON zilla.zillaid = zcf.district_id
-                                LEFT JOIN $tbl" . "crop_info crop ON crop.crop_id = zcf.crop_id
-                                LEFT JOIN $tbl" . "product_type ptype ON ptype.product_type_id = zcf.product_type_id
-                                LEFT JOIN $tbl" . "varriety_info variety ON variety.varriety_id = zcf.variety_id
-                                LEFT JOIN $tbl" . "upazilla upa ON upa.upazilaid = zcf.upazilla_id AND upa.zillaid = zcf.district_id
+                            LEFT JOIN $tbl" . "territory_info ati ON ati.territory_id = zcf.territory_id
+                            LEFT JOIN $tbl" . "zilla zilla ON zilla.zillaid = zcf.district_id
+                            LEFT JOIN $tbl" . "crop_info crop ON crop.crop_id = zcf.crop_id
+                            LEFT JOIN $tbl" . "product_type ptype ON ptype.product_type_id = zcf.product_type_id
+                            LEFT JOIN $tbl" . "varriety_info variety ON variety.varriety_id = zcf.variety_id
+                            LEFT JOIN $tbl" . "upazilla upa ON upa.upazilaid = zcf.upazilla_id AND upa.zillaid = zcf.district_id
 
-                                WHERE zcf.zone_id ='".$_SESSION['zone_id']."'
-                                ";
+                            WHERE zcf.zone_id ='".$_SESSION['zone_id']."'
+                            ";
 
                         if($db->open())
                         {
