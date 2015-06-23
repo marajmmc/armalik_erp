@@ -13,70 +13,36 @@ $user_zone = $_SESSION['zone_id'];
 $user_division = $_SESSION['division_id'];
 $tbl = _DB_PREFIX;
 
+$division_id = $_SESSION['division_id'];
+$zone_id = $_SESSION['zone_id'];
 $territory_id = $_POST['territory_id'];
 $district_id = $_POST['district_id'];
-$distributor_id = $_POST['distributor_id'];
-$purchase_order = $_POST['purchase_order'];
-$collection = $_POST['collection'];
-$entry_date = $_POST['entry_date'];
-$activities = $_POST['activities'];
-$problem = $_POST['problem'];
-$recommendation = $_POST['recommendation'];
-
-if(@$_FILES["activities_file"]['name'] != "")
-{
-    $ext = end(explode(".", @$_FILES["activities_file"]['name']));
-    $activities_image_url = time() . "." . $ext;
-    copy(@$_FILES['activities_file']['tmp_name'], "../../system_images/zi_task/$activities_image_url");
-}
-else
-{
-    $activities_image_url = '';
-}
-
-if(@$_FILES["problem_file"]['name'] != "")
-{
-    $ext = end(explode(".", @$_FILES["problem_file"]['name']));
-    $problem_image_url = time()+1 . "." . $ext;
-    copy(@$_FILES['problem_file']['tmp_name'], "../../system_images/zi_task/$problem_image_url");
-}
-else
-{
-    $problem_image_url = '';
-}
+$upazilla_id = $_POST['upazilla_id'];
+$crop_id = $_POST['crop_id'];
+$type_id = $_POST['type_id'];
+$variety_id = $_POST['variety_id'];
+$farmers_name = $_POST['farmers_name'];
+$farmers_address = $_POST['farmers_address'];
+$farmers_contact = $_POST['farmers_contact'];
 
 $data = array(
-    'division_id' => "'$user_division'",
-    'zone_id' => "'$user_zone'",
+    'division_id' => "'$division_id'",
+    'zone_id' => "'$zone_id'",
     'territory_id' => "'$territory_id'",
     'district_id' => "'$district_id'",
-    'distributor_id' => "'$distributor_id'",
-    'purchase_order' => "'$purchase_order'",
-    'collection' => "'$collection'",
-    'task_entry_date' => "'$entry_date'",
-    'activities' => "'$activities'",
-    'problem' => "'$problem'",
-    'recommendation' => "'$recommendation'"
+    'upazilla_id' => "'$upazilla_id'",
+    'crop_id' => "'$crop_id'",
+    'product_type_id' => "'$type_id'",
+    'variety_id' => "'$variety_id'",
+    'farmers_name' => "'$farmers_name'",
+    'farmers_address' => "'$farmers_address'",
+    'contact_no' => "'$farmers_contact'"
 );
-
-if($activities_image_url)
-{
-    $data['activities_image'] = "'$activities_image_url'";
-}
-
-if($problem_image_url)
-{
-    $data['problem_image'] = "'$problem_image_url'";
-}
 
 $maxID = $_POST['rowID'];
 
 $whereField = array('id' => "'$maxID'");
-$db->data_update($tbl . 'zi_task', $data, $whereField);
-$db->system_event_log('', $user_id, $employee_id, $maxID, '', $tbl . 'zi_task', 'Update', '');
+$db->data_update($tbl . 'zi_crop_farmer_setup', $data, $whereField);
+$db->system_event_log('', $user_id, $employee_id, $maxID, '', $tbl . 'zi_crop_farmer_setup', 'Update', '');
 
 ?>
-
-<script>
-    window.location.href = "list_frm.php?menuID=<?php echo $_SESSION['sm_id']; ?>&buttonID=<?php echo $_SESSION['st_id']; ?>";
-</script>

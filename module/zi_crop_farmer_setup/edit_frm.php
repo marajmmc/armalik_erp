@@ -7,7 +7,7 @@ require_once("../../libraries/lib/functions.inc.php");
 $db = new Database();
 $tbl = _DB_PREFIX;
 $user_zone = $_SESSION['zone_id'];
-$editRow = $db->single_data($tbl . "zi_task", "*", "id", $_POST['rowID']);
+$editRow = $db->single_data($tbl . "zi_crop_farmer_setup", "*", "id", $_POST['rowID']);
 ?>
 <div class="row-fluid">
     <div class="span12">
@@ -49,17 +49,17 @@ $editRow = $db->single_data($tbl . "zi_task", "*", "id", $_POST['rowID']);
                                 <option value="">Select</option>
                                 <?php
                                 $sql_user_group = "SELECT
-                                            $tbl" . "zilla.zillaid as fieldkey,
-                                            $tbl" . "zilla.zillanameeng as fieldtext
-                                        FROM
-                                            $tbl" . "territory_assign_district
-                                            LEFT JOIN $tbl" . "zilla ON $tbl" . "zilla.zillaid = $tbl" . "territory_assign_district.zilla_id
-                                        WHERE
-                                            $tbl" . "territory_assign_district.del_status=0
-                                            AND $tbl" . "zilla.visible=0
-                                            AND $tbl" . "territory_assign_district.status='Active'
-                                            AND $tbl" . "territory_assign_district.territory_id='".$editRow['territory_id']."'
-                                            ";
+                                    $tbl" . "zilla.zillaid as fieldkey,
+                                    $tbl" . "zilla.zillanameeng as fieldtext
+                                    FROM
+                                    $tbl" . "territory_assign_district
+                                    LEFT JOIN $tbl" . "zilla ON $tbl" . "zilla.zillaid = $tbl" . "territory_assign_district.zilla_id
+                                    WHERE
+                                    $tbl" . "territory_assign_district.del_status=0
+                                    AND $tbl" . "zilla.visible=0
+                                    AND $tbl" . "territory_assign_district.status='Active'
+                                    AND $tbl" . "territory_assign_district.territory_id='".$editRow['territory_id']."'
+                                    ";
                                 echo $db->SelectList($sql_user_group, $editRow['district_id']);
                                 ?>
                             </select>
@@ -68,20 +68,23 @@ $editRow = $db->single_data($tbl . "zi_task", "*", "id", $_POST['rowID']);
 
                     <div class="control-group">
                         <label class="control-label">
-                            Distributor
+                            Upazilla
                         </label>
                         <div class="controls">
-                            <select id="distributor_id" name="distributor_id" class="span5">
+                            <select id="upazilla_id" name="upazilla_id" class="span5">
                                 <option value="">Select</option>
                                 <?php
-                                $sql = "select distributor_id as fieldkey, distributor_name as fieldtext from $tbl" . "distributor_info where status='Active' AND del_status='0' AND zone_id='$user_zone' AND territory_id='".$editRow['territory_id']."' AND zilla_id='".$editRow['district_id']."' order by distributor_name";
-                                $distributorDropDownArray = $db->return_result_array($sql);
-                                foreach($distributorDropDownArray as $DropDown)
-                                {
-                                    ?>
-                                    <option value="<?php echo $DropDown['fieldkey'];?>" <?php if($DropDown['fieldkey']==$editRow['distributor_id']){echo 'selected';}?>><?php echo $DropDown['fieldtext'];?></option>
-                                <?php
-                                }
+                                $sql = "SELECT
+                                    $tbl" . "upazilla.upazilaid as fieldkey,
+                                    $tbl" . "upazilla.upazilanameeng as fieldtext
+                                    FROM
+                                    $tbl" . "upazilla
+
+                                    WHERE
+                                    $tbl" . "upazilla.visible=0
+                                    AND $tbl" . "upazilla.zillaid='".$editRow['district_id']."'
+                                    ";
+                                echo $db->SelectList($sql, $editRow['upazilla_id']);
                                 ?>
                             </select>
                         </div>
@@ -89,68 +92,85 @@ $editRow = $db->single_data($tbl . "zi_task", "*", "id", $_POST['rowID']);
 
                     <div class="control-group">
                         <label class="control-label">
-                            Purchase Order
+                            Crop
                         </label>
                         <div class="controls">
-                            <input type="text" class="span5" name="purchase_order" value="<?php echo $editRow['purchase_order'];?>"/>
+                            <select id="crop_id" name="crop_id" class="span5" onchange="load_type_by_crop()">
+                                <option value="">Select</option>
+                                <?php
+                                $sql = "select
+                                    crop_id as fieldkey,
+                                    crop_name as fieldtext
+                                    from $tbl" . "crop_info
+                                    where status='Active' AND del_status='0' order by order_crop";
+                                echo $db->SelectList($sql, $editRow['crop_id']);
+                                ?>
+                            </select>
                         </div>
                     </div>
 
                     <div class="control-group">
                         <label class="control-label">
-                            Collection
+                            Type
                         </label>
                         <div class="controls">
-                            <input type="text" class="span5" name="collection" value="<?php echo $editRow['collection'];?>"/>
+                            <select id="type_id" name="type_id" class="span5" onchange="load_variety_by_crop_type()">
+                                <option value="">Select</option>
+                                <?php
+                                $sql = "select
+                                    product_type_id as fieldkey,
+                                    product_type as fieldtext
+                                    from $tbl" . "product_type
+                                    where status='Active' AND del_status='0' AND crop_id= '".$editRow['crop_id']."' order by order_type";
+                                echo $db->SelectList($sql, $editRow['product_type_id']);
+                                ?>
+                            </select>
                         </div>
                     </div>
 
                     <div class="control-group">
                         <label class="control-label">
-                            date
+                            Variety
                         </label>
                         <div class="controls">
-                            <input class="span5" type="text" name="entry_date" id="entry_date" value="<?php echo $editRow['task_entry_date'];?>" placeholder="Entry date">
+                            <select id="variety_id" name="variety_id" class="span5">
+                                <option value="">Select</option>
+                                <?php
+                                $sql = "select
+                                    varriety_id as fieldkey,
+                                    varriety_name as fieldtext
+                                    from $tbl" . "varriety_info
+                                    where status='Active' AND del_status='0' AND crop_id= '".$editRow['crop_id']."' AND product_type_id= '".$editRow['product_type_id']."' order by order_variety";
+                                echo $db->SelectList($sql, $editRow['variety_id']);
+                                ?>
+                            </select>
                         </div>
                     </div>
 
                     <div class="control-group">
                         <label class="control-label">
-                            Activities
+                            Farmer's Name
                         </label>
                         <div class="controls">
-                            <textarea name="activities" class="span6"><?php echo $editRow['activities'];?></textarea>
-                            <input type="file" name="activities_file" class="span3" />
-                            <div class="span2"><img src="../../system_images/zi_task/<?php echo $editRow['activities_image']?>" /></div>
+                            <input type="text" name="farmers_name" value="<?php echo $editRow['farmers_name'];?>" class="span5" />
                         </div>
                     </div>
 
                     <div class="control-group">
                         <label class="control-label">
-                            Problem
+                            Address
                         </label>
                         <div class="controls">
-                            <textarea name="problem" class="span6"><?php echo $editRow['problem'];?></textarea>
-                            <input type="file" name="problem_file" class="span3" />
-                            <div class="span2"><img src="../../system_images/zi_task/<?php echo $editRow['problem_image']?>" /></div>
+                            <textarea name="farmers_address" class="span5"><?php echo $editRow['farmers_address'];?></textarea>
                         </div>
                     </div>
 
                     <div class="control-group">
                         <label class="control-label">
-                            Recommendation
+                            Contact No.
                         </label>
                         <div class="controls">
-                            <textarea name="recommendation" class="span6"><?php echo $editRow['recommendation'];?></textarea>
-                        </div>
-                    </div>
-
-                    <div class="control-group">
-                        <label class="control-label">
-                            Solution
-                        </label>
-                        <div class="controls">
-                            <textarea name="solution" class="span6" <?php if($_SESSION['user_level']=='Zone'){echo 'disabled';}?>><?php echo $editRow['solution'];?></textarea>
+                            <input type="text" name="farmers_contact" class="span5" value="<?php echo $editRow['contact_no'];?>"/>
                         </div>
                     </div>
                 </div>
