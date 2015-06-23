@@ -69,6 +69,79 @@ $user_zone = $_SESSION['zone_id'];
                         </div>
                     </div>
 
+                    <div class="control-group">
+                        <label class="control-label">
+                            Crop
+                        </label>
+                        <div class="controls">
+                            <select id="crop_id" name="crop_id" class="span5" onchange="load_type_by_crop()">
+                                <option value="">Select</option>
+                                <?php
+                                    $sql_uesr_group = "select
+                                    crop_id as fieldkey,
+                                    crop_name as fieldtext
+                                    from $tbl" . "crop_info
+                                    where status='Active' AND del_status='0' order by order_crop";
+                                    echo $db->SelectList($sql_uesr_group);
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label">
+                            Type
+                        </label>
+                        <div class="controls">
+                            <select id="type_id" name="type_id" class="span5" onchange="load_variety_by_crop_type()">
+                                <option value="">Select</option>
+                                <?php
+
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label">
+                            Variety
+                        </label>
+                        <div class="controls">
+                            <select id="variety_id" name="variety_id" class="span5">
+                                <option value="">Select</option>
+                                <?php
+
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label">
+                            Farmer's Name
+                        </label>
+                        <div class="controls">
+                            <input type="text" name="farmers_name" value="" class="span5" />
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label">
+                            Address
+                        </label>
+                        <div class="controls">
+                            <textarea name="farmers_address" class="span5"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label">
+                            Contact No.
+                        </label>
+                        <div class="controls">
+                            <input type="text" name="farmers_contact" class="span5"/>
+                        </div>
+                    </div>
 
                 </div>
             </div>

@@ -31,19 +31,35 @@ function Save_Rec()
     formValidate();
     if(validateResult){
         if (SaveStatus==1){
-            document.getElementById('frm_area').action = 'save.php';
-        }else{
-            document.getElementById('frm_area').action = 'update.php';
+            $.post("save.php",$("#frm_area").serialize(), function(result){
+                if (result){
+                    $("#new_rec").html(result);
+                    list();
+                    loader_close();
+                    reset();
+                    alertify.set({
+                        delay: 3000
+                    });
+                    alertify.success("Data Save Successfully");
+                    return false;
+                }
+            });
+        }else if(SaveStatus==2){
+            $.post("update.php",$("#frm_area").serialize(), function(result){
+
+                if (result){
+                    //$("#edit_rec").html(result);
+                    list();
+                    loader_close();
+                    reset();
+                    alertify.set({
+                        delay: 3000
+                    });
+                    alertify.success("Data Update Successfully");
+                    return false;
+                }
+            });
         }
-        $('#frm_area').submit();
-        reset();
-
-        alertify.set({
-            delay: 3000
-        });
-
-        alertify.success("Data Save Successfully");
-        return false;
     }
 }
 
@@ -177,3 +193,36 @@ function load_upazilla_by_district()
     });
 }
 
+function load_type_by_crop()
+{
+    $("#type_id").html('');
+    $.post("../../libraries/ajax_load_file/load_product_type.php",
+    {
+        crop_id: $("#crop_id").val()
+    },
+
+    function(result)
+    {
+        if(result)
+        {
+            $("#type_id").append(result);
+        }
+    });
+}
+
+function load_variety_by_crop_type()
+{
+    $("#variety_id").html('');
+    $.post("../../libraries/ajax_load_file/load_varriety.php",
+    {
+        crop_id:$("#crop_id").val(), product_type_id: $("#type_id").val()
+    },
+
+    function(result)
+    {
+        if(result)
+        {
+            $("#variety_id").append(result);
+        }
+    });
+}

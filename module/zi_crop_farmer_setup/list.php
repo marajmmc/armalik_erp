@@ -22,86 +22,94 @@ $tbl = _DB_PREFIX;
                         <i class="icon-list-alt" data-original-title="Share"> </i>
                     </a>
                 </span>
-            </div>
 
+            </div>
             <div class="widget-body">
                 <div id="dt_example" class="example_alt_pagination">
                     <table class="table table-condensed table-striped table-hover table-bordered pull-left" id="data-table">
-
                         <thead>
                             <tr>
                                 <th style="width:5%">
-                                    No
-                                </th>
-                                <th style="width:5%">
-                                    Zone
+                                    Sl.
                                 </th>
                                 <th style="width:15%">
                                     Territory
                                 </th>
-                                <th style="width:22%">
-                                    Distributor
+                                <th style="width:12%">
+                                    District
                                 </th>
-                                <th style="width:5%">
-                                    Purchase Order
+                                <th style="width:12%">
+                                    Upazilla
                                 </th>
-                                <th style="width:5%">
-                                    Collection
+                                <th style="width:12%">
+                                    Crop
                                 </th>
-                                <th style="width:5%">
-                                    Date
+                                <th style="width:12%">
+                                    Type
                                 </th>
-                                <th style="width:20%">
-                                    Activities
+                                <th style="width:12%">
+                                    Variety
                                 </th>
-                                <th style="width:20%">
-                                    Problem
+                                <th style="width:30%">
+                                    Farmer's Name
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php
-                            $sql = "SELECT
-                                azt.*,
+                        <?php
+
+                        $sql = "SELECT
+                                zcf.*,
                                 ati.territory_name,
-                                azi.zone_name,
-                                az.zillanameeng,
-                                adi.distributor_name
-                            FROM
-                                $tbl" . "zi_task azt
-                            LEFT JOIN $tbl" . "territory_info ati ON ati.territory_id = azt.territory_id
-                            LEFT JOIN $tbl" . "zone_info azi ON azi.zone_id = azt.zone_id
-                            LEFT JOIN $tbl" . "zilla az ON az.zillaid = azt.district_id
-                            LEFT JOIN $tbl" . "distributor_info adi ON adi.distributor_id = azt.distributor_id
-                        ";
-                            if ($db->open()) {
-                                $result = $db->query($sql);
-                                $i = 1;
-                                while ($result_array = $db->fetchAssoc()) {
-                                    if ($i % 2 == 0) {
-                                        $rowcolor = "gradeC";
-                                    } else {
-                                        $rowcolor = "gradeA success";
-                                    }
-                                    ?>
-                                    <tr class="<?php echo $rowcolor ?> pointer" id="tr_id<?php echo $i; ?>" onclick="get_rowID('<?php echo $result_array['id']; ?>', '<?php echo $i; ?>')" ondblclick="details_form();">
-                                        <td>
-                                            <?php echo $i; ?>
-                                        </td>
-                                        <td><?php echo $result_array['zone_name']; ?></td>
-                                        <td><?php echo $result_array['territory_name']; ?></td>
-                                        <td><?php echo $result_array['distributor_name']; ?></td>
-                                        <td><?php echo $result_array['purchase_order']; ?></td>
-                                        <td><?php echo $result_array['collection']; ?></td>
-                                        <td><?php echo $result_array['task_entry_date']; ?></td>
-                                        <td><?php echo $result_array['activities']; ?></td>
-                                        <td><?php echo $result_array['problem']; ?></td>
-                                    </tr>
-                                    <?php
-                                    ++$i;
+                                zilla.zillanameeng,
+                                upa.upazilanameeng,
+                                crop.crop_name,
+                                ptype.product_type,
+                                variety.varriety_name
+
+                                FROM
+                                $tbl" . "zi_crop_farmer_setup zcf
+
+                                LEFT JOIN $tbl" . "territory_info ati ON ati.territory_id = zcf.territory_id
+                                LEFT JOIN $tbl" . "zilla zilla ON zilla.zillaid = zcf.district_id
+                                LEFT JOIN $tbl" . "crop_info crop ON crop.crop_id = zcf.crop_id
+                                LEFT JOIN $tbl" . "product_type ptype ON ptype.product_type_id = zcf.product_type_id
+                                LEFT JOIN $tbl" . "varriety_info variety ON variety.varriety_id = zcf.variety_id
+                                LEFT JOIN $tbl" . "upazilla upa ON upa.upazilaid = zcf.upazilla_id AND upa.zillaid = zcf.district_id
+
+                                WHERE zcf.zone_id ='".$_SESSION['zone_id']."'
+                                ";
+
+                        if($db->open())
+                        {
+                            $result = $db->query($sql);
+                            $i = 1;
+                            while ($result_array = $db->fetchAssoc())
+                            {
+                                if ($i % 2 == 0)
+                                {
+                                    $rowcolor = "gradeC";
                                 }
+                                else
+                                {
+                                    $rowcolor = "gradeA success";
+                                }
+                                ?>
+                                <tr class="<?php echo $rowcolor ?> pointer" id="tr_id<?php echo $i; ?>" onclick="get_rowID('<?php echo $result_array["id"];?>', '<?php echo $i; ?>')" ondblclick="details_form();">
+                                    <td><?php echo $i; ?></td>
+                                    <td><?php echo $result_array['territory_name']; ?></td>
+                                    <td><?php echo $result_array['zillanameeng']; ?></td>
+                                    <td><?php echo $result_array['upazilanameeng']; ?></td>
+                                    <td><?php echo $result_array['crop_name']; ?></td>
+                                    <td><?php echo $result_array['product_type']; ?></td>
+                                    <td><?php echo $result_array['varriety_name']; ?></td>
+                                    <td><?php echo $result_array['farmers_name']; ?></td>
+                                </tr>
+                                <?php
+                                ++$i;
                             }
-                            ?>
+                        }
+                        ?>
                         </tbody>
                     </table>
                     <div class="clearfix">
