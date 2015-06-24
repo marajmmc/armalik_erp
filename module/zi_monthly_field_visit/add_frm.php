@@ -46,7 +46,7 @@ $user_zone = $_SESSION['zone_id'];
                             District
                         </label>
                         <div class="controls">
-                            <select id="district_id" name="district_id" class="span5" onchange="load_distributor_by_district()">
+                            <select id="district_id" name="district_id" class="span5" onchange="load_upazilla_by_district()">
                                 <option value="">Select</option>
                                 <?php
 
@@ -57,10 +57,10 @@ $user_zone = $_SESSION['zone_id'];
 
                     <div class="control-group">
                         <label class="control-label">
-                            Distributor
+                            Upazilla
                         </label>
                         <div class="controls">
-                            <select id="distributor_id" name="distributor_id" class="span5" onchange="load_po_and_collection()">
+                            <select id="upazilla_id" name="upazilla_id" class="span5">
                                 <option value="">Select</option>
                                 <?php
 
@@ -71,10 +71,29 @@ $user_zone = $_SESSION['zone_id'];
 
                     <div class="control-group">
                         <label class="control-label">
-                            Purchase Order
+                            Crop
                         </label>
                         <div class="controls">
-                            <select id="purchase_order" name="purchase_order" class="span5">
+                            <select id="crop_id" name="crop_id" class="span5" onchange="load_type_by_crop()">
+                                <option value="">Select</option>
+                                <?php
+                                    $sql_uesr_group = "select
+                                    crop_id as fieldkey,
+                                    crop_name as fieldtext
+                                    from $tbl" . "crop_info
+                                    where status='Active' AND del_status='0' order by order_crop";
+                                    echo $db->SelectList($sql_uesr_group);
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label">
+                            Type
+                        </label>
+                        <div class="controls">
+                            <select id="type_id" name="type_id" class="span5" onchange="load_variety_by_crop_type()">
                                 <option value="">Select</option>
                                 <?php
 
@@ -85,10 +104,10 @@ $user_zone = $_SESSION['zone_id'];
 
                     <div class="control-group">
                         <label class="control-label">
-                            Collection
+                            Variety
                         </label>
                         <div class="controls">
-                            <select id="collection" name="collection" class="span5">
+                            <select id="variety_id" name="variety_id" class="span5" onchange="load_farmers()">
                                 <option value="">Select</option>
                                 <?php
 
@@ -99,11 +118,25 @@ $user_zone = $_SESSION['zone_id'];
 
                     <div class="control-group">
                         <label class="control-label">
-                            date
+                            Farmer's Name
                         </label>
                         <div class="controls">
-                            <input class="span5" type="text" name="entry_date" id="entry_date" value="<?php echo $db->ToDayDate();?>" placeholder="Entry date">
-                            <span class="add-on" id="calcbtn_entry_date">
+                            <select id="farmers_id" name="farmers_id" class="span5">
+                                <option value="">Select</option>
+                                <?php
+
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label">
+                            Sowing Date
+                        </label>
+                        <div class="controls">
+                            <input class="span5" type="text" name="sowing_date" id="sowing_date" value="<?php echo $db->ToDayDate();?>" placeholder="Entry date">
+                            <span class="add-on" id="calcbtn_sowing_date">
                                 <i class="icon-calendar"></i>
                             </span>
                         </div>
@@ -111,58 +144,41 @@ $user_zone = $_SESSION['zone_id'];
 
                     <div class="control-group">
                         <label class="control-label">
-                            Activities
+                            No. Of Picture
                         </label>
                         <div class="controls">
-                            <textarea name="activities" class="span6"></textarea>
-                            <input type="file" name="activities_file" class="span3" />
+                            <input class="span5" type="text" name="no_of_picture" id="no_of_picture" value="" placeholder="No. Of Pictures (Max 30)" />
                         </div>
                     </div>
 
                     <div class="control-group">
                         <label class="control-label">
-                            Problem
+                            Interval
                         </label>
                         <div class="controls">
-                            <textarea name="problem" class="span6"></textarea>
-                            <input type="file" name="problem_file" class="span3" />
+                            <input class="span5" type="text" name="interval" id="interval" value="" placeholder="Days" />
                         </div>
                     </div>
 
-                    <div class="control-group">
-                        <label class="control-label">
-                            Recommendation
-                        </label>
-                        <div class="controls">
-                            <textarea name="recommendation" class="span6"></textarea>
-                        </div>
-                    </div>
-
-                    <div class="control-group">
-                        <label class="control-label">
-                            Solution
-                        </label>
-                        <div class="controls">
-                            <textarea name="solution" class="span6" <?php if($_SESSION['user_level']=='Zone'){echo 'disabled';}?>></textarea>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+
 <script>
 //    $(document).ready(function()
 //    {
 //
 //    });
-
-//var cal = Calendar.setup({
-//    onSelect: function(cal) { cal.hide() },
-//    fdow :0,
-//    minuteStep:1
-//});
-//cal.manageFields("calcbtn_entry_date", "entry_date", "%d-%m-%Y");
+//
+//    var cal = Calendar.setup({
+//        onSelect: function(cal) { cal.hide() },
+//        fdow :0,
+//        minuteStep:1
+//    });
+//
+//    cal.manageFields("calcbtn_sowing_date", "sowing_date", "%d-%m-%Y");
 
 </script>

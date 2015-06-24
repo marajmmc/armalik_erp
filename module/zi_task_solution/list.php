@@ -38,7 +38,7 @@ $user_division = $_SESSION['division_id'];
                                 <th style="width:5%">
                                     Zone
                                 </th>
-                                <th style="width:15%">
+                                <th style="width:20%">
                                     Territory
                                 </th>
                                 <th style="width:22%">

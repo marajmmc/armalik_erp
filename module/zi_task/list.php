@@ -36,14 +36,14 @@ $tbl = _DB_PREFIX;
                                 <th style="width:5%">
                                     Zone
                                 </th>
-                                <th style="width:15%">
+                                <th style="width:20%">
                                     Territory
                                 </th>
                                 <th style="width:22%">
                                     Distributor
                                 </th>
                                 <th style="width:5%">
-                                    Purchase Order
+                                    PO
                                 </th>
                                 <th style="width:5%">
                                     Collection

@@ -120,7 +120,20 @@ $editRow = $db->single_data($tbl . "zi_task", "*", "id", $_POST['rowID']);
                         </label>
                         <div class="controls">
                             <textarea name="activities" disabled class="span6"><?php echo $editRow['activities'];?></textarea>
-                            <div class="span2"><img src="../../system_images/zi_task/<?php echo $editRow['activities_image']?>" /></div>
+                            <?php
+                            if(isset($editRow['activities_image']) && strlen($editRow['activities_image'])>0)
+                            {
+                                ?>
+                                <div class="span2"><img height="100" width="100" src="../../system_images/zi_task/<?php echo $editRow['activities_image']?>" /></div>
+                            <?php
+                            }
+                            else
+                            {
+                                ?>
+                                <div class="span2"><img height="100" width="100" src="../../system_images/zi_task/no_image.jpg" /></div>
+                            <?php
+                            }
+                            ?>
                         </div>
                     </div>
 
@@ -130,7 +143,20 @@ $editRow = $db->single_data($tbl . "zi_task", "*", "id", $_POST['rowID']);
                         </label>
                         <div class="controls">
                             <textarea name="problem" disabled class="span6"><?php echo $editRow['problem'];?></textarea>
-                            <div class="span2"><img src="../../system_images/zi_task/<?php echo $editRow['problem_image']?>" /></div>
+                            <?php
+                            if(isset($editRow['problem_image']) && strlen($editRow['problem_image'])>0)
+                            {
+                                ?>
+                                <div class="span2"><img height="100" width="100" src="../../system_images/zi_task/<?php echo $editRow['problem_image']?>" /></div>
+                            <?php
+                            }
+                            else
+                            {
+                                ?>
+                                <div class="span2"><img height="100" width="100" src="../../system_images/zi_task/no_image.jpg" /></div>
+                            <?php
+                            }
+                            ?>
                         </div>
                     </div>
 
