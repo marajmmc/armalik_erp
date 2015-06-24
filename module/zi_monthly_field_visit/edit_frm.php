@@ -257,7 +257,7 @@ $editRow = $db->single_data($tbl . "zi_monthly_field_visit_setup", "*", "id", $_
             </div>
             <div class="form-horizontal no-margin">
                 <div class="widget-body">
-                    
+
                 </div>
             </div>
         </div>
