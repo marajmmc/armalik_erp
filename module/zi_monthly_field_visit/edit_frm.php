@@ -37,6 +37,7 @@ $editRow = $db->single_data($tbl . "zi_monthly_field_visit_setup", "*", "id", $_
                                 echo $db->SelectList($sql, $editRow['territory_id']);
                                 ?>
                             </select>
+                            <input type="hidden" name="id" value="<?php echo $_POST['rowID'];?>">
                         </div>
                     </div>
 
@@ -152,7 +153,7 @@ $editRow = $db->single_data($tbl . "zi_monthly_field_visit_setup", "*", "id", $_
                             Farmer's Name
                         </label>
                         <div class="controls">
-                            <select id="variety_id" name="variety_id" class="span5">
+                            <select id="farmer_id" name="farmer_id" class="span5">
                                 <option value="">Select</option>
                                 <?php
                                 $sql = "select
@@ -203,7 +204,7 @@ $editRow = $db->single_data($tbl . "zi_monthly_field_visit_setup", "*", "id", $_
 
                                         <div class="control-group">
                                             <div class="controls">
-                                                <input type="file" class="" name="picture[image][<?php echo $i;?>]" />
+                                                <input type="file" class="" name="picture_link_<?php echo $i;?>" />
                                             </div>
                                         </div>
 
@@ -212,7 +213,7 @@ $editRow = $db->single_data($tbl . "zi_monthly_field_visit_setup", "*", "id", $_
                                                 Remarks
                                             </label>
                                             <div class="controls">
-                                                <textarea class="span12" name="picture[remarks][<?php echo $i;?>]"></textarea>
+                                                <textarea class="span12" name="remarks_<?php echo $i;?>"></textarea>
                                             </div>
                                         </div>
 
@@ -221,7 +222,7 @@ $editRow = $db->single_data($tbl . "zi_monthly_field_visit_setup", "*", "id", $_
                                                 Date
                                             </label>
                                             <div class="controls">
-                                                <input type="text" class="span12" name="picture[picture_date][<?php echo $i;?>]" value="<?php echo date('d-m-Y', ($sowing_date_str+($i*$editRow['interval_days'])*24*3600));?>" />
+                                                <input type="text" class="span12" name="picture_date_<?php echo $i;?>" value="<?php echo date('d-m-Y', ($sowing_date_str+($i*$editRow['interval_days'])*24*3600));?>" />
                                             </div>
                                         </div>
                                     </div>
@@ -234,6 +235,7 @@ $editRow = $db->single_data($tbl . "zi_monthly_field_visit_setup", "*", "id", $_
                                 }
                             }
                             ?>
+                        <input type="hidden" name="total" value="<?php echo $total;?>" />
                     </table>
                 </div>
             </div>
@@ -257,9 +259,99 @@ $editRow = $db->single_data($tbl . "zi_monthly_field_visit_setup", "*", "id", $_
             </div>
             <div class="form-horizontal no-margin">
                 <div class="widget-body">
+                    <table class="table table-hover" id="adding_elements">
+                        <tr>
+                            <td>
+                                <label class="">Picture</label>
+                            </td>
 
+                            <td>
+                                <input type="file" class="span12" name="other_picture[]" id="other_picture" />
+                            </td>
+
+                            <td>
+                                <label class="">Remarks</label>
+                            </td>
+
+                            <td>
+                                <textarea class="span12" name="other_remarks[]" id="other_remarks"></textarea>
+                            </td>
+
+                            <td>
+                                <label class="">Date</label>
+                            </td>
+
+                            <td>
+                                <input type="text" class="span12" name="other_picture_date[]" id="other_picture_date" value="<?php echo $db->date_formate($db->ToDayDate());?>" />
+                            </td>
+
+                            <td>
+                                <a class="btn btn-warning btn-rect" style="">Delete</a>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <div class="control-group">
+                        <input type="button" onclick="RowIncrement()" class="btn btn-success btn-rect pull-right" value="Add More">
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    var ExId = 0;
+    function RowIncrement()
+    {
+        var table = document.getElementById('adding_elements');
+
+        var rowCount = table.rows.length;
+
+        var row = table.insertRow(rowCount);
+        row.id = "T" + ExId;
+        row.className = "tableHover";
+
+        var cell1 = row.insertCell(0);
+        cell1.innerHTML = "<label class=''>Picture</label>";
+        var cell1 = row.insertCell(1);
+        cell1.innerHTML = "<input type='file' name='other_picture[]' id='other_picture" + ExId + "' class='span12'/>" +
+            "<input type='hidden' id='row_id' name='row_id[]' value=''/>";
+
+        var cell1 = row.insertCell(2);
+        cell1.innerHTML = "<label class=''>Remarks</label>";
+        var cell1 = row.insertCell(3);
+        cell1.innerHTML = "<textarea  class='span12' name='other_remarks[]' id='other_remarks" + ExId + "'></textarea>" +
+            "<input type='hidden' id='other_remarks[]' name='other_remarks[]' value=''/>";
+
+        var cell1 = row.insertCell(4);
+        cell1.innerHTML = "<label class=''>Date</label>";
+        var cell1 = row.insertCell(5);
+        cell1.innerHTML = "<input type='text' value='<?php echo $db->date_formate($db->ToDayDate());?>' class='span12' name='other_picture_date[]' id='other_picture_date" + ExId + "' >" +
+            "<input type='hidden' id='other_picture_date[]' name='other_picture_date[]' value=''/>";
+
+        cell1 = row.insertCell(6);
+        cell1.innerHTML = "<a class='btn btn-warning btn-rect' data-original-title='' onclick=\"RowDecrement('adding_elements','T" + ExId + "')\" >Delete</a>";
+        cell1.style.cursor = "default";
+        document.getElementById("other_picture" + ExId).focus();
+        ExId = ExId + 1;
+    }
+
+
+    function RowDecrement(adding_elements, id)
+    {
+        try {
+            var table = document.getElementById(adding_elements);
+            for (var i = 1; i < table.rows.length; i++)
+            {
+                if (table.rows[i].id == id)
+                {
+                    table.deleteRow(i);
+                }
+            }
+        }
+        catch (e) {
+            alert(e);
+        }
+    }
+</script>

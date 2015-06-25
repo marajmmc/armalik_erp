@@ -7,14 +7,16 @@ require_once("../../libraries/lib/config.inc.php");
 require_once("../../libraries/lib/functions.inc.php");
 
 $db = new Database();
+$tbl = _DB_PREFIX;
 $user_id = $_SESSION['user_id'];
 $employee_id = $_SESSION['employee_id'];
 $user_zone = $_SESSION['zone_id'];
-$user_division = $_SESSION['division_id'];
-$tbl = _DB_PREFIX;
+$user_division_query = $db->single_data($tbl.'zone_info', 'division_id', 'zone_id', "$user_zone");
+$user_division = $user_division_query['division_id'];
 
-$division_id = $_SESSION['division_id'];
-$zone_id = $_SESSION['zone_id'];
+
+$division_id = $user_division;
+$zone_id = $user_zone;
 $territory_id = $_POST['territory_id'];
 $district_id = $_POST['district_id'];
 $upazilla_id = $_POST['upazilla_id'];

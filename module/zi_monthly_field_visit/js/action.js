@@ -31,35 +31,19 @@ function Save_Rec()
     formValidate();
     if(validateResult){
         if (SaveStatus==1){
-            $.post("save.php",$("#frm_area").serialize(), function(result){
-                if (result){
-                    $("#new_rec").html(result);
-                    list();
-                    loader_close();
-                    reset();
-                    alertify.set({
-                        delay: 3000
-                    });
-                    alertify.success("Data Save Successfully");
-                    return false;
-                }
-            });
-        }else if(SaveStatus==2){
-            $.post("update.php",$("#frm_area").serialize(), function(result){
-
-                if (result){
-                    //$("#edit_rec").html(result);
-                    list();
-                    loader_close();
-                    reset();
-                    alertify.set({
-                        delay: 3000
-                    });
-                    alertify.success("Data Update Successfully");
-                    return false;
-                }
-            });
+            document.getElementById('frm_area').action = 'save.php';
+        }else{
+            document.getElementById('frm_area').action = 'update.php';
         }
+        $('#frm_area').submit();
+        reset();
+
+        alertify.set({
+            delay: 3000
+        });
+
+        alertify.success("Data Save Successfully");
+        return false;
     }
 }
 
