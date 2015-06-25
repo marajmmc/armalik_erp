@@ -69,7 +69,8 @@ $total = $_POST['total'];
 //}
 
 
-$increment = $_POST['row_id'];
+$increment = sizeof($_POST['row_id']);
+
 if(isset($increment))
 {
     $incrementCount = $increment;
@@ -80,42 +81,47 @@ else
     $incrementCount = 1;
 }
 
-$other_picture_post = $_POST['other_picture'];
+//$other_picture_post = $_POST['other_picture'];
 $other_remarks_post = $_POST['other_remarks'];
 $other_picture_date_post = $_POST['other_picture_date'];
 $otherFile = $_FILES["other_picture"];
 
-for($i=1; $i<$incrementCount; $i++)
-{
-    if(@$otherFile[$i]['name'] != "")
-    {
-        $ext = end(explode(".", @$otherFile[$i]['name']));
-        $image_url = $time.$i . "." . $ext;
-        copy(@$otherFile[$i]['tmp_name'], "../../system_images/zi_field_visit/$image_url");
-        $remark = $other_remarks_post[$i];
-        $picture_date = $other_picture_date_post[$i];
-
-        $data = array(
-            'division_id,' => "'$user_division',",
-            'zone_id,' => "'$user_zone',",
-            'territory_id,' => "'$territory_id',",
-            'district_id,' => "'$district_id',",
-            'upazilla_id,' => "'$upazilla_id',",
-            'crop_id,' => "'$crop_id',",
-            'product_type_id,' => "'$type_id',",
-            'variety_id,' => "'$variety_id',",
-            'farmer_id,' => "'$farmer_id',",
-            'setup_id,' => "'$id',",
-            'picture_link,' => "'$image_url',",
-            'remarks,' => "'$remark',",
-            'picture_date,' => "'$picture_date',",
-            'picture_number,' => "'$i',",
-            'popular_status,' => "'1',",
-            'entry_by,' => "'$user_id',",
-            'entry_date' => "'" . $db->ToDayDate() . "'"
-        );
-    }
-}
+print_r($otherFile);
+//
+//for($i=1; $i<$incrementCount; $i++)
+//{
+//    if(@$otherFile[$i]['name'] != "")
+//    {
+//        $ext = end(explode(".", @$otherFile[$i]['name']));
+//        $image_url = $time.$i . "." . $ext;
+//        copy(@$otherFile[$i]['tmp_name'], "../../system_images/zi_field_visit/$image_url");
+//        $remark = $other_remarks_post[$i];
+//        $picture_date = $other_picture_date_post[$i];
+//
+//        $data = array(
+//            'division_id,' => "'$user_division',",
+//            'zone_id,' => "'$user_zone',",
+//            'territory_id,' => "'$territory_id',",
+//            'district_id,' => "'$district_id',",
+//            'upazilla_id,' => "'$upazilla_id',",
+//            'crop_id,' => "'$crop_id',",
+//            'product_type_id,' => "'$type_id',",
+//            'variety_id,' => "'$variety_id',",
+//            'farmer_id,' => "'$farmer_id',",
+//            'setup_id,' => "'$id',",
+//            'picture_link,' => "'$image_url',",
+//            'remarks,' => "'$remark',",
+//            'picture_date,' => "'$picture_date',",
+//            'picture_number,' => "'$i',",
+//            'popular_status,' => "'1',",
+//            'entry_by,' => "'$user_id',",
+//            'entry_date' => "'" . $db->ToDayDate() . "'"
+//        );
+//
+//        $db->data_insert($tbl . 'zi_monthly_field_visit_pictures', $data);
+//        $db->system_event_log('', $user_id, $employee_id, '', '', $tbl . 'zi_monthly_field_visit_pictures', 'Save', '');
+//    }
+//}
 
 //print_r($_POST);
 //$imgCount = sizeof($picture_linkPost);
