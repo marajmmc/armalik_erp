@@ -78,8 +78,6 @@ $tbl = _DB_PREFIX;
                             LEFT JOIN $tbl" . "varriety_info variety ON variety.varriety_id = zcf.variety_id
                             LEFT JOIN $tbl" . "zi_crop_farmer_setup zcfs ON zcfs.id = zcf.farmer_id
                             LEFT JOIN $tbl" . "upazilla upa ON upa.upazilaid = zcf.upazilla_id AND upa.zillaid = zcf.district_id
-
-                            WHERE zcf.zone_id ='".$_SESSION['zone_id']."'
                             ";
 
                         if($db->open())

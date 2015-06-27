@@ -27,6 +27,39 @@ $editRow = $db->single_data($tbl . "zi_monthly_field_visit_setup", "*", "id", $_
                 <div class="widget-body">
                     <div class="control-group">
                         <label class="control-label">
+                            Division
+                        </label>
+                        <div class="controls">
+                            <select id="division_id" name="division_id" class="span5" onchange="load_zone_by_division()" disabled>
+                                <option value="">Select</option>
+                                <?php
+                                $sql = "select division_id as fieldkey, division_name as fieldtext from $tbl" . "division_info";
+                                echo $db->SelectList($sql, $editRow['division_id']);
+                                ?>
+                            </select>
+                            <input type="hidden" name="id" value="<?php echo $_POST['rowID'];?>">
+                            <input type="hidden" name="division_id" value="<?php echo $editRow['division_id'];?>" />
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label">
+                            Zone
+                        </label>
+                        <div class="controls">
+                            <select id="zone_id" name="zone_id" class="span5" onchange="load_territory_by_zone()" disabled>
+                                <option value="">Select</option>
+                                <?php
+                                $sql = "select zone_id as fieldkey, zone_name as fieldtext from $tbl" . "zone_info";
+                                echo $db->SelectList($sql, $editRow['zone_id']);
+                                ?>
+                            </select>
+                            <input type="hidden" name="zone_id" value="<?php echo $editRow['zone_id'];?>" />
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label">
                             Territory
                         </label>
                         <div class="controls">
@@ -37,7 +70,6 @@ $editRow = $db->single_data($tbl . "zi_monthly_field_visit_setup", "*", "id", $_
                                 echo $db->SelectList($sql, $editRow['territory_id']);
                                 ?>
                             </select>
-                            <input type="hidden" name="id" value="<?php echo $_POST['rowID'];?>">
                             <input type="hidden" name="territory_id" value="<?php echo $editRow['territory_id'];?>">
                         </div>
                     </div>
@@ -202,6 +234,7 @@ $editRow = $db->single_data($tbl . "zi_monthly_field_visit_setup", "*", "id", $_
                             $total = $editRow['no_of_pictures'];
                             for($i=1; $i<=$total; $i++)
                             {
+                                $existing = $db->single_data_w($tbl.'zi_monthly_field_visit_pictures','picture_link, remarks, picture_date', "farmer_id=".$_POST['rowID']." AND picture_number=$i");
                                 ?>
                                 <td>
                                     <div class="control-group">
@@ -211,7 +244,21 @@ $editRow = $db->single_data($tbl . "zi_monthly_field_visit_setup", "*", "id", $_
 
                                         <div class="control-group">
                                             <div class="controls">
-                                                <input type="file" class="" name="picture_link_<?php echo $i;?>" />
+                                                <input type="file" class="" name="picture_link_<?php echo $i;?>" onchange="readURL(this, <?php echo $i;?>)" />
+                                                <?php
+                                                if(isset($existing['picture_link']) && strlen($existing['picture_link'])>0)
+                                                {
+                                                    ?>
+                                                    <div class="span3"><img id="img_up<?php echo $i;?>" height="100" width="100" src="../../system_images/zi_field_visit/<?php echo $existing['picture_link'];?>" /></div>
+                                                <?php
+                                                }
+                                                else
+                                                {
+                                                    ?>
+                                                    <div class="span3"><img id="img_up<?php echo $i;?>" height="100" width="100" src="../../system_images/zi_field_visit/no_image.jpg" /></div>
+                                                <?php
+                                                }
+                                                ?>
                                             </div>
                                         </div>
 
@@ -220,7 +267,7 @@ $editRow = $db->single_data($tbl . "zi_monthly_field_visit_setup", "*", "id", $_
                                                 Remarks
                                             </label>
                                             <div class="controls">
-                                                <textarea class="span12" name="remarks_<?php echo $i;?>"></textarea>
+                                                <textarea class="span12" name="remarks_<?php echo $i;?>"><?php echo $existing['remarks'];?></textarea>
                                             </div>
                                         </div>
 
@@ -250,3 +297,19 @@ $editRow = $db->single_data($tbl . "zi_monthly_field_visit_setup", "*", "id", $_
     </div>
 </div>
 
+<script>
+    function readURL(input, sl)
+    {
+        if (input.files && input.files[0])
+        {
+            var reader = new FileReader();
+
+            reader.onload = function  ( e )
+            {
+                $('#img_up'+sl).attr('src', e.target.result);
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>

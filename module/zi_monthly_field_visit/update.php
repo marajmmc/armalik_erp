@@ -13,12 +13,9 @@ $time = time();
 
 $user_id = $_SESSION['user_id'];
 $employee_id = $_SESSION['employee_id'];
-$user_zone = $_SESSION['zone_id'];
-$user_division_query = $db->single_data($tbl.'zone_info', 'division_id', 'zone_id', "$user_zone");
-$user_division = $user_division_query['division_id'];
 
-$zone_id = $user_zone;
-$division_id = $user_division;
+$division_id = $_POST['division_id'];
+$zone_id = $_POST['zone_id'];
 $territory_id = $_POST['territory_id'];
 $district_id = $_POST['district_id'];
 $upazilla_id = $_POST['upazilla_id'];
@@ -41,8 +38,8 @@ for($i=1; $i<=$total; $i++)
         $picture_date = date('Y-m-d', strtotime($_POST['picture_date_'.$i]));
 
         $data = array(
-            'division_id,' => "'$user_division',",
-            'zone_id,' => "'$user_zone',",
+            'division_id,' => "'$division_id',",
+            'zone_id,' => "'$zone_id',",
             'territory_id,' => "'$territory_id',",
             'district_id,' => "'$district_id',",
             'upazilla_id,' => "'$upazilla_id',",
