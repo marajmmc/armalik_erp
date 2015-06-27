@@ -6,16 +6,18 @@ require_once("../../libraries/lib/functions.inc.php");
 
 $tbl = _DB_PREFIX;
 $db = new Database();
+$year_id = $_POST['year_id'];
+$warehouse_id = $_POST['warehouse_id'];
 $crop_id = $_POST['crop_id'];
 $product_type_id = $_POST['product_type_id'];
 $variety_id = $_POST['varriety_id'];
 $pack_size = $_POST['pack_size'];
-$purchase_order_id = $_POST['purchase_order_id'];
-$warehouse_id = $_POST['warehouse_id'];
-$year_id = $_POST['year_id'];
+//$purchase_order_id = $_POST['purchase_order_id'];
 
 
-$sql="SELECT
+
+
+ $sql="SELECT
             pi.id,
             ait_warehouse_info.warehouse_name,
             ait_crop_info.crop_name,
@@ -75,7 +77,27 @@ $sql="SELECT
                 pina.product_type_id = pi.product_type_id AND
                 pina.varriety_id = pi.varriety_id AND
                 pina.pack_size = pi.pack_size
-            ) AS Total_Access_Quantity
+            ) AS Total_Access_Quantity,
+            (
+                SELECT SUM(pinsq.sample_quantity) FROM ait_product_inventory AS pinsq
+                WHERE
+                pinsq.year_id=pi.year_id AND
+                pinsq.warehouse_id=pi.warehouse_id AND
+                pinsq.crop_id=pi.crop_id AND
+                pinsq.product_type_id = pi.product_type_id AND
+                pinsq.varriety_id = pi.varriety_id AND
+                pinsq.pack_size = pi.pack_size
+            ) AS Total_Sample_Quantity,
+            (
+                SELECT SUM(pinrq.rnd_quantity) FROM ait_product_inventory AS pinrq
+                WHERE
+                pinrq.year_id=pi.year_id AND
+                pinrq.warehouse_id=pi.warehouse_id AND
+                pinrq.crop_id=pi.crop_id AND
+                pinrq.product_type_id = pi.product_type_id AND
+                pinrq.varriety_id = pi.varriety_id AND
+                pinrq.pack_size = pi.pack_size
+            ) AS Total_RND_Quantity
         FROM
             ait_product_info AS pi
             LEFT JOIN ait_warehouse_info ON ait_warehouse_info.warehouse_id = pi.warehouse_id
@@ -102,7 +124,7 @@ if($db->open())
 {
     $result = $db->query($sql);
     $row_result = $db->fetchAssoc($result);
-    $current_stock=($row_result['Total_HQ_Purchase_Quantity']-(($row_result['Total_Sales_Quantity']+$row_result['Total_Bonus_Quantity']+$row_result['Total_Access_Quantity'])-$row_result['Total_Short_Quantity']));
+    $current_stock=(($row_result['Total_HQ_Purchase_Quantity']+$row_result['Total_Access_Quantity'])-($row_result['Total_Sales_Quantity']+$row_result['Total_Bonus_Quantity']+$row_result['Total_Short_Quantity']+$row_result['Total_Sample_Quantity']+$row_result['Total_RND_Quantity']));
     echo $current_stock?$current_stock:0;
 }
 

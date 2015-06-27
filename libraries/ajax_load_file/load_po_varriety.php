@@ -16,6 +16,15 @@ if($_POST['product_type_id']!=""){
     $product_type_id="AND product_type_id=''";
 }
 echo "<option value=''>Select</option>";
-$sql_uesr_group = "select varriety_id as fieldkey, varriety_name as fieldtext from $tbl" . "varriety_info where status='Active' AND del_status='0' AND varriety_id IN (select varriety_id from $tbl"."product_pricing where status='Active') $crop_id $product_type_id ORDER BY varriety_name";
+$sql_uesr_group = "select
+varriety_id as fieldkey,
+varriety_name as fieldtext
+from $tbl" . "varriety_info
+where
+status='Active'
+AND del_status='0'
+AND type=0
+AND varriety_id IN (select varriety_id from $tbl"."product_pricing where status='Active') $crop_id $product_type_id
+ORDER BY varriety_name";
 echo $db->SelectList($sql_uesr_group);
 ?>

@@ -23,14 +23,15 @@ else if ($_SESSION['user_level'] == "Distributor")
 }
 else if ($_SESSION['user_level'] == "Division")
 {
-    $zone_id = "AND zone_id='" . $_SESSION['zone_id'] . "'";
+    echo "<option value=''>Select</option>";
+    $zone_id = "AND division_id='" . $_SESSION['division_id'] . "'";
 }
 else
 {
     $zone_id = '';
 }
 
-//echo "<option value=''>Select</option>";
+
 echo $sql_uesr_group = "select zone_id as fieldkey, zone_name as fieldtext from $tbl" . "zone_info where status='Active' AND del_status='0' $zone_id ORDER BY zone_name";
 echo $db->SelectList($sql_uesr_group);
 ?>
