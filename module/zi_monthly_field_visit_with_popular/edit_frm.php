@@ -30,7 +30,7 @@ $editRow = $db->single_data($tbl . "zi_monthly_field_visit_setup", "*", "id", $_
                             Territory
                         </label>
                         <div class="controls">
-                            <select id="territory_id" name="territory_id" class="span5" onchange="load_district_by_territory()" disabled>
+                            <select id="territory_id" name="territory_id" class="span5" onchange="load_district_by_territory()">
                                 <option value="">Select</option>
                                 <?php
                                 $sql = "select territory_id as fieldkey, territory_name as fieldtext from $tbl" . "territory_info where zone_id='$user_zone'";
@@ -38,7 +38,6 @@ $editRow = $db->single_data($tbl . "zi_monthly_field_visit_setup", "*", "id", $_
                                 ?>
                             </select>
                             <input type="hidden" name="id" value="<?php echo $_POST['rowID'];?>">
-                            <input type="hidden" name="territory_id" value="<?php echo $editRow['territory_id'];?>">
                         </div>
                     </div>
 
@@ -47,7 +46,7 @@ $editRow = $db->single_data($tbl . "zi_monthly_field_visit_setup", "*", "id", $_
                             District
                         </label>
                         <div class="controls">
-                            <select id="district_id" name="district_id" class="span5" onchange="load_distributor_by_district()" disabled>
+                            <select id="district_id" name="district_id" class="span5" onchange="load_distributor_by_district()">
                                 <option value="">Select</option>
                                 <?php
                                 $sql_user_group = "SELECT
@@ -65,7 +64,6 @@ $editRow = $db->single_data($tbl . "zi_monthly_field_visit_setup", "*", "id", $_
                                 echo $db->SelectList($sql_user_group, $editRow['district_id']);
                                 ?>
                             </select>
-                            <input type="hidden" name="district_id" value="<?php echo $editRow['district_id'];?>" />
                         </div>
                     </div>
 
@@ -74,7 +72,7 @@ $editRow = $db->single_data($tbl . "zi_monthly_field_visit_setup", "*", "id", $_
                             Upazilla
                         </label>
                         <div class="controls">
-                            <select id="upazilla_id" name="upazilla_id" class="span5" disabled>
+                            <select id="upazilla_id" name="upazilla_id" class="span5">
                                 <option value="">Select</option>
                                 <?php
                                 $sql = "SELECT
@@ -90,7 +88,6 @@ $editRow = $db->single_data($tbl . "zi_monthly_field_visit_setup", "*", "id", $_
                                 echo $db->SelectList($sql, $editRow['upazilla_id']);
                                 ?>
                             </select>
-                            <input type="hidden" name="upazilla_id" value="<?php echo $editRow['upazilla_id'];?>" />
                         </div>
                     </div>
 
@@ -99,7 +96,7 @@ $editRow = $db->single_data($tbl . "zi_monthly_field_visit_setup", "*", "id", $_
                             Crop
                         </label>
                         <div class="controls">
-                            <select id="crop_id" name="crop_id" class="span5" onchange="load_type_by_crop()" disabled>
+                            <select id="crop_id" name="crop_id" class="span5" onchange="load_type_by_crop()">
                                 <option value="">Select</option>
                                 <?php
                                 $sql = "select
@@ -110,7 +107,6 @@ $editRow = $db->single_data($tbl . "zi_monthly_field_visit_setup", "*", "id", $_
                                 echo $db->SelectList($sql, $editRow['crop_id']);
                                 ?>
                             </select>
-                            <input type="hidden" name="crop_id" value="<?php echo $editRow['crop_id'];?>" />
                         </div>
                     </div>
 
@@ -119,7 +115,7 @@ $editRow = $db->single_data($tbl . "zi_monthly_field_visit_setup", "*", "id", $_
                             Type
                         </label>
                         <div class="controls">
-                            <select id="type_id" name="type_id" class="span5" onchange="load_variety_by_crop_type()" disabled>
+                            <select id="type_id" name="type_id" class="span5" onchange="load_variety_by_crop_type()">
                                 <option value="">Select</option>
                                 <?php
                                 $sql = "select
@@ -130,7 +126,6 @@ $editRow = $db->single_data($tbl . "zi_monthly_field_visit_setup", "*", "id", $_
                                 echo $db->SelectList($sql, $editRow['product_type_id']);
                                 ?>
                             </select>
-                            <input type="hidden" name="type_id" value="<?php echo $editRow['product_type_id'];?>" />
                         </div>
                     </div>
 
@@ -139,7 +134,7 @@ $editRow = $db->single_data($tbl . "zi_monthly_field_visit_setup", "*", "id", $_
                             Variety
                         </label>
                         <div class="controls">
-                            <select id="variety_id" name="variety_id" class="span5" disabled>
+                            <select id="variety_id" name="variety_id" class="span5">
                                 <option value="">Select</option>
                                 <?php
                                 $sql = "select
@@ -150,7 +145,6 @@ $editRow = $db->single_data($tbl . "zi_monthly_field_visit_setup", "*", "id", $_
                                 echo $db->SelectList($sql, $editRow['variety_id']);
                                 ?>
                             </select>
-                            <input type="hidden" name="variety_id" value="<?php echo $editRow['variety_id'];?>" />
                         </div>
                     </div>
 
@@ -159,7 +153,7 @@ $editRow = $db->single_data($tbl . "zi_monthly_field_visit_setup", "*", "id", $_
                             Farmer's Name
                         </label>
                         <div class="controls">
-                            <select id="farmer_id" name="farmer_id" class="span5" disabled>
+                            <select id="farmer_id" name="farmer_id" class="span5">
                                 <option value="">Select</option>
                                 <?php
                                 $sql = "select
@@ -170,7 +164,6 @@ $editRow = $db->single_data($tbl . "zi_monthly_field_visit_setup", "*", "id", $_
                                 echo $db->SelectList($sql, $editRow['farmer_id']);
                                 ?>
                             </select>
-                            <input type="hidden" name="farmer_id" value="<?php echo $editRow['farmer_id'];?>" />
                         </div>
                     </div>
                 </div>
@@ -250,3 +243,115 @@ $editRow = $db->single_data($tbl . "zi_monthly_field_visit_setup", "*", "id", $_
     </div>
 </div>
 
+<div class="row-fluid">
+    <div class="span12">
+        <div class="widget span">
+            <div class="widget-header">
+                <div class="title">
+                    <a id="dynamicTable">Others Popular Variety</a>
+                    <span class="mini-title"></span>
+                </div>
+                <span class="tools">
+                    <a class="btn btn-small" data-original-title="">
+                        <i class="icon-plus-sign" data-original-title="Share"> </i>
+                    </a>
+                </span>
+            </div>
+            <div class="form-horizontal no-margin">
+                <div class="widget-body">
+                    <table class="table table-hover" id="adding_elements">
+                        <tr>
+                            <td>
+                                <label class="">Picture</label>
+                            </td>
+
+                            <td>
+                                <input type="file" class="span12" name="other_picture[]" id="other_picture" />
+                            </td>
+
+                            <td>
+                                <label class="">Remarks</label>
+                            </td>
+
+                            <td>
+                                <textarea class="span12" name="other_remarks[]" id="other_remarks"></textarea>
+                            </td>
+
+                            <td>
+                                <label class="">Date</label>
+                            </td>
+
+                            <td>
+                                <input type="text" class="span12" name="other_picture_date[]" id="other_picture_date" value="<?php echo $db->date_formate($db->ToDayDate());?>" />
+                            </td>
+
+                            <td>
+                                <a class="btn btn-warning btn-rect" style="">Delete</a>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <div class="control-group">
+                        <input type="button" onclick="RowIncrement()" class="btn btn-success btn-rect pull-right" value="Add More">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var ExId = 0;
+    function RowIncrement()
+    {
+        var table = document.getElementById('adding_elements');
+
+        var rowCount = table.rows.length;
+
+        var row = table.insertRow(rowCount);
+        row.id = "T" + ExId;
+        row.className = "tableHover";
+
+        var cell1 = row.insertCell(0);
+        cell1.innerHTML = "<label class=''>Picture</label>";
+        var cell1 = row.insertCell(1);
+        cell1.innerHTML = "<input type='file' name='other_picture[]' id='other_picture" + ExId + "' class='span12'/>" +
+            "<input type='hidden' id='row_id' name='row_id[]' value=''/>";
+
+        var cell1 = row.insertCell(2);
+        cell1.innerHTML = "<label class=''>Remarks</label>";
+        var cell1 = row.insertCell(3);
+        cell1.innerHTML = "<textarea  class='span12' name='other_remarks[]' id='other_remarks" + ExId + "'></textarea>" +
+            "<input type='hidden' id='other_remarks[]' name='other_remarks[]' value=''/>";
+
+        var cell1 = row.insertCell(4);
+        cell1.innerHTML = "<label class=''>Date</label>";
+        var cell1 = row.insertCell(5);
+        cell1.innerHTML = "<input type='text' value='<?php echo $db->date_formate($db->ToDayDate());?>' class='span12' name='other_picture_date[]' id='other_picture_date" + ExId + "' >" +
+            "<input type='hidden' id='other_picture_date[]' name='other_picture_date[]' value=''/>";
+
+        cell1 = row.insertCell(6);
+        cell1.innerHTML = "<a class='btn btn-warning btn-rect' data-original-title='' onclick=\"RowDecrement('adding_elements','T" + ExId + "')\" >Delete</a>";
+        cell1.style.cursor = "default";
+        document.getElementById("other_picture" + ExId).focus();
+        ExId = ExId + 1;
+    }
+
+
+    function RowDecrement(adding_elements, id)
+    {
+        try {
+            var table = document.getElementById(adding_elements);
+            for (var i = 1; i < table.rows.length; i++)
+            {
+                if (table.rows[i].id == id)
+                {
+                    table.deleteRow(i);
+                }
+            }
+        }
+        catch (e) {
+            alert(e);
+        }
+    }
+</script>
