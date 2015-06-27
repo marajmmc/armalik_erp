@@ -276,7 +276,7 @@ $editRow = $db->single_data($tbl . "zi_monthly_field_visit_setup", "*", "id", $_
                                                 Date
                                             </label>
                                             <div class="controls">
-                                                <input type="text" class="span12" name="picture_date_<?php echo $i;?>" value="<?php echo date('d-m-Y', ($sowing_date_str+($i*$editRow['interval_days'])*24*3600));?>" />
+                                                <input type="text" class="span12" name="picture_date_<?php echo $i;?>" value="<?php if(isset($existing['picture_date']) && strlen($existing['picture_date'])>0){echo $db->date_formate($existing['picture_date']);}else{ echo date('d-m-Y', ($sowing_date_str+($i*$editRow['interval_days'])*24*3600));}?>" />
                                             </div>
                                         </div>
                                     </div>
