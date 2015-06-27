@@ -49,6 +49,22 @@ if ($_SESSION['warehouse_id']) {
                         </div>
                     </div>
                     <div class="control-group">
+                        <label class="control-label">
+                            Year
+                        </label>
+                        <div class="controls">
+                            <select id="year_id" name="year_id" class="span5" validate="Require">
+                                <?php
+                                $db_fiscal_year=new Database();
+                                $db_fiscal_year->get_fiscal_year();
+                                ?>
+                            </select>
+                            <span class="help-inline">
+                                *
+                            </span>
+                        </div>
+                    </div>
+                    <div class="control-group">
                         <label class="control-label" for="warehouse_id">
                             Select Warehouse
                         </label>

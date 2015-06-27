@@ -12,14 +12,17 @@ $tbl = _DB_PREFIX;
         <th style="width:10%">
             Division
         </th>
-        <th style="width:10%">
+        <th style="width:10%" id="zone_th_caption">
             Zone
         </th>
         <th style="width:10%" id="territory_th_caption">
             Territory
         </th>
-        <th style="width:10%" id="distributor_th_caption">
-            Customer
+        <th style="width:10%" id="zilla_th_caption">
+            District
+        </th>
+        <th style="width:10%" id="upazilla_th_caption">
+            Upazilla
         </th>
     </tr>
     <tr>
@@ -32,7 +35,7 @@ $tbl = _DB_PREFIX;
                 ?>
             </select>
         </td>
-        <td>
+        <td id="zone_td_elm">
             <select id="zone_id" name="zone_id" class="span12" placeholder="Zone" onchange="load_territory_fnc()">
                 <option value="">Select</option>
                 <?php
@@ -42,13 +45,19 @@ $tbl = _DB_PREFIX;
             </select>
         </td>
         <td id="territory_td_elm">
-            <select id="territory_id" name="territory_id" class="span12" placeholder="Territory" onchange="load_distributor_fnc()" >
+            <select id="territory_id" name="territory_id" class="span12" placeholder="Territory" onchange="load_district()" >
                 <option value="">Select</option>
 
             </select>
         </td>
-        <td id="distributor_td_elm">
-            <select id="distributor_id" name="distributor_id" class="span12" placeholder="Distributor" validate="Require" onchange="load_dealer_fnc()">
+        <td id="zilla_td_elm">
+            <select id="zilla_id" name="zilla_id" class="span12" placeholder="" validate="Require" onchange="load_upazilla_fnc()">
+                <option value="">Select</option>
+
+            </select>
+        </td>
+        <td id="upazilla_td_elm">
+            <select id="upazilla_id" name="upazilla_id" class="span12" placeholder="" validate="Require" onchange="">
                 <option value="">Select</option>
 
             </select>
@@ -73,18 +82,6 @@ $tbl = _DB_PREFIX;
     }
 
 
-    function load_distributor_fnc(){
-        $("#distributor_id").html('');
-        $.post("../../libraries/ajax_load_file/load_distributor.php",{
-            zone_id:$("#zone_id").val(),
-            territory_id:$("#territory_id").val()
-        }, function(result){
-            if (result){
-                $("#distributor_id").append(result);
-            }
-        });
-    }
-
     function session_load_fnc(){
         if($("#userLevel").val()=="Zone")
         {
@@ -95,13 +92,13 @@ $tbl = _DB_PREFIX;
         {
             session_load_zone();
             session_load_territory();
-            session_load_distributor();
+            //session_load_distributor();
         }
         else if($("#userLevel").val()=="Distributor")
         {
             session_load_zone();
             session_load_territory();
-            session_load_distributor();
+            //session_load_distributor();
         }
         else if($("#userLevel").val()=="Division")
         {
@@ -153,6 +150,26 @@ $tbl = _DB_PREFIX;
         $.post("../../libraries/ajax_load_file/load_zone_info_user_access.php",{division_id: $("#division_id").val()}, function(result){
             if (result){
                 $("#zone_id").append(result);
+            }
+        });
+    }
+    function load_district()
+    {
+        $("#zilla_id").html('');
+        $.post("../../libraries/ajax_load_file/load_territory_assign_district.php",{zone_id: $('#zone_id').val(), territory_id: $('#territory_id').val()},function(result){
+            if (result){
+                $("#zilla_id").append(result);
+            }
+        });
+    }
+    function load_upazilla_fnc()
+    {
+        $("#upazilla_id").html('');
+        $.post("../../libraries/ajax_load_file/load_upazilla_info.php",{
+            district_id: $("#zilla_id").val()
+        }, function(result){
+            if (result){
+                $("#upazilla_id").append(result);
             }
         });
     }

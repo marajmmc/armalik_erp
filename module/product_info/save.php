@@ -33,6 +33,7 @@ if (empty($ppo['product_id']))
     $rowfield = array
     (
         'product_id,' => "'$maxID',",
+        'year_id,' => "'" . $year_id . "',",
         'warehouse_id,' => "'" . $warehouse_id . "',",
         'crop_id,' => "'" . $crop_id . "',",
         'product_type_id,' => "'" . $product_type_id . "',",

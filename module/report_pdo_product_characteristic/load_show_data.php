@@ -28,6 +28,8 @@ else
     $product_type_id="";
 }
 
+
+
 if($_POST['zone_id']!="")
 {
     $zone_id=" AND $tbl"."pdo_product_characteristic.zone_id='".$_POST['zone_id']."'";
@@ -46,9 +48,9 @@ else
     $division_id="";
 }
 
-if($_POST['district_id']!="")
+if($_POST['zilla_id']!="")
 {
-    $district_id=" AND $tbl"."pdo_product_characteristic.district_id='".$_POST['district_id']."'";
+    $district_id=" AND $tbl"."pdo_product_characteristic.district_id='".$_POST['zilla_id']."'";
 }
 else
 {
@@ -103,7 +105,7 @@ else
                 ?>
 
         <tr class="btn-success">
-            <td colspan="21">
+            <td colspan="21" style="font-size: 14px; font-weight: bold;">
                 <?php echo $rowr['crop_name']." - ".$rowr['product_type']?>
                 <a href='#' class='btn-success'><b>Total Market Size:
                 <!--                Total Market: Hybrid -->
@@ -209,7 +211,8 @@ else
                                 WHERE
                                     $tbl"."varriety_info.type=0 AND
                                     $tbl"."pdo_product_characteristic.crop_id='".$rowr['crop_id']."' AND
-                                $tbl"."pdo_product_characteristic.product_type_id='".$rowr['product_type_id']."'
+                                    $tbl"."pdo_product_characteristic.product_type_id='".$rowr['product_type_id']."'
+                                    AND $tbl"."pdo_product_characteristic.sales_quantity!=0
                                     $division_id $crop_id $product_type_id $zone_id $district_id $upazilla_id
                                 GROUP BY $tbl"."pdo_product_characteristic_setting_zone.pcsz_id
                         ";
@@ -292,6 +295,7 @@ else
                                     $tbl"."varriety_info.type=1 AND
                                     $tbl"."pdo_product_characteristic.crop_id='".$rowr['crop_id']."' AND
                                     $tbl"."pdo_product_characteristic.product_type_id='".$rowr['product_type_id']."'
+                                    AND $tbl"."pdo_product_characteristic.sales_quantity!=0
                                     $division_id $crop_id $product_type_id $zone_id $district_id $upazilla_id
                                 GROUP BY $tbl"."pdo_product_characteristic_setting_zone.pcsz_id
                         ";

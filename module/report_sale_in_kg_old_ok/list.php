@@ -38,7 +38,7 @@ $tbl = _DB_PREFIX;
                         </tr>
                         <tr>
                             <td>
-                                <select id="year_id" name="year_id" class="span12" placeholder="Zone" validate="Require">
+                                <select id="year_id" name="year_id" class="span12" placeholder="Zone" validate="Require">-->
                                     <option value="">Select</option>
                                     <?php
                                     $sql_uesr_group = "select year_id as fieldkey, year_name as fieldtext from $tbl" . "year WHERE status='Active' AND del_status='0'";

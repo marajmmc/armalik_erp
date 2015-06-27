@@ -10,6 +10,7 @@ require_once("../../libraries/lib/config.inc.php");
 require_once("../../libraries/lib/functions.inc.php");
 $db = new Database();
 $tbl = _DB_PREFIX;
+
 ?>
 <div class="row-fluid">
     <div class="span12">

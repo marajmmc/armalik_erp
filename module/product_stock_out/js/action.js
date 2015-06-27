@@ -24,30 +24,16 @@ function Save_Rec()
     if(validateResult){
         if (SaveStatus==1){
             $.post("save.php",$("#frm_area").serialize(), function(result){
-                if (result){
-                    var data=result.trim();
-                    if(data=="1Sucess"){
-                        //$("#new_rec").html(result);
-                        list();
-                        loader_close();
-                        reset();
-                        alertify.set({
-                            delay: 3000
-                        });
-                        alertify.success("Data Save Successfully");
-                        return false;
-                    }else{
-                        //$("#new_rec").html(result);
-                        list();
-                        loader_close();
-                        reset();
-                        alertify.set({
-                            delay: 3000
-                        });
-                        alertify.error("Data Save Not Successfully");
-                        return false;
-                    }
-                    
+                if (result)
+                {
+                    list();
+                    loader_close();
+                    reset();
+                    alertify.set({
+                        delay: 3000
+                    });
+                    alertify.success("Data Save Successfully");
+                    return false;
                 }
             });
         }else if(SaveStatus==2){

@@ -15,7 +15,8 @@ $rnd_qnty = '0';
 @$distributor_id = $_POST["distributor_id"];
 
 $ws = $db->single_data_w($tbl . "product_stock", "id", "crop_id='" . $_POST['crop_id'] . "' AND product_type_id='" . $_POST['product_type_id'] . "' AND varriety_id='" . $_POST['varriety_id'] . "' AND pack_size='" . $_POST['pack_size'] . "' AND warehouse_id='" . $_POST['warehouse_id'] . "'");
-if ($ws['id'] != "") {
+if ($ws['id'] != "")
+{
 
     if ($_POST['purpose'] == "Sample Purpose") {
         $sample_qnty = $_POST['stock_out'];
@@ -29,8 +30,9 @@ if ($ws['id'] != "") {
     }
 
     $pid = $db->single_data_w($tbl . 'product_stock', "count(id) as product_id", "crop_id='" . $_POST['crop_id'] . "' AND product_type_id='" . $_POST['product_type_id'] . "' AND varriety_id='" . $_POST['varriety_id'] . "' AND pack_size='" . $_POST['pack_size'] . "' AND warehouse_id='" . $_POST['warehouse_id'] . "'");
-    if ($pid['product_id'] != 0) {
-//        echo "update";
+    if ($pid['product_id'] != 0)
+    {
+        //        echo "update";
         $mSQL_task = "update `$tbl" . "product_stock` set
 				`current_stock_qunatity`='$current_stock_qunatity', 
 				`sample_quantity`=sample_quantity+'" . $sample_qnty . "', 
@@ -47,8 +49,10 @@ if ($ws['id'] != "") {
             $db->freeResult();
         }
         $db->system_event_log('', $user_id, $ei_id, '', '', $tbl . 'product_stock', 'Update', '');
-    } else {
-//        echo "insert";
+    }
+    else
+    {
+        //        echo "insert";
         $rowfield = array(
             'warehouse_id,' => "'" . $_POST["warehouse_id"] . "',",
             'crop_id,' => "'" . $_POST["crop_id"] . "',",
@@ -73,6 +77,7 @@ if ($ws['id'] != "") {
         'inventory_id,' => "'" . $MaxID . "',",
         'inventory_date,' => "'" . $db->date_formate($_POST["inventory_date"]) . "',",
         'warehouse_id,' => "'" . $_POST["warehouse_id"] . "',",
+        'year_id,' => "'" . $_POST["year_id"] . "',",
         'crop_id,' => "'" . $_POST["crop_id"] . "',",
         'product_type_id,' => "'" . $_POST["product_type_id"] . "',",
         'varriety_id,' => "'" . $_POST["varriety_id"] . "',",
@@ -92,7 +97,9 @@ if ($ws['id'] != "") {
     $db->data_insert($tbl . 'product_inventory', $rowfield);
     $db->system_event_log('', $user_id, $ei_id, '', '', $tbl . 'product_inventory', 'Save', '');
     echo "Sucess";
-} else {
+}
+else
+{
     echo "Not Sucess";
 }
 ?>

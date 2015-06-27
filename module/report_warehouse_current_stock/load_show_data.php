@@ -9,7 +9,7 @@ $tbl = _DB_PREFIX;
 
 if ($_POST['crop_id'] != "")
 {
-    $crop_id = "AND $tbl" . "product_stock.crop_id='" . $_POST['crop_id'] . "'";
+    $crop_id = "AND $tbl" . "product_info.crop_id='" . $_POST['crop_id'] . "'";
 }
 else
 {
@@ -17,24 +17,24 @@ else
 }
 if ($_POST['product_type_id'] != "")
 {
-    $product_type_id = "AND $tbl" . "product_stock.product_type_id='" . $_POST['product_type_id'] . "'";
+    $product_type_id = "AND $tbl" . "product_info.product_type_id='" . $_POST['product_type_id'] . "'";
 }
 else
 {
     $product_type_id = "";
 }
 if ($_POST['varriety_id'] != "") {
-    $varriety_id = "AND $tbl" . "product_stock.varriety_id='" . $_POST['varriety_id'] . "'";
+    $varriety_id = "AND $tbl" . "product_info.varriety_id='" . $_POST['varriety_id'] . "'";
 } else {
     $varriety_id = "";
 }
 if ($_POST['pack_size'] != "") {
-    $pack_size = "AND $tbl" . "product_stock.pack_size='" . $_POST['pack_size'] . "'";
+    $pack_size = "AND $tbl" . "product_info.pack_size='" . $_POST['pack_size'] . "'";
 } else {
     $pack_size = "";
 }
 if ($_POST['warehouse_id'] != "") {
-    $warehouse = "AND $tbl" . "product_stock.warehouse_id='" . $_POST['warehouse_id'] . "'";
+    $warehouse = "AND $tbl" . "product_info.warehouse_id='" . $_POST['warehouse_id'] . "'";
 } else {
     $warehouse = "";
 }
@@ -80,6 +80,12 @@ if ($_POST['warehouse_id'] != "") {
                     Access Qty(pieces)
                 </th>
                 <th style="width:5%; text-align: right">
+                    Sample Qty(pieces)
+                </th>
+                <th style="width:5%; text-align: right">
+                    RND Qty(pieces)
+                </th>
+                <th style="width:5%; text-align: right">
                     Current Stock
                 </th>
             </tr>
@@ -104,6 +110,7 @@ if ($_POST['warehouse_id'] != "") {
                         (
                         SELECT SUM(ppi.quantity) FROM ait_product_purchase_info AS ppi
                         WHERE
+                        ppi.year_id=pi.year_id AND
                         ppi.warehouse_id=pi.warehouse_id AND
                         ppi.crop_id=pi.crop_id AND
                         ppi.product_type_id = pi.product_type_id AND
@@ -113,6 +120,7 @@ if ($_POST['warehouse_id'] != "") {
                         (
                         SELECT SUM(ppoi.approved_quantity) FROM ait_product_purchase_order_invoice AS ppoi
                         WHERE
+                        ppoi.year_id=pi.year_id AND
                         ppoi.warehouse_id=pi.warehouse_id AND
                         ppoi.crop_id=pi.crop_id AND
                         ppoi.product_type_id = pi.product_type_id AND
@@ -122,6 +130,7 @@ if ($_POST['warehouse_id'] != "") {
                         (
                         SELECT SUM(ppob.quantity) FROM ait_product_purchase_order_bonus AS ppob
                         WHERE
+                        ppob.year_id=pi.year_id AND
                         ppob.warehouse_id=pi.warehouse_id AND
                         ppob.crop_id=pi.crop_id AND
                         ppob.product_type_id = pi.product_type_id AND
@@ -131,6 +140,7 @@ if ($_POST['warehouse_id'] != "") {
                         (
                         SELECT SUM(pin.damage_quantity) FROM ait_product_inventory AS pin
                         WHERE
+                        pin.year_id=pi.year_id AND
                         pin.warehouse_id=pi.warehouse_id AND
                         pin.crop_id=pi.crop_id AND
                         pin.product_type_id = pi.product_type_id AND
@@ -140,12 +150,33 @@ if ($_POST['warehouse_id'] != "") {
                         (
                         SELECT SUM(pin.access_quantity) FROM ait_product_inventory AS pin
                         WHERE
+                        pin.year_id=pi.year_id AND
                         pin.warehouse_id=pi.warehouse_id AND
                         pin.crop_id=pi.crop_id AND
                         pin.product_type_id = pi.product_type_id AND
                         pin.varriety_id = pi.varriety_id AND
                         pin.pack_size = pi.pack_size
-                        ) AS total_access_qnty
+                        ) AS total_access_qnty,
+                        (
+                        SELECT SUM(pinsq.sample_quantity) FROM ait_product_inventory AS pinsq
+                        WHERE
+                        pinsq.year_id=pi.year_id AND
+                        pinsq.warehouse_id=pi.warehouse_id AND
+                        pinsq.crop_id=pi.crop_id AND
+                        pinsq.product_type_id = pi.product_type_id AND
+                        pinsq.varriety_id = pi.varriety_id AND
+                        pinsq.pack_size = pi.pack_size
+                        ) AS total_sample_quantity,
+                        (
+                        SELECT SUM(pinrq.rnd_quantity) FROM ait_product_inventory AS pinrq
+                        WHERE
+                        pinrq.year_id=pi.year_id AND
+                        pinrq.warehouse_id=pi.warehouse_id AND
+                        pinrq.crop_id=pi.crop_id AND
+                        pinrq.product_type_id = pi.product_type_id AND
+                        pinrq.varriety_id = pi.varriety_id AND
+                        pinrq.pack_size = pi.pack_size
+                        ) AS total_rnd_quantity
                         FROM
                         ait_product_info AS pi
                         LEFT JOIN ait_warehouse_info ON ait_warehouse_info.warehouse_id = pi.warehouse_id
@@ -157,7 +188,7 @@ if ($_POST['warehouse_id'] != "") {
                         pi.del_status=0
                         $crop_id $product_type_id $varriety_id $pack_size $warehouse
                         GROUP BY
-                        pi.crop_id, pi.product_type_id, pi.varriety_id, pi.pack_size
+                        pi.year_id, pi.warehouse_id, pi.crop_id, pi.product_type_id, pi.varriety_id, pi.pack_size
                         ORDER BY
                         ait_warehouse_info.warehouse_id,
                         ait_crop_info.crop_id,
@@ -173,10 +204,10 @@ if ($_POST['warehouse_id'] != "") {
                     } else {
                         $rowcolor = "gradeA success";
                     }
-                    $current_stock=($result_array['total_product']-(($result_array['total_delivery']+$result_array['total_bonus']+$result_array['total_access_qnty'])-$result_array['total_short_qnty']));
+                    $current_stock=(($result_array['total_product']+$result_array['total_access_qnty'])-($result_array['total_delivery']+$result_array['total_bonus']+$result_array['total_sample_quantity']+$result_array['total_rnd_quantity']+$result_array['total_short_qnty']));
                         ?>
                         <tr class="<?php echo $rowcolor; ?> pointer" id="tr_id<?php echo $i; ?>" onclick="get_rowID('<?php echo $result_array["id"] ?>', '<?php echo $i; ?>')">
-                            <td>
+                            <td title="Warehouse Name: <?php echo $result_array['warehouse_name'];?>">
                                 <?php
                                 if ($warehouse_name == '') {
                                     echo $result_array['warehouse_name'];
@@ -191,7 +222,7 @@ if ($_POST['warehouse_id'] != "") {
                                 }
                                 ?>
                             </td>
-                           <td>
+                           <td title="Crop Name: <?php echo $result_array['crop_name'];?>">
                                 <?php
                                 if ($crop_name == '') {
                                     echo $result_array['crop_name'];
@@ -206,7 +237,7 @@ if ($_POST['warehouse_id'] != "") {
                                 }
                                 ?>
                             </td>
-                            <td>
+                            <td title="Product Type: <?php echo $result_array['product_type'];?>">
                                 <?php
                                 if ($product_type == '') {
                                     echo $result_array['product_type'];
@@ -221,14 +252,16 @@ if ($_POST['warehouse_id'] != "") {
                                 }
                                 ?>
                             </td>
-                            <td><?php echo $result_array['varriety_name']; ?></td>
-                            <td><?php echo $result_array['pack_size_name']; ?></td>
-                            <td style="text-align: right;"><?php echo $result_array['total_product']; ?></td>
-                            <td style="text-align: right;"><?php echo $result_array['total_delivery']; ?></td>
-                            <td style="text-align: right;"><?php echo $result_array['total_bonus']; ?></td>
-                            <td style="text-align: right;"><?php echo $result_array['total_short_qnty']; ?></td>
-                            <td style="text-align: right;"><?php echo $result_array['total_access_qnty']; ?></td>
-                            <td style="text-align: right;"><?php echo $current_stock; ?></td>
+                            <td title="Variety Name: <?php echo $result_array['varriety_name']; ?>"><?php echo $result_array['varriety_name']; ?></td>
+                            <td title="Pack Size(gm): <?php echo $result_array['pack_size_name']; ?>"><?php echo $result_array['pack_size_name']; ?></td>
+                            <td title="Purchase Qty(pieces): <?php echo $result_array['total_product']; ?>" style="text-align: right;"><?php echo $result_array['total_product']; ?></td>
+                            <td title="Delivery Qty(pieces): <?php echo $result_array['total_delivery']; ?>" style="text-align: right;"><?php echo $result_array['total_delivery']; ?></td>
+                            <td title="Bonus Qty(pieces): <?php echo $result_array['total_bonus']; ?>" style="text-align: right;"><?php echo $result_array['total_bonus']; ?></td>
+                            <td title="Short Qty(pieces): <?php echo $result_array['total_short_qnty']; ?>" style="text-align: right;"><?php echo $result_array['total_short_qnty']; ?></td>
+                            <td title="Access Qty(pieces): <?php echo $result_array['total_access_qnty']; ?>" style="text-align: right;"><?php echo $result_array['total_access_qnty']; ?></td>
+                            <td title="Sample Qty(pieces): <?php echo $result_array['total_sample_quantity']; ?>" style="text-align: right;"><?php echo $result_array['total_sample_quantity']; ?></td>
+                            <td title="RND Qty(pieces): <?php echo $result_array['total_rnd_quantity']; ?>" style="text-align: right;"><?php echo $result_array['total_rnd_quantity']; ?></td>
+                            <td title="Current Stock: <?php echo $current_stock; ?>" style="text-align: right;"><?php echo $current_stock; ?></td>
                         </tr>
                         <?php
                         ++$i;

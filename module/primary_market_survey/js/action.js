@@ -37,13 +37,22 @@ function Save_Rec()
                     return false;
                 }
             });
-        }else if(SaveStatus==2){
-            $.post("update.php",$("#frm_area").serialize(), function(result){
-            
-                if (result){
+        }
+        else if(SaveStatus==2)
+        {
+            $.post("update.php",$("#frm_area").serialize(), function(result)
+            {
+                if (result)
+                {
                     //$("#edit_rec").html(result);
-                    list();
+                    //list();
+
+                    $("#crop_master_id").val("");
+                    $("#product_master_type_id").val("");
+                    $("#product_list").html("");
+
                     loader_close();
+                    $("#save_btn").show();
                     reset();
                     alertify.set({
                         delay: 3000
@@ -72,14 +81,18 @@ function Load_form()
     });
     
 }
-function edit_form(){
-    if($("#rowID").val()==""){
+function edit_form()
+{
+    if($("#rowID").val()=="")
+    {
         alertify.set({
             delay: 3000
         });
         alertify.error("Please Select Any Row In The Table");
         return false;
-    }else{
+    }
+    else
+    {
         hide_div();
         $("#edit_rec").show();
         loader_start();

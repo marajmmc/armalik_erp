@@ -17,7 +17,7 @@ $tbl = _DB_PREFIX;
         <th style="width:10%">
             Product Type
         </th>
-        <th style="width:10%">
+        <th style="width:10%" id="variety_th_caption">
             Variety
         </th>
         <th style="width:10%" id="pack_size_th_caption">
@@ -37,7 +37,7 @@ $tbl = _DB_PREFIX;
                 <option value="">Select</option>
             </select>
         </td>
-        <td>
+        <td id="variety_td_elm">
             <select id="varriety_id" name="varriety_id" class="span12" placeholder="Select Variety" onchange="load_pack_size_fnc()">
                 <option value="">Select</option>
             </select>

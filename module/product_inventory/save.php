@@ -52,10 +52,12 @@ if ($pid['product_id'] != 0) {
 }
 
 $MaxID = "IT-" . $db->getMaxID_six_digit($tbl . 'product_inventory', 'inventory_id');
-$rowfield = array(
+$rowfield = array
+(
     'inventory_id,' => "'" . $MaxID . "',",
     'inventory_date,' => "'" . $db->date_formate($_POST["inventory_date"]) . "',",
     'warehouse_id,' => "'" . $_POST["warehouse_id"] . "',",
+    'year_id,' => "'" . $_POST["year_id"] . "',",
     'crop_id,' => "'" . $_POST["crop_id"] . "',",
     'product_type_id,' => "'" . $_POST["product_type_id"] . "',",
     'varriety_id,' => "'" . $_POST["varriety_id"] . "',",

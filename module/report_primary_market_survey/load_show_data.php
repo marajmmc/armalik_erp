@@ -104,7 +104,10 @@ else
                     LEFT JOIN $tbl"."product_type ON $tbl"."product_type.crop_id = $tbl"."primary_market_survey_details.crop_id AND $tbl"."product_type.product_type_id = $tbl"."primary_market_survey_details.product_type_id
                     LEFT JOIN $tbl"."varriety_info ON $tbl"."varriety_info.crop_id = $tbl"."primary_market_survey_details.crop_id AND $tbl"."varriety_info.product_type_id = $tbl"."primary_market_survey_details.product_type_id AND $tbl"."varriety_info.varriety_id = $tbl"."primary_market_survey_details.varriety_id
                     LEFT JOIN $tbl"."pdo_product_characteristic_setting ON $tbl"."pdo_product_characteristic_setting.prodcut_characteristic_id = $tbl"."primary_market_survey_details.varriety_id
-                WHERE $tbl"."primary_market_survey_details.del_status=0 $zone_id $district_id $upazilla_id $crop_id $product_type_id
+                WHERE
+                    $tbl"."primary_market_survey_details.del_status=0
+
+                    $zone_id $district_id $upazilla_id $crop_id $product_type_id
             ";
     $all_data=array();
     $ths=array();

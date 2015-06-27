@@ -27,8 +27,6 @@ $sqlws="
         FROM `$tbl"."primary_market_survey`
         WHERE
             $tbl"."primary_market_survey.market_survey_group_id='".$row_id."'
-            AND $tbl"."primary_market_survey.crop_id='".$crop_id."'
-            AND $tbl"."primary_market_survey.product_type_id='".$product_type_id."'
             AND $tbl"."primary_market_survey.del_status=0
             AND $tbl"."primary_market_survey.status='Active'
 ";
@@ -177,7 +175,7 @@ if($dbws_details->open())
                 ?>
                 <th colspan="2">
                     <input type="text" name="wholesaler_name[]" id="wholesaler_name[]" value="<?php echo $wholesaler[$i]['wholesaler_name'];?>" <?php if(isset($wholesaler[$i]['wholesaler_name']) && !empty($wholesaler[$i]['wholesaler_name'])){echo "readonly='readonly'";}?> class="span12" placeholder="Distributor <?php echo $i+1;?>" />
-                    <input type="text" name="market_survey_id[]" id="market_survey_id[]" value="<?php echo $wholesaler[$i]['market_survey_id'];?>" class="span12" />
+                    <input type="hidden" name="market_survey_id[]" id="market_survey_id[]" value="<?php echo $wholesaler[$i]['market_survey_id'];?>" class="span12" />
                 </th>
             <?php
             }

@@ -391,7 +391,8 @@ function load_current_stock_fnc(crop_id, product_type_id, varriety_id, pack_size
             var stock=parseFloat(result);
             var rp_qnty=parseFloat($("#quantity_"+serial).val());
             var current_stock=parseFloat(($("#pack_size_name_"+serial).val()*rp_qnty)/1000);
-            $("#current_stock_"+serial).val(parseFloat(($("#pack_size_name_"+serial).val()*stock)/1000));
+            //$("#current_stock_"+serial).val(parseFloat(($("#pack_size_name_"+serial).val()*stock)/1000));
+            $("#current_stock_"+serial).val(result);
 
             if(stock<rp_qnty)
             {

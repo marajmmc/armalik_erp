@@ -19,6 +19,7 @@ $product_type_id=$_POST['product_master_type_id'];
 $db_pmsd=new Database();
 $db_ppc=new Database();
 
+
 if(!empty($zone_id) && !empty($territory_id) && !empty($district_id) && !empty($upazilla_id) || !empty($crop_id) || !empty($product_type_id))
 {
 
@@ -53,7 +54,14 @@ if(!empty($zone_id) && !empty($territory_id) && !empty($district_id) && !empty($
                 $sale_quantity_other=$_POST["sales_quantity_other"][$z];
                 if(!empty($crop_id) && !empty($product_type_id) && !empty($variety_id))
                 {
-                    $sqlpmsd="UPDATE $tbl"."primary_market_survey_details SET
+                    $pmsd_chk=$db_pmsd->single_data_w($tbl."primary_market_survey_details", "market_survey_id", "crop_id='$crop_id'
+                            AND product_type_id='$product_type_id'
+                            AND varriety_id='$variety_id'
+                            AND market_survey_group_id='$group_maxID'
+                            AND market_survey_id='$pms_maxID'");
+                    if(!empty($pmsd_chk['market_survey_id']))
+                    {
+                        $sqlpmsd="UPDATE $tbl"."primary_market_survey_details SET
                             sales_quantity='".$sale_quantity."',
                             market_size='".$market_size."',
                             sales_quantity_other='".$sale_quantity_other."'
@@ -63,33 +71,89 @@ if(!empty($zone_id) && !empty($territory_id) && !empty($district_id) && !empty($
                             AND varriety_id='$variety_id'
                             AND market_survey_group_id='$group_maxID'
                             AND market_survey_id='$pms_maxID'
-                ";
-                    if($db_pmsd->open())
-                    {
-                        $db_pmsd->query($sqlpmsd);
+                        ";
+                        if($db_pmsd->open())
+                        {
+                            $db_pmsd->query($sqlpmsd);
+                        }
+                        $db->system_event_log('', $user_id, $ei_id, $pms_maxID, '', $tbl . 'primary_market_survey_details', 'Save', '');
                     }
-                    $db->system_event_log('', $user_id, $ei_id, $pms_maxID, '', $tbl . 'primary_market_survey_details', 'Save', '');
+                    else
+                    {
+                        $rowfield = array
+                        (
+                            'market_survey_group_id,' => "'$group_maxID',",
+                            'market_survey_id,' => "'$pms_maxID',",
+                            'crop_id,' => "'" . $crop_id . "',",
+                            'product_type_id,' => "'" . $product_type_id . "',",
+                            'varriety_id,' => "'" . $variety_id . "',",
+                            'sales_quantity,' => "'" . $_POST["sales_quantity"][$i][$z] . "',",
+                            'market_size,' => "'" . $_POST["market_size"][$i][$z] . "',",
+                            'sales_quantity_other,' => "'" . $_POST["sales_quantity_other"][$z] . "',",
+                            'status,' => "'Active',",
+                            'del_status,' => "'0',",
+                            'entry_by,' => "'$user_id',",
+                            'entry_date' => "'" . $db->ToDayDate() . "'"
+                        );
+
+                        $db->data_insert($tbl . 'primary_market_survey_details', $rowfield);
+                        $db->system_event_log('', $user_id, $ei_id, $pms_maxID, '', $tbl . 'primary_market_survey_details', 'Save', '');
+                    }
 
 
-                    $sqlppc="UPDATE $tbl"."pdo_product_characteristic SET
-                            sales_quantity='".$sale_quantity_other."'
-                        WHERE
-                            crop_id='$crop_id'
-                            AND product_type_id='$product_type_id'
-                            AND variety_id='$variety_id'
-                            AND market_survey_group_id='$group_maxID'
-                            AND zone_id='$zone_id'
-                            AND territory_id='$territory_id'
-                            AND district_id='$district_id'
-                            AND upazilla_id='$upazilla_id'
-                ";
-                    if($db_ppc->open())
+                    $ppc_chk=$db_ppc->single_data_w($tbl."pdo_product_characteristic", "market_survey_group_id", "crop_id='$crop_id'
+                                AND product_type_id='$product_type_id'
+                                AND variety_id='$variety_id'
+                                AND market_survey_group_id='$group_maxID'
+                                AND zone_id='$zone_id'
+                                AND territory_id='$territory_id'
+                                AND district_id='$district_id'
+                                AND upazilla_id='$upazilla_id'");
+                    if(!empty($pmsd_chk['market_survey_group_id']))
                     {
-                        $db_ppc->query($sqlppc);
+                        $sqlppc="UPDATE $tbl"."pdo_product_characteristic SET
+                                sales_quantity='".$sale_quantity_other."'
+                            WHERE
+                                crop_id='$crop_id'
+                                AND product_type_id='$product_type_id'
+                                AND variety_id='$variety_id'
+                                AND market_survey_group_id='$group_maxID'
+                                AND zone_id='$zone_id'
+                                AND territory_id='$territory_id'
+                                AND district_id='$district_id'
+                                AND upazilla_id='$upazilla_id'
+                            ";
+                        if($db_ppc->open())
+                        {
+                            $db_ppc->query($sqlppc);
+                        }
+                        $db->system_event_log('', $user_id, $ei_id, $group_maxID, '', $tbl . 'pdo_product_characteristic', 'Save', '');
                     }
-                    $db->system_event_log('', $user_id, $ei_id, $group_maxID, '', $tbl . 'pdo_product_characteristic', 'Save', '');
+                    else
+                    {
+                        $ppc_maxID = "PC-".$db->getMaxID_six_digit($tbl . 'pdo_product_characteristic', 'prodcut_characteristic_id');
+                        $rowfield = array
+                        (
+                            'market_survey_group_id,' => "'$group_maxID',",
+                            'prodcut_characteristic_id,' => "'$ppc_maxID',",
+                            'crop_id,' => "'" . $crop_id . "',",
+                            'product_type_id,' => "'" . $product_type_id . "',",
+                            'variety_id,' => "'" . $variety_id . "',",
+                            'zone_id,' => "'" . $zone_id . "',",
+                            'territory_id,' => "'" . $territory_id . "',",
+                            'district_id,' => "'" . $district_id . "',",
+                            'upazilla_id,' => "'" . $upazilla_id . "',",
+                            'sales_quantity,' => "'" . $_POST["sales_quantity_other"][$y] . "',",
+                            'upload_date,' => "'" . $db->ToDayDate() . "',",
+                            'status,' => "'Active',",
+                            'del_status,' => "'0',",
+                            'entry_by,' => "'$user_id',",
+                            'entry_date' => "'" . $db->ToDayDate() . "'"
+                        );
+                        $db->data_insert($tbl . 'pdo_product_characteristic', $rowfield);
+                        $db->system_event_log('', $user_id, $ei_id, $ppc_maxID, '', $tbl . 'pdo_product_characteristic', 'Save', '');
+                    }
                 }
-
             }
         }
         else
@@ -114,33 +178,6 @@ if(!empty($zone_id) && !empty($territory_id) && !empty($district_id) && !empty($
 
             $db->data_insert($tbl . 'primary_market_survey', $rowfield);
             $db->system_event_log('', $user_id, $ei_id, $pms_maxID, '', $tbl . 'primary_market_survey', 'Save', '');
-
-            $count=count($_POST['self_variety_id']);
-            for($z=0; $z<$count; $z++)
-            {
-                $rowfield = array
-                (
-                    'market_survey_group_id,' => "'$group_maxID',",
-                    'market_survey_id,' => "'$pms_maxID',",
-                    //'type,' => "'" . $_POST["type"][$z] . "',",
-                    'crop_id,' => "'" . $_POST["crop_id"][$z] . "',",
-                    'product_type_id,' => "'" . $_POST["product_type_id"][$z] . "',",
-                    //'hybrid,' => "'" . $_POST["hybrid"][$z] . "',",
-                    'varriety_id,' => "'" . $_POST["varriety_id"][$z] . "',",
-                    'sales_quantity,' => "'" . $_POST["sales_quantity"][$i][$z] . "',",
-                    'market_size,' => "'" . $_POST["market_size"][$i][$z] . "',",
-                    'sales_quantity_other,' => "'" . $_POST["sales_quantity_other"][$z] . "',",
-                    'status,' => "'Active',",
-                    'del_status,' => "'0',",
-                    'entry_by,' => "'$user_id',",
-                    'entry_date' => "'" . $db->ToDayDate() . "'"
-                );
-
-                $db->data_insert($tbl . 'primary_market_survey_details', $rowfield);
-                $db->system_event_log('', $user_id, $ei_id, $pms_maxID, '', $tbl . 'primary_market_survey_details', 'Save', '');
-            }
-
-
         }
     }
 

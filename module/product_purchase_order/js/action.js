@@ -144,19 +144,31 @@ function load_distributor_fnc()
     });
 }
 
-function session_load_fnc(){
-    if($("#userLevel").val()=="Zone"){
+function session_load_fnc()
+{
+    if($("#userLevel").val()=="Zone")
+    {
         session_load_zone();
         session_load_territory();
-    }else if($("#userLevel").val()=="Territory"){
+    }
+    else if($("#userLevel").val()=="Territory")
+    {
         session_load_zone();
         session_load_territory();
         session_load_distributor();
-    }else if($("#userLevel").val()=="Distributor"){
+    }
+    else if($("#userLevel").val()=="Distributor")
+    {
         session_load_zone();
         session_load_territory();
         session_load_distributor();
-    }else{
+    }
+    else if($("#userLevel").val()=="Division")
+    {
+        session_load_zone();
+    }
+    else
+    {
         
     }
 }

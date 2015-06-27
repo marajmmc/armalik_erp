@@ -26,9 +26,8 @@ $tbl = _DB_PREFIX;
             </div>
             <div class="widget-body">
                 <div id="dt_example" class="example_alt_pagination">
-                    <?php require_once("../../libraries/search_box/distributor_without_district_upzilla.php") ?>
+                    <?php require_once("../../libraries/search_box/division_zone_territory_district_upzilla.php") ?>
                     <?php require_once("../../libraries/search_box/crop_type_variety_pack_size.php") ?>
-                    <?php require_once("../../libraries/search_box/from_to_date.php") ?>
                     <?php require_once("../../libraries/search_box/search_button.php") ?>
 
                     <div class="clearfix"></div>
@@ -42,5 +41,21 @@ $tbl = _DB_PREFIX;
 <script>
     $(document).ready(function(){
         session_load_fnc()
+
+        $("#zone_id").attr('onchange', '');
+
+        $("#territory_td_elm").hide();
+        $("#territory_th_caption").hide();
+
+        $("#zilla_td_elm").hide();
+        $("#zilla_th_caption").hide();
+
+        $("#upazilla_td_elm").hide();
+        $("#upazilla_th_caption").hide();
+
+        $("#varriety_id").attr('onchange', '');
+
+        $("#pack_size_th_caption").hide();
+        $("#pack_size_td_elm").hide();
     });
 </script>
