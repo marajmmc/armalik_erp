@@ -142,9 +142,34 @@ function Existin_data(elm){
     });
 }
 
+function load_zone_by_division()
+{
+    $("#zone_id").html('');
+    $("#territory_id").html('');
+    $("#district_id").html('');
+    $("#upazilla_id").html('');
+    $("#farmers_id").html('');
+    $.post("../../libraries/ajax_load_file/load_zone.php",
+        {
+            division_id : $("#division_id").val()
+        },
+
+        function(result)
+        {
+            if(result)
+            {
+                $("#zone_id").append(result);
+            }
+        });
+}
+
 function load_territory_by_zone()
 {
     $("#territory_id").html('');
+    $("#district_id").html('');
+    $("#upazilla_id").html('');
+    $("#farmers_id").html('');
+
     $.post("../../libraries/ajax_load_file/load_territory.php",
     {
         zone_id : $("#zone_id").val()
@@ -162,6 +187,9 @@ function load_territory_by_zone()
 function load_district_by_territory()
 {
     $("#district_id").html('');
+    $("#upazilla_id").html('');
+    $("#farmers_id").html('');
+
     $.post("../../libraries/ajax_load_file/load_territory_assign_district.php",
     {
         zone_id : $("#zone_id").val(), territory_id: $("#territory_id").val()
@@ -179,6 +207,8 @@ function load_district_by_territory()
 function load_upazilla_by_district()
 {
     $("#upazilla_id").html('');
+    $("#farmers_id").html('');
+
     $.post("../../libraries/ajax_load_file/load_upazilla.php",
     {
         zilla_id: $("#district_id").val()
@@ -223,6 +253,27 @@ function load_variety_by_crop_type()
         if(result)
         {
             $("#variety_id").append(result);
+        }
+    });
+}
+
+function check_farmer_existence()
+{
+    $.post("../../libraries/ajax_load_file/check_farmer_existence.php",
+    {
+        farmer_id: $("#farmer_id").val(), division_id:$("#division_id").val(), zone_id: $("#zone_id").val(), territory_id: $("#territory_id").val(), district_id: $("#district_id").val(), upazilla_id: $("#upazilla_id").val(), crop_id: $("#crop_id").val(), product_type_id: $("#type_id").val(), variety_id: $("#variety_id").val(), farmers_name: $("#farmers_name").val()
+    },
+
+    function(result)
+    {
+        if(result==1)
+        {
+            $("#farmers_name").val('');
+            alertify.set({
+                delay: 3000
+            });
+            alertify.error("Farmer Name Exists");
+            return false;
         }
     });
 }

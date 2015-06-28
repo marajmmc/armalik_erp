@@ -7,8 +7,9 @@ require_once("../../libraries/lib/functions.inc.php");
 $db = new Database();
 $tbl = _DB_PREFIX;
 
-$user_division = $_SESSION['division_id'];
 $user_zone = $_SESSION['zone_id'];
+$user_division_query = $db->single_data($tbl.'zone_info', 'division_id', 'zone_id', "$user_zone");
+$user_division = $user_division_query['division_id'];
 ?>
 <div class="row-fluid">
     <div class="span12">
@@ -31,6 +32,10 @@ $user_zone = $_SESSION['zone_id'];
                             Territory
                         </label>
                         <div class="controls">
+                            <input type="hidden" id="division_id" name="division_id" value="<?php echo $user_division;?>" />
+                            <input type="hidden" id="zone_id" name="zone_id" value="<?php echo $user_zone;?>" />
+                            <input type="hidden" id="farmer_id" name="farmer_id" value="0" />
+
                             <select id="territory_id" name="territory_id" class="span5" onchange="load_district_by_territory()">
                                 <option value="">Select</option>
                                 <?php
@@ -121,7 +126,7 @@ $user_zone = $_SESSION['zone_id'];
                             Farmer Name
                         </label>
                         <div class="controls">
-                            <input type="text" name="farmers_name" class="span5" value="" />
+                            <input type="text" name="farmers_name" id="farmers_name" class="span5" value="" onblur="check_farmer_existence()" />
                         </div>
                     </div>
                 </div>

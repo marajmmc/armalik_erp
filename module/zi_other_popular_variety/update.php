@@ -139,3 +139,6 @@ for($i=0; $i<$incrementCount; $i++)
 }
 
 ?>
+<script>
+    window.location.href = "list_frm.php?menuID=<?php echo $_SESSION['sm_id']; ?>&buttonID=<?php echo $_SESSION['st_id']; ?>";
+</script>

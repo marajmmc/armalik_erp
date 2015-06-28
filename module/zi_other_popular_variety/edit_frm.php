@@ -32,7 +32,7 @@ $editRow = $db->single_data($tbl . "zi_others_popular_variety", "*", "id", $_POS
                             Territory
                         </label>
                         <div class="controls">
-                            <select id="territory_id" name="territory_id" class="span5" onchange="load_district_by_territory()">
+                            <select id="territory_id" name="territory_id" class="span5" onchange="load_district_by_territory()" disabled>
                                 <option value="">Select</option>
                                 <?php
                                 $sql = "select territory_id as fieldkey, territory_name as fieldtext from $tbl" . "territory_info where zone_id='$user_zone'";
@@ -40,6 +40,7 @@ $editRow = $db->single_data($tbl . "zi_others_popular_variety", "*", "id", $_POS
                                 ?>
                             </select>
                             <input type="hidden" name="id" value="<?php echo $_POST['rowID'];?>">
+                            <input type="hidden" name="territory_id" value="<?php echo $editRow['territory_id'];?>">
                         </div>
                     </div>
 
@@ -48,7 +49,7 @@ $editRow = $db->single_data($tbl . "zi_others_popular_variety", "*", "id", $_POS
                             District
                         </label>
                         <div class="controls">
-                            <select id="district_id" name="district_id" class="span5" onchange="load_distributor_by_district()">
+                            <select id="district_id" name="district_id" class="span5" onchange="load_distributor_by_district()" disabled>
                                 <option value="">Select</option>
                                 <?php
                                 $sql_user_group = "SELECT
@@ -66,6 +67,7 @@ $editRow = $db->single_data($tbl . "zi_others_popular_variety", "*", "id", $_POS
                                 echo $db->SelectList($sql_user_group, $editRow['district_id']);
                                 ?>
                             </select>
+                            <input type="hidden" name="district_id" value="<?php echo $editRow['district_id'];?>" />
                         </div>
                     </div>
 
@@ -74,7 +76,7 @@ $editRow = $db->single_data($tbl . "zi_others_popular_variety", "*", "id", $_POS
                             Upazilla
                         </label>
                         <div class="controls">
-                            <select id="upazilla_id" name="upazilla_id" class="span5">
+                            <select id="upazilla_id" name="upazilla_id" class="span5" disabled>
                                 <option value="">Select</option>
                                 <?php
                                 $sql = "SELECT
@@ -90,6 +92,7 @@ $editRow = $db->single_data($tbl . "zi_others_popular_variety", "*", "id", $_POS
                                 echo $db->SelectList($sql, $editRow['upazilla_id']);
                                 ?>
                             </select>
+                            <input type="hidden" name="upazilla_id" value="<?php echo $editRow['upazilla_id'];?>" />
                         </div>
                     </div>
 
@@ -98,7 +101,7 @@ $editRow = $db->single_data($tbl . "zi_others_popular_variety", "*", "id", $_POS
                             Crop
                         </label>
                         <div class="controls">
-                            <select id="crop_id" name="crop_id" class="span5" onchange="load_type_by_crop()">
+                            <select id="crop_id" name="crop_id" class="span5" onchange="load_type_by_crop()" disabled>
                                 <option value="">Select</option>
                                 <?php
                                 $sql = "select
@@ -109,6 +112,7 @@ $editRow = $db->single_data($tbl . "zi_others_popular_variety", "*", "id", $_POS
                                 echo $db->SelectList($sql, $editRow['crop_id']);
                                 ?>
                             </select>
+                            <input type="hidden" name="crop_id" value="<?php echo $editRow['crop_id'];?>" />
                         </div>
                     </div>
 
@@ -117,7 +121,7 @@ $editRow = $db->single_data($tbl . "zi_others_popular_variety", "*", "id", $_POS
                             Type
                         </label>
                         <div class="controls">
-                            <select id="type_id" name="type_id" class="span5" onchange="load_variety_by_crop_type()">
+                            <select id="type_id" name="type_id" class="span5" onchange="load_variety_by_crop_type()" disabled>
                                 <option value="">Select</option>
                                 <?php
                                 $sql = "select
@@ -128,6 +132,7 @@ $editRow = $db->single_data($tbl . "zi_others_popular_variety", "*", "id", $_POS
                                 echo $db->SelectList($sql, $editRow['product_type_id']);
                                 ?>
                             </select>
+                            <input type="hidden" name="type_id" value="<?php echo $editRow['product_type_id'];?>" />
                         </div>
                     </div>
 
@@ -136,7 +141,7 @@ $editRow = $db->single_data($tbl . "zi_others_popular_variety", "*", "id", $_POS
                             Variety
                         </label>
                         <div class="controls">
-                            <select id="variety_id" name="variety_id" class="span5">
+                            <select id="variety_id" name="variety_id" class="span5" disabled>
                                 <option value="">Select</option>
                                 <?php
                                 $sql = "select
@@ -147,6 +152,7 @@ $editRow = $db->single_data($tbl . "zi_others_popular_variety", "*", "id", $_POS
                                 echo $db->SelectList($sql, $editRow['variety_id']);
                                 ?>
                             </select>
+                            <input type="hidden" name="variety_id" value="<?php echo $editRow['variety_id'];?>" />
                         </div>
                     </div>
 
@@ -155,7 +161,8 @@ $editRow = $db->single_data($tbl . "zi_others_popular_variety", "*", "id", $_POS
                             Farmer Name
                         </label>
                         <div class="controls">
-                            <input type="text" name="farmers_name" class="span5" value="<?php echo $editRow['farmer_name'];?>" />
+                            <input type="text" name="farmers_name" class="span5" value="<?php echo $editRow['farmer_name'];?>" disabled />
+                            <input type="hidden" name="farmers_name" value="<?php echo $editRow['farmer_name'];?>" />
                         </div>
                     </div>
                 </div>

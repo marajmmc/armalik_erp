@@ -11,13 +11,13 @@ $tbl = _DB_PREFIX;
 
 $user_id = $_SESSION['user_id'];
 $employee_id = $_SESSION['employee_id'];
-$user_zone = $_SESSION['zone_id'];
-$user_division_query = $db->single_data($tbl.'zone_info', 'division_id', 'zone_id', "$user_zone");
-$user_division = $user_division_query['division_id'];
 
+//$user_zone = $_SESSION['zone_id'];
+//$user_division_query = $db->single_data($tbl.'zone_info', 'division_id', 'zone_id', "$user_zone");
+//$user_division = $user_division_query['division_id'];
 
-$division_id = $user_division;
-$zone_id = $user_zone;
+$division_id = $_POST['division_id'];
+$zone_id = $_POST['zone_id'];
 $territory_id = $_POST['territory_id'];
 $district_id = $_POST['district_id'];
 $upazilla_id = $_POST['upazilla_id'];
@@ -27,7 +27,6 @@ $variety_id = $_POST['variety_id'];
 $farmers_name = $_POST['farmers_name'];
 $farmers_address = $_POST['farmers_address'];
 $farmers_contact = $_POST['farmers_contact'];
-
 
 $data = array(
     'division_id,' => "'$division_id',",
@@ -47,4 +46,5 @@ $data = array(
 
 $db->data_insert($tbl . 'zi_crop_farmer_setup', $data);
 $db->system_event_log('', $user_id, $employee_id, '', '', $tbl . 'zi_crop_farmer_setup', 'Save', '');
+
 ?>

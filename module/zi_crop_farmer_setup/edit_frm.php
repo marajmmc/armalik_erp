@@ -27,6 +27,39 @@ $editRow = $db->single_data($tbl . "zi_crop_farmer_setup", "*", "id", $_POST['ro
                 <div class="widget-body">
                     <div class="control-group">
                         <label class="control-label">
+                            Division
+                        </label>
+                        <div class="controls">
+                            <select id="division_id" name="division_id" class="span5" onchange="load_zone_by_division()" >
+                                <option value="">Select</option>
+                                <?php
+                                $sql = "select division_id as fieldkey, division_name as fieldtext from $tbl" . "division_info";
+                                echo $db->SelectList($sql, $editRow['division_id']);
+                                ?>
+                            </select>
+                            <input type="hidden" name="id" value="<?php echo $_POST['rowID'];?>">
+<!--                            <input type="hidden" name="division_id" value="--><?php //echo $editRow['division_id'];?><!--" />-->
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label">
+                            Zone
+                        </label>
+                        <div class="controls">
+                            <select id="zone_id" name="zone_id" class="span5" onchange="load_territory_by_zone()" >
+                                <option value="">Select</option>
+                                <?php
+                                $sql = "select zone_id as fieldkey, zone_name as fieldtext from $tbl" . "zone_info";
+                                echo $db->SelectList($sql, $editRow['zone_id']);
+                                ?>
+                            </select>
+<!--                            <input type="hidden" name="zone_id" value="--><?php //echo $editRow['zone_id'];?><!--" />-->
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label">
                             Territory
                         </label>
                         <div class="controls">
@@ -149,10 +182,11 @@ $editRow = $db->single_data($tbl . "zi_crop_farmer_setup", "*", "id", $_POST['ro
 
                     <div class="control-group">
                         <label class="control-label">
-                            Farmer's Name
+                            Farmer Name
                         </label>
                         <div class="controls">
-                            <input type="text" name="farmers_name" value="<?php echo $editRow['farmers_name'];?>" class="span5" />
+                            <input type="text" id="farmers_name" name="farmers_name" value="<?php echo $editRow['farmers_name'];?>" class="span5" onblur="check_farmer_existence()" />
+                            <input type="hidden" name="farmer_id" id="farmer_id" value="<?php echo $editRow['id'];?>" />
                         </div>
                     </div>
 

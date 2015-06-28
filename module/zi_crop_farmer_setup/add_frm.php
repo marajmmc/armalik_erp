@@ -7,8 +7,6 @@ require_once("../../libraries/lib/functions.inc.php");
 $db = new Database();
 $tbl = _DB_PREFIX;
 
-$user_division = $_SESSION['division_id'];
-$user_zone = $_SESSION['zone_id'];
 ?>
 <div class="row-fluid">
     <div class="span12">
@@ -28,14 +26,42 @@ $user_zone = $_SESSION['zone_id'];
                 <div class="widget-body">
                     <div class="control-group">
                         <label class="control-label">
+                            Division
+                        </label>
+                        <div class="controls">
+                            <select id="division_id" name="division_id" class="span5" onchange="load_zone_by_division()">
+                                <option value="">Select</option>
+                                <?php
+                                $sql = "select division_id as fieldkey, division_name as fieldtext from $tbl" . "division_info";
+                                echo $db->SelectList($sql);
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label">
+                            Zone
+                        </label>
+                        <div class="controls">
+                            <select id="zone_id" name="zone_id" class="span5" onchange="load_territory_by_zone()">
+                                <option value="">Select</option>
+                                <?php
+
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label">
                             Territory
                         </label>
                         <div class="controls">
                             <select id="territory_id" name="territory_id" class="span5" onchange="load_district_by_territory()">
                                 <option value="">Select</option>
                                 <?php
-                                $sql = "select territory_id as fieldkey, territory_name as fieldtext from $tbl" . "territory_info where zone_id='$user_zone'";
-                                echo $db->SelectList($sql);
+
                                 ?>
                             </select>
                         </div>
@@ -77,12 +103,12 @@ $user_zone = $_SESSION['zone_id'];
                             <select id="crop_id" name="crop_id" class="span5" onchange="load_type_by_crop()">
                                 <option value="">Select</option>
                                 <?php
-                                    $sql_uesr_group = "select
+                                $sql_uesr_group = "select
                                     crop_id as fieldkey,
                                     crop_name as fieldtext
                                     from $tbl" . "crop_info
                                     where status='Active' AND del_status='0' order by order_crop";
-                                    echo $db->SelectList($sql_uesr_group);
+                                echo $db->SelectList($sql_uesr_group);
                                 ?>
                             </select>
                         </div>
@@ -107,7 +133,7 @@ $user_zone = $_SESSION['zone_id'];
                             Variety
                         </label>
                         <div class="controls">
-                            <select id="variety_id" name="variety_id" class="span5">
+                            <select id="variety_id" name="variety_id" class="span5" onchange="load_farmers()">
                                 <option value="">Select</option>
                                 <?php
 
@@ -118,10 +144,11 @@ $user_zone = $_SESSION['zone_id'];
 
                     <div class="control-group">
                         <label class="control-label">
-                            Farmer's Name
+                            Farmer Name
                         </label>
                         <div class="controls">
-                            <input type="text" name="farmers_name" value="" class="span5" />
+                            <input type="text" id="farmers_name" name="farmers_name" value="" class="span5" onblur="check_farmer_existence()" />
+                            <input type="hidden" name="farmer_id" id="farmer_id" value="0" />
                         </div>
                     </div>
 

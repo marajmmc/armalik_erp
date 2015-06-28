@@ -237,3 +237,24 @@ function load_farmers()
         }
     });
 }
+
+function check_farmer_existence()
+{
+    $.post("../../libraries/ajax_load_file/check_farmer_existence_other.php",
+    {
+        farmer_id: $("#farmer_id").val(), division_id:$("#division_id").val(), zone_id: $("#zone_id").val(), territory_id: $("#territory_id").val(), district_id: $("#district_id").val(), upazilla_id: $("#upazilla_id").val(), crop_id: $("#crop_id").val(), product_type_id: $("#type_id").val(), variety_id: $("#variety_id").val(), farmers_name: $("#farmers_name").val()
+    },
+
+    function(result)
+    {
+        if(result==1)
+        {
+            $("#farmers_name").val('');
+            alertify.set({
+                delay: 3000
+            });
+            alertify.error("Farmer Name Exists");
+            return false;
+        }
+    });
+}
