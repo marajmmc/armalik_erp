@@ -37,27 +37,91 @@ for($i=1; $i<=$total; $i++)
         $remark = $_POST['remarks_'.$i];
         $picture_date = date('Y-m-d', strtotime($_POST['picture_date_'.$i]));
 
-        $data = array(
-            'division_id,' => "'$division_id',",
-            'zone_id,' => "'$zone_id',",
-            'territory_id,' => "'$territory_id',",
-            'district_id,' => "'$district_id',",
-            'upazilla_id,' => "'$upazilla_id',",
-            'crop_id,' => "'$crop_id',",
-            'product_type_id,' => "'$type_id',",
-            'variety_id,' => "'$variety_id',",
-            'farmer_id,' => "'$farmer_id',",
-            'setup_id,' => "'$id',",
-            'picture_link,' => "'$image_url',",
-            'remarks,' => "'$remark',",
-            'picture_date,' => "'$picture_date',",
-            'picture_number,' => "'$i',",
-            'entry_by,' => "'$user_id',",
-            'entry_date' => "'" . $db->ToDayDate() . "'"
-        );
+        $existing = $db->single_data_w($tbl.'zi_monthly_field_visit_pictures','id', "farmer_id=$farmer_id AND picture_number=$i");
 
-        $db->data_insert($tbl . 'zi_monthly_field_visit_pictures', $data);
-        $db->system_event_log('', $user_id, $employee_id, '', '', $tbl . 'zi_monthly_field_visit_pictures', 'Save', '');
+        if(isset($existing['id']) && strlen($existing['id']))
+        {
+            $data = array(
+                'division_id' => "'$division_id'",
+                'zone_id' => "'$zone_id'",
+                'territory_id' => "'$territory_id'",
+                'district_id' => "'$district_id'",
+                'upazilla_id' => "'$upazilla_id'",
+                'crop_id' => "'$crop_id'",
+                'product_type_id' => "'$type_id'",
+                'variety_id' => "'$variety_id'",
+                'farmer_id' => "'$farmer_id'",
+                'setup_id' => "'$id'",
+                'picture_link' => "'$image_url'",
+                'remarks' => "'$remark'",
+                'picture_date' => "'$picture_date'",
+                'picture_number' => "'$i'",
+                'entry_by' => "'$user_id'",
+                'entry_date' => "'" . $db->ToDayDate() . "'"
+            );
+
+            $maxID = $existing['id'];
+            $whereField = array('id' => "'$maxID'");
+            $db->data_update($tbl . 'zi_monthly_field_visit_pictures', $data, $whereField);
+            $db->system_event_log('', $user_id, $employee_id, $maxID, '', $tbl . 'zi_monthly_field_visit_pictures', 'Update', '');
+        }
+        else
+        {
+            $data = array(
+                'division_id,' => "'$division_id',",
+                'zone_id,' => "'$zone_id',",
+                'territory_id,' => "'$territory_id',",
+                'district_id,' => "'$district_id',",
+                'upazilla_id,' => "'$upazilla_id',",
+                'crop_id,' => "'$crop_id',",
+                'product_type_id,' => "'$type_id',",
+                'variety_id,' => "'$variety_id',",
+                'farmer_id,' => "'$farmer_id',",
+                'setup_id,' => "'$id',",
+                'picture_link,' => "'$image_url',",
+                'remarks,' => "'$remark',",
+                'picture_date,' => "'$picture_date',",
+                'picture_number,' => "'$i',",
+                'entry_by,' => "'$user_id',",
+                'entry_date' => "'" . $db->ToDayDate() . "'"
+            );
+
+            $db->data_insert($tbl . 'zi_monthly_field_visit_pictures', $data);
+            $db->system_event_log('', $user_id, $employee_id, '', '', $tbl . 'zi_monthly_field_visit_pictures', 'Save', '');
+        }
+    }
+    else
+    {
+        $remark = $_POST['remarks_'.$i];
+        $picture_date = date('Y-m-d', strtotime($_POST['picture_date_'.$i]));
+
+        $existing = $db->single_data_w($tbl.'zi_monthly_field_visit_pictures','id', "farmer_id=$farmer_id AND picture_number=$i");
+
+        if(isset($existing['id']) && strlen($existing['id']))
+        {
+            $data = array(
+                'division_id' => "'$division_id'",
+                'zone_id' => "'$zone_id'",
+                'territory_id' => "'$territory_id'",
+                'district_id' => "'$district_id'",
+                'upazilla_id' => "'$upazilla_id'",
+                'crop_id' => "'$crop_id'",
+                'product_type_id' => "'$type_id'",
+                'variety_id' => "'$variety_id'",
+                'farmer_id' => "'$farmer_id'",
+                'setup_id' => "'$id'",
+                'remarks' => "'$remark'",
+                'picture_date' => "'$picture_date'",
+                'picture_number' => "'$i'",
+                'entry_by' => "'$user_id'",
+                'entry_date' => "'" . $db->ToDayDate() . "'"
+            );
+
+            $maxID = $existing['id'];
+            $whereField = array('id' => "'$maxID'");
+            $db->data_update($tbl . 'zi_monthly_field_visit_pictures', $data, $whereField);
+            $db->system_event_log('', $user_id, $employee_id, $maxID, '', $tbl . 'zi_monthly_field_visit_pictures', 'Update', '');
+        }
     }
 }
 

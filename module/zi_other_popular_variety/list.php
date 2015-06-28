@@ -51,7 +51,7 @@ $tbl = _DB_PREFIX;
                                     Variety
                                 </th>
                                 <th style="width:30%">
-                                    Farmer's Name
+                                    Farmer Name
                                 </th>
                             </tr>
                         </thead>
@@ -65,21 +65,20 @@ $tbl = _DB_PREFIX;
                             upa.upazilanameeng,
                             crop.crop_name,
                             ptype.product_type,
-                            variety.varriety_name,
-                            zcfs.farmers_name
+                            variety.varriety_name
 
                             FROM
-                            $tbl" . "zi_monthly_field_visit_setup zcf
+                            $tbl" . "zi_others_popular_variety zcf
 
                             LEFT JOIN $tbl" . "territory_info ati ON ati.territory_id = zcf.territory_id
                             LEFT JOIN $tbl" . "zilla zilla ON zilla.zillaid = zcf.district_id
                             LEFT JOIN $tbl" . "crop_info crop ON crop.crop_id = zcf.crop_id
                             LEFT JOIN $tbl" . "product_type ptype ON ptype.product_type_id = zcf.product_type_id
                             LEFT JOIN $tbl" . "varriety_info variety ON variety.varriety_id = zcf.variety_id
-                            LEFT JOIN $tbl" . "zi_crop_farmer_setup zcfs ON zcfs.id = zcf.farmer_id
                             LEFT JOIN $tbl" . "upazilla upa ON upa.upazilaid = zcf.upazilla_id AND upa.zillaid = zcf.district_id
 
                             WHERE zcf.zone_id ='".$_SESSION['zone_id']."'
+                            GROUP BY zcf.division_id, zcf.zone_id, zcf.territory_id, zcf.district_id, zcf.upazilla_id, zcf.crop_id, zcf.product_type_id, zcf.variety_id, zcf.farmer_name
                             ";
 
                         if($db->open())
@@ -105,7 +104,7 @@ $tbl = _DB_PREFIX;
                                     <td><?php echo $result_array['crop_name']; ?></td>
                                     <td><?php echo $result_array['product_type']; ?></td>
                                     <td><?php echo $result_array['varriety_name']; ?></td>
-                                    <td><?php echo $result_array['farmers_name']; ?></td>
+                                    <td><?php echo $result_array['farmer_name']; ?></td>
                                 </tr>
                                 <?php
                                 ++$i;

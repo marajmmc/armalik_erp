@@ -6,8 +6,9 @@ require_once("../../libraries/lib/config.inc.php");
 require_once("../../libraries/lib/functions.inc.php");
 $db = new Database();
 $tbl = _DB_PREFIX;
+
+$user_division = $_SESSION['division_id'];
 $user_zone = $_SESSION['zone_id'];
-$editRow = $db->single_data($tbl . "zi_monthly_field_visit_setup", "*", "id", $_POST['rowID']);
 ?>
 <div class="row-fluid">
     <div class="span12">
@@ -34,10 +35,9 @@ $editRow = $db->single_data($tbl . "zi_monthly_field_visit_setup", "*", "id", $_
                                 <option value="">Select</option>
                                 <?php
                                 $sql = "select territory_id as fieldkey, territory_name as fieldtext from $tbl" . "territory_info where zone_id='$user_zone'";
-                                echo $db->SelectList($sql, $editRow['territory_id']);
+                                echo $db->SelectList($sql);
                                 ?>
                             </select>
-                            <input type="hidden" name="id" value="<?php echo $_POST['rowID'];?>">
                         </div>
                     </div>
 
@@ -46,22 +46,10 @@ $editRow = $db->single_data($tbl . "zi_monthly_field_visit_setup", "*", "id", $_
                             District
                         </label>
                         <div class="controls">
-                            <select id="district_id" name="district_id" class="span5" onchange="load_distributor_by_district()">
+                            <select id="district_id" name="district_id" class="span5" onchange="load_upazilla_by_district()">
                                 <option value="">Select</option>
                                 <?php
-                                $sql_user_group = "SELECT
-                                    $tbl" . "zilla.zillaid as fieldkey,
-                                    $tbl" . "zilla.zillanameeng as fieldtext
-                                    FROM
-                                    $tbl" . "territory_assign_district
-                                    LEFT JOIN $tbl" . "zilla ON $tbl" . "zilla.zillaid = $tbl" . "territory_assign_district.zilla_id
-                                    WHERE
-                                    $tbl" . "territory_assign_district.del_status=0
-                                    AND $tbl" . "zilla.visible=0
-                                    AND $tbl" . "territory_assign_district.status='Active'
-                                    AND $tbl" . "territory_assign_district.territory_id='".$editRow['territory_id']."'
-                                    ";
-                                echo $db->SelectList($sql_user_group, $editRow['district_id']);
+
                                 ?>
                             </select>
                         </div>
@@ -75,17 +63,7 @@ $editRow = $db->single_data($tbl . "zi_monthly_field_visit_setup", "*", "id", $_
                             <select id="upazilla_id" name="upazilla_id" class="span5">
                                 <option value="">Select</option>
                                 <?php
-                                $sql = "SELECT
-                                    $tbl" . "upazilla.upazilaid as fieldkey,
-                                    $tbl" . "upazilla.upazilanameeng as fieldtext
-                                    FROM
-                                    $tbl" . "upazilla
 
-                                    WHERE
-                                    $tbl" . "upazilla.visible=0
-                                    AND $tbl" . "upazilla.zillaid='".$editRow['district_id']."'
-                                    ";
-                                echo $db->SelectList($sql, $editRow['upazilla_id']);
                                 ?>
                             </select>
                         </div>
@@ -99,12 +77,12 @@ $editRow = $db->single_data($tbl . "zi_monthly_field_visit_setup", "*", "id", $_
                             <select id="crop_id" name="crop_id" class="span5" onchange="load_type_by_crop()">
                                 <option value="">Select</option>
                                 <?php
-                                $sql = "select
+                                    $sql_uesr_group = "select
                                     crop_id as fieldkey,
                                     crop_name as fieldtext
                                     from $tbl" . "crop_info
                                     where status='Active' AND del_status='0' order by order_crop";
-                                echo $db->SelectList($sql, $editRow['crop_id']);
+                                    echo $db->SelectList($sql_uesr_group);
                                 ?>
                             </select>
                         </div>
@@ -118,12 +96,7 @@ $editRow = $db->single_data($tbl . "zi_monthly_field_visit_setup", "*", "id", $_
                             <select id="type_id" name="type_id" class="span5" onchange="load_variety_by_crop_type()">
                                 <option value="">Select</option>
                                 <?php
-                                $sql = "select
-                                    product_type_id as fieldkey,
-                                    product_type as fieldtext
-                                    from $tbl" . "product_type
-                                    where status='Active' AND del_status='0' AND crop_id= '".$editRow['crop_id']."' order by order_type";
-                                echo $db->SelectList($sql, $editRow['product_type_id']);
+
                                 ?>
                             </select>
                         </div>
@@ -137,12 +110,7 @@ $editRow = $db->single_data($tbl . "zi_monthly_field_visit_setup", "*", "id", $_
                             <select id="variety_id" name="variety_id" class="span5">
                                 <option value="">Select</option>
                                 <?php
-                                $sql = "select
-                                    varriety_id as fieldkey,
-                                    varriety_name as fieldtext
-                                    from $tbl" . "varriety_info
-                                    where status='Active' AND del_status='0' AND crop_id= '".$editRow['crop_id']."' AND product_type_id= '".$editRow['product_type_id']."' order by order_variety";
-                                echo $db->SelectList($sql, $editRow['variety_id']);
+
                                 ?>
                             </select>
                         </div>
@@ -150,93 +118,12 @@ $editRow = $db->single_data($tbl . "zi_monthly_field_visit_setup", "*", "id", $_
 
                     <div class="control-group">
                         <label class="control-label">
-                            Farmer's Name
+                            Farmer Name
                         </label>
                         <div class="controls">
-                            <select id="farmer_id" name="farmer_id" class="span5">
-                                <option value="">Select</option>
-                                <?php
-                                $sql = "select
-                                    id as fieldkey,
-                                    farmers_name as fieldtext
-                                    from $tbl" . "zi_crop_farmer_setup
-                                    where status='1' AND del_status='0' AND territory_id = '".$editRow['territory_id']."' AND district_id = '".$editRow['district_id']."' AND upazilla_id = '".$editRow['upazilla_id']."' AND crop_id= '".$editRow['crop_id']."' AND product_type_id= '".$editRow['product_type_id']."'";
-                                echo $db->SelectList($sql, $editRow['farmer_id']);
-                                ?>
-                            </select>
+                            <input type="text" name="farmers_name" class="span5" value="" />
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row-fluid">
-    <div class="span12">
-        <div class="widget span">
-            <div class="widget-header">
-                <div class="title">
-                    <a id="dynamicTable">Pictures</a>
-                    <span class="mini-title"></span>
-                </div>
-                <span class="tools">
-                    <a class="btn btn-small" data-original-title="">
-                        <i class="icon-plus-sign" data-original-title="Share"> </i>
-                    </a>
-                </span>
-            </div>
-            <div class="form-horizontal no-margin">
-                <div class="widget-body">
-                    <table>
-                        <tr>
-                            <?php
-                            $sowing_date_str = strtotime($editRow['sowing_date']);
-                            $total = $editRow['no_of_pictures'];
-                            for($i=1; $i<=$total; $i++)
-                            {
-                                ?>
-                                <td>
-                                    <div class="control-group">
-                                        <label class="control-label">
-                                            Picture <label class="label label-success"><?php echo $i;?></label>
-                                        </label>
-
-                                        <div class="control-group">
-                                            <div class="controls">
-                                                <input type="file" class="" name="picture_link_<?php echo $i;?>" />
-                                            </div>
-                                        </div>
-
-                                        <div class="control-group">
-                                            <label class="control-label">
-                                                Remarks
-                                            </label>
-                                            <div class="controls">
-                                                <textarea class="span12" name="remarks_<?php echo $i;?>"></textarea>
-                                            </div>
-                                        </div>
-
-                                        <div class="control-group">
-                                            <label class="control-label">
-                                                Date
-                                            </label>
-                                            <div class="controls">
-                                                <input type="text" class="span12" name="picture_date_<?php echo $i;?>" value="<?php echo date('d-m-Y', ($sowing_date_str+($i*$editRow['interval_days'])*24*3600));?>" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <?php
-                                if($i%2 == 0)
-                                {
-                                    echo '</tr>';
-                                    echo '<tr>';
-                                }
-                            }
-                            ?>
-                        <input type="hidden" name="total" value="<?php echo $total;?>" />
-                    </table>
                 </div>
             </div>
         </div>
@@ -354,4 +241,20 @@ $editRow = $db->single_data($tbl . "zi_monthly_field_visit_setup", "*", "id", $_
             alert(e);
         }
     }
+</script>
+
+<script>
+//    $(document).ready(function()
+//    {
+//
+//    });
+//
+//    var cal = Calendar.setup({
+//        onSelect: function(cal) { cal.hide() },
+//        fdow :0,
+//        minuteStep:1
+//    });
+//
+//    cal.manageFields("calcbtn_sowing_date", "sowing_date", "%d-%m-%Y");
+
 </script>
