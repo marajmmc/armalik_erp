@@ -7,17 +7,19 @@ require_once("../../libraries/lib/config.inc.php");
 require_once("../../libraries/lib/functions.inc.php");
 
 $db = new Database();
+$tbl = _DB_PREFIX;
 $user_id = $_SESSION['user_id'];
 $employee_id = $_SESSION['employee_id'];
-$tbl = _DB_PREFIX;
 
 $data = array();
 $year = $_POST['year'];
 $from_month = $_POST['from_month'];
 $to_month = $_POST['to_month'];
 
-$planPost = $_POST['plan'];
+$division_id = $_POST['division_id'];
+$zone_id = $_POST['zone_id'];
 
+$planPost = $_POST['plan'];
 
 foreach($planPost as $day=>$plan)
 {
@@ -41,7 +43,8 @@ foreach($planPost as $day=>$plan)
                         'end_month,' => "'" . $to_month . "',",
                         'week_day,' => "'" . $day . "',",
                         'day_time,' => "'" . $time . "',",
-                        'zone_id,' => "'" . $_SESSION['zone_id'] . "',",
+                        'division_id,' => "'" . $division_id . "',",
+                        'zone_id,' => "'" . $zone_id . "',",
                         'territory_id,' => "'" . $attribute['territory_id'] . "',",
                         'district_id,' => "'" . $attribute['district_id'] . "',",
                         'distributor_id,' => "'" . $distributor . "',",

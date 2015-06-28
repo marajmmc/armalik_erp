@@ -7,43 +7,36 @@ require_once("../../libraries/lib/functions.inc.php");
 $db = new Database();
 $tbl = _DB_PREFIX;
 
-$user_zone = $_SESSION['zone_id'];
+//$user_zone = $_SESSION['zone_id'];
 $postData = explode('~', $_POST['rowID']);
 $year = $postData[0];
-$zone_id = $postData[1];
-$start_month = $postData[2];
-$end_month = $postData[3];
+$division_id = $postData[1];
+$zone_id = $postData[2];
+$start_month = $postData[3];
+$end_month = $postData[4];
 
-$sql = "SELECT
-            *
-            FROM `$tbl" . "zi_tour_plan`
-            WHERE $tbl" . "zi_tour_plan.year='" . $year . "' AND
-            $tbl" . "zi_tour_plan.zone_id='" . $zone_id . "' AND
-            $tbl" . "zi_tour_plan.start_month='" . $start_month . "' AND
-            $tbl" . "zi_tour_plan.end_month='" . $end_month . "'
-";
-
-$arranged_array = array();
-
-if ($db->open())
-{
-    $result = $db->query($sql);
-
-    while ($row = $db->fetchAssoc($result))
-    {
-        $year = $row['year'];
-        $start_month = $row['start_month'];
-        $end_month = $row['end_month'];
-
-//        $arranged_array[$row['week_day']][$row['day_time']]['territory'] = $row['territory_id'];
-//        $arranged_array[$row['week_day']][$row['day_time']]['district'] = $row['district_id'];
-//        $arranged_array[$row['week_day']][$row['day_time']]['distributor'][] = $row['distributor_id'];
-
-//        echo '<pre>';
-//        print_r($arranged_array);
-//        echo '</pre>';
-    }
-}
+//$sql = "SELECT
+//            *
+//            FROM `$tbl" . "zi_tour_plan`
+//            WHERE $tbl" . "zi_tour_plan.year='" . $year . "' AND
+//            $tbl" . "zi_tour_plan.zone_id='" . $zone_id . "' AND
+//            $tbl" . "zi_tour_plan.start_month='" . $start_month . "' AND
+//            $tbl" . "zi_tour_plan.end_month='" . $end_month . "'
+//";
+//
+//$arranged_array = array();
+//
+//if ($db->open())
+//{
+//    $result = $db->query($sql);
+//
+//    while ($row = $db->fetchAssoc($result))
+//    {
+//        $year = $row['year'];
+//        $start_month = $row['start_month'];
+//        $end_month = $row['end_month'];
+//    }
+//}
 ?>
 
 <div class="row-fluid">
@@ -62,6 +55,45 @@ if ($db->open())
                     </a>
                 </span>
             </div>
+
+            <table class="table table-condensed table-striped table-hover table-bordered" id="data-table">
+                <thead>
+                <tr>
+                    <th style="width:50%" id="territory_th_caption">
+                        Division
+                    </th>
+                    <th style="width:50%" id="territory_th_caption">
+                        Zone
+                    </th>
+                </tr>
+                </thead>
+                <tr>
+                    <td>
+                        <div class="controls">
+                            <select id="division_id" name="division_id" class="span10" disabled>
+                                <option value="">Select</option>
+                                <?php
+                                $sql = "select division_id as fieldkey, division_name as fieldtext from $tbl" . "division_info";
+                                echo $db->SelectList($sql, $division_id);
+                                ?>
+                            </select>
+                            <input type="hidden" name="division_id" value="<?php echo $division_id;?>" />
+                        </div>
+                    </td>
+                    <td>
+                        <div class="controls">
+                            <select id="zone_id" name="zone_id" class="span10" disabled>
+                                <option value="">Select</option>
+                                <?php
+                                $sql = "select zone_id as fieldkey, zone_name as fieldtext from $tbl" . "zone_info";
+                                echo $db->SelectList($sql, $zone_id);
+                                ?>
+                            </select>
+                            <input type="hidden" name="zone_id" value="<?php echo $zone_id;?>" />
+                        </div>
+                    </td>
+                </tr>
+            </table>
 
             <div class="widget-body">
                 <table class="table table-condensed table-striped table-hover table-bordered pull-left" id="data-table">
@@ -166,8 +198,8 @@ if ($db->open())
                                     <select name="plan[<?php echo $val;?>][1][territory_id]" class="span12 territory_id" placeholder="Territory" onchange="" >
                                         <option value="">Select</option>
                                         <?php
-                                        $territory = $db->single_data_w($tbl.'zi_tour_plan','territory_id', "year='$year' AND start_month=$start_month AND end_month=$end_month AND zone_id='$user_zone' AND week_day='$val' AND day_time=1 AND status=1");
-                                        $sql = "select territory_id as fieldkey, territory_name as fieldtext from $tbl" . "territory_info where zone_id='$user_zone'";
+                                        $territory = $db->single_data_w($tbl.'zi_tour_plan','territory_id', "year='$year' AND start_month=$start_month AND end_month=$end_month AND zone_id='$zone_id' AND week_day='$val' AND day_time=1 AND status=1");
+                                        $sql = "select territory_id as fieldkey, territory_name as fieldtext from $tbl" . "territory_info where zone_id='$zone_id'";
                                         echo $db->SelectList($sql, $territory['territory_id']);
                                         ?>
                                     </select>
@@ -176,7 +208,7 @@ if ($db->open())
                                     <select name="plan[<?php echo $val;?>][1][district_id]" class="span12 district_id" placeholder="District" onchange="" >
                                         <option value="">Select</option>
                                         <?php
-                                        $district = $db->single_data_w($tbl.'zi_tour_plan','district_id', "year='$year' AND start_month=$start_month AND end_month=$end_month AND zone_id='$user_zone' AND week_day='$val' AND day_time=1 AND status=1");
+                                        $district = $db->single_data_w($tbl.'zi_tour_plan','district_id', "year='$year' AND start_month=$start_month AND end_month=$end_month AND zone_id='$zone_id' AND week_day='$val' AND day_time=1 AND status=1");
                                         $sql_user_group = "SELECT
                                             $tbl" . "zilla.zillaid as fieldkey,
                                             $tbl" . "zilla.zillanameeng as fieldtext
@@ -197,7 +229,7 @@ if ($db->open())
                                     <select name="plan[<?php echo $val;?>][1][distributor_id][]" class="span12 distributor_id" multiple="multiple" placeholder="Distributor">
                                         <option value="">Select</option>
                                         <?php
-                                        $distributorQuery = "SELECT distributor_id FROM $tbl" . "zi_tour_plan WHERE year='$year' AND start_month='$start_month' AND end_month='$end_month' AND zone_id='$user_zone' AND week_day='$val' AND day_time=1 AND status=1";
+                                        $distributorQuery = "SELECT distributor_id FROM $tbl" . "zi_tour_plan WHERE year='$year' AND start_month='$start_month' AND end_month='$end_month' AND zone_id='$zone_id' AND week_day='$val' AND day_time=1 AND status=1";
                                         $distributors = $db->return_result_array($distributorQuery);
 
                                         $customers = array();
@@ -206,7 +238,7 @@ if ($db->open())
                                             $customers[] = $distributor['distributor_id'];
                                         }
 
-                                        $sql = "select distributor_id as fieldkey, distributor_name as fieldtext from $tbl" . "distributor_info where status='Active' AND del_status='0' AND zone_id='$user_zone' AND territory_id='".$territory['territory_id']."' AND zilla_id='".$district['district_id']."' order by distributor_name";
+                                        $sql = "select distributor_id as fieldkey, distributor_name as fieldtext from $tbl" . "distributor_info where status='Active' AND del_status='0' AND zone_id='$zone_id' AND territory_id='".$territory['territory_id']."' AND zilla_id='".$district['district_id']."' order by distributor_name";
                                         $distributorDropDownArray = $db->return_result_array($sql);
                                         foreach($distributorDropDownArray as $DropDown)
                                         {
@@ -228,8 +260,8 @@ if ($db->open())
                                     <select name="plan[<?php echo $val;?>][2][territory_id]" class="span12 territory_id" placeholder="Territory" onchange="" >
                                         <option value="">Select</option>
                                         <?php
-                                        $territory = $db->single_data_w($tbl.'zi_tour_plan','territory_id', "year='$year' AND start_month=$start_month AND end_month=$end_month AND zone_id='$user_zone' AND week_day='$val' AND day_time=2 AND status=1");
-                                        $sql = "select territory_id as fieldkey, territory_name as fieldtext from $tbl" . "territory_info where zone_id='$user_zone'";
+                                        $territory = $db->single_data_w($tbl.'zi_tour_plan','territory_id', "year='$year' AND start_month=$start_month AND end_month=$end_month AND zone_id='$zone_id' AND week_day='$val' AND day_time=2 AND status=1");
+                                        $sql = "select territory_id as fieldkey, territory_name as fieldtext from $tbl" . "territory_info where zone_id='$zone_id'";
                                         echo $db->SelectList($sql, $territory['territory_id']);
                                         ?>
                                     </select>
@@ -238,7 +270,7 @@ if ($db->open())
                                     <select name="plan[<?php echo $val;?>][2][district_id]" class="span12 district_id" placeholder="District" onchange="" >
                                         <option value="">Select</option>
                                         <?php
-                                        $district = $db->single_data_w($tbl.'zi_tour_plan','district_id', "year='$year' AND start_month=$start_month AND end_month=$end_month AND zone_id='$user_zone' AND week_day='$val' AND day_time=2 AND status=1");
+                                        $district = $db->single_data_w($tbl.'zi_tour_plan','district_id', "year='$year' AND start_month=$start_month AND end_month=$end_month AND zone_id='$zone_id' AND week_day='$val' AND day_time=2 AND status=1");
                                         $sql_user_group = "SELECT
                                             $tbl" . "zilla.zillaid as fieldkey,
                                             $tbl" . "zilla.zillanameeng as fieldtext
@@ -259,7 +291,7 @@ if ($db->open())
                                     <select name="plan[<?php echo $val;?>][2][distributor_id][]" class="span12 distributor_id" multiple="multiple" placeholder="Distributor">
                                         <option value="">Select</option>
                                         <?php
-                                        $distributorQuery = "SELECT distributor_id FROM $tbl" . "zi_tour_plan WHERE year='$year' AND start_month='$start_month' AND end_month='$end_month' AND zone_id='$user_zone' AND week_day='$val' AND day_time=2 AND status=1";
+                                        $distributorQuery = "SELECT distributor_id FROM $tbl" . "zi_tour_plan WHERE year='$year' AND start_month='$start_month' AND end_month='$end_month' AND zone_id='$zone_id' AND week_day='$val' AND day_time=2 AND status=1";
 
                                         $distributors = $db->return_result_array($distributorQuery);
 
@@ -269,7 +301,7 @@ if ($db->open())
                                             $customers[] = $distributor['distributor_id'];
                                         }
 
-                                        $sql = "select distributor_id as fieldkey, distributor_name as fieldtext from $tbl" . "distributor_info where status='Active' AND del_status='0' AND zone_id='$user_zone' AND territory_id='".$territory['territory_id']."' AND zilla_id='".$district['district_id']."' order by distributor_name";
+                                        $sql = "select distributor_id as fieldkey, distributor_name as fieldtext from $tbl" . "distributor_info where status='Active' AND del_status='0' AND zone_id='$zone_id' AND territory_id='".$territory['territory_id']."' AND zilla_id='".$district['district_id']."' order by distributor_name";
                                         $distributorDropDownArray = $db->return_result_array($sql);
                                         foreach($distributorDropDownArray as $DropDown)
                                         {
@@ -307,16 +339,16 @@ if ($db->open())
                 var location = $(this).parents().next(".district_td_elm").find(".district_id");
 
                 $.post("../../libraries/ajax_load_file/load_territory_assign_district.php",
+                {
+                    zone_id:"", territory_id: $(this).val()
+                },
+                function(result)
+                {
+                    if(result)
                     {
-                        zone_id:"", territory_id: $(this).val()
-                    },
-                    function(result)
-                    {
-                        if(result)
-                        {
-                            location.append(result);
-                        }
-                    });
+                        location.append(result);
+                    }
+                });
             }
             else
             {
@@ -336,16 +368,16 @@ if ($db->open())
                 var location = $(this).parents().next(".distributor_td_elm").find(".distributor_id");
 
                 $.post("../../libraries/ajax_load_file/load_distributor.php",
+                {
+                    zone_id:"", territory_id: territory_id, zilla_id: $(this).val()
+                },
+                function(result)
+                {
+                    if(result)
                     {
-                        zone_id:"", territory_id: territory_id, zilla_id: $(this).val()
-                    },
-                    function(result)
-                    {
-                        if(result)
-                        {
-                            location.append(result);
-                        }
-                    });
+                        location.append(result);
+                    }
+                });
             }
             else
             {

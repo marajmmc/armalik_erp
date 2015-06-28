@@ -28,6 +28,42 @@ $user_zone = $_SESSION['zone_id'];
                 </span>
             </div>
 
+            <table class="table table-condensed table-striped table-hover table-bordered" id="data-table">
+                <thead>
+                <tr>
+                    <th style="width:50%" id="territory_th_caption">
+                        Division
+                    </th>
+                    <th style="width:50%" id="territory_th_caption">
+                        Zone
+                    </th>
+                </tr>
+                </thead>
+                <tr>
+                    <td>
+                        <div class="controls">
+                            <select id="division_id" name="division_id" class="span10" onchange="load_zone_by_division()">
+                                <option value="">Select</option>
+                                <?php
+                                $sql = "select division_id as fieldkey, division_name as fieldtext from $tbl" . "division_info";
+                                echo $db->SelectList($sql);
+                                ?>
+                            </select>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="controls">
+                            <select id="zone_id" name="zone_id" class="span10" onchange="load_territory_by_zone()">
+                                <option value="">Select</option>
+                                <?php
+
+                                ?>
+                            </select>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
             <div class="widget-body">
                 <table class="table table-condensed table-striped table-hover table-bordered pull-left" id="data-table">
                     <thead>
@@ -128,8 +164,8 @@ $user_zone = $_SESSION['zone_id'];
                                     <select name="plan[<?php echo $val;?>][1][territory_id]" class="span12 territory_id" placeholder="Territory" onchange="" >
                                         <option value="">Select</option>
                                         <?php
-                                        $sql = "select territory_id as fieldkey, territory_name as fieldtext from $tbl" . "territory_info where zone_id='$user_zone'";
-                                        echo $db->SelectList($sql);
+                                        //$sql = "select territory_id as fieldkey, territory_name as fieldtext from $tbl" . "territory_info where zone_id='$user_zone'";
+                                        //echo $db->SelectList($sql);
                                         ?>
                                     </select>
                                 </td>

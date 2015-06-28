@@ -195,6 +195,40 @@ function Existin_data(elm){
     }
 
 
+    function load_zone_by_division()
+    {
+        $("#zone_id").html('');
 
+        $.post("../../libraries/ajax_load_file/load_zone.php",
+        {
+            division_id : $("#division_id").val()
+        },
 
+        function(result)
+        {
+            if(result)
+            {
+                $("#zone_id").append(result);
+            }
+        });
+    }
+
+    function load_territory_by_zone()
+    {
+        $(".territory_id").html('');
+        $(".district_id").html('');
+
+        $.post("../../libraries/ajax_load_file/load_territory.php",
+        {
+            zone_id : $("#zone_id").val()
+        },
+
+        function(result)
+        {
+            if(result)
+            {
+                $(".territory_id").append(result);
+            }
+        });
+    }
 

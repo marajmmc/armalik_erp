@@ -75,7 +75,7 @@ $tbl = _DB_PREFIX;
                                 LEFT JOIN $tbl" . "year ay ON ay.year_id = ztp.year
 
                                 WHERE ztp.zone_id ='".$_SESSION['zone_id']."' AND ztp.status=1
-                                GROUP BY ztp.year, ztp.start_month, ztp.end_month
+                                GROUP BY ztp.year, ztp.start_month, ztp.end_month, ztp.division_id, ztp.zone_id
                                 ";
 
                             if($db->open())
@@ -93,7 +93,7 @@ $tbl = _DB_PREFIX;
                                         $rowcolor = "gradeA success";
                                     }
                                     ?>
-                                        <tr class="<?php echo $rowcolor ?> pointer" id="tr_id<?php echo $i; ?>" onclick="get_rowID('<?php echo $result_array["year"].'~'. $result_array["zone_id"].'~'.$result_array["start_month"].'~'.$result_array["end_month"]?>', '<?php echo $i; ?>')" ondblclick="details_form();">
+                                        <tr class="<?php echo $rowcolor ?> pointer" id="tr_id<?php echo $i; ?>" onclick="get_rowID('<?php echo $result_array["year"].'~'. $result_array["division_id"].'~'.$result_array["zone_id"].'~'.$result_array["start_month"].'~'.$result_array["end_month"]?>', '<?php echo $i; ?>')" ondblclick="details_form();">
                                             <td>
                                                 <?php echo $i; ?>
                                             </td>
