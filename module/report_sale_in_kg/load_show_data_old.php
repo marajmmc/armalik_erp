@@ -75,14 +75,6 @@ else
 {
     $territory_id = "";
 }
-if ($_POST['zilla_id'] != "")
-{
-    $zilla_id = "AND appoi.zilla_id='" . $_POST['zilla_id'] . "'";
-}
-else
-{
-    $zilla_id = "";
-}
 if ($_POST['distributor_id'] != "")
 {
     $distributor_id = "AND appoi.distributor_id='" . $_POST['distributor_id'] . "'";
@@ -181,7 +173,7 @@ $sql="SELECT
         WHERE
             appoi.del_status=0
             $crop_id $product_type_id $varriety_id $pack_size
-            $division_id $zone_id $territory_id $zilla_id $distributor_id
+            $division_id $zone_id $territory_id $distributor_id
             $between $fiscal_year_between
             ".$db->get_zone_access($tbl. "zone_info")."
 
@@ -202,15 +194,23 @@ if($db->open())
     $result=$db->query($sql);
     while($row_sales=$db->fetchAssoc($result))
     {
-        $data_sales[$row_sales['crop_id']]['crop_name']=$row_sales['crop_name'];
-        $data_sales[$row_sales['crop_id']]['type'][$row_sales['product_type_id']]['product_type']=$row_sales['product_type'];
-        $data_sales[$row_sales['crop_id']]['type'][$row_sales['product_type_id']]['variety'][$row_sales['varriety_id']]['variety_name']=$row_sales['varriety_name'];
-        $data_sales[$row_sales['crop_id']]['type'][$row_sales['product_type_id']]['variety'][$row_sales['varriety_id']]['pack_size'][$row_sales['pack_size']]['pack_size_name']=$row_sales['pack_size_name'];
-        $data_sales[$row_sales['crop_id']]['type'][$row_sales['product_type_id']]['variety'][$row_sales['varriety_id']]['pack_size'][$row_sales['pack_size']]['price_in_kg']=$row_sales['price_in_kg'];
-        $data_sales[$row_sales['crop_id']]['type'][$row_sales['product_type_id']]['variety'][$row_sales['varriety_id']]['pack_size'][$row_sales['pack_size']]['sales_quantity_in_kg']=$row_sales['sales_quantity_in_kg'];
-        $data_sales[$row_sales['crop_id']]['type'][$row_sales['product_type_id']]['variety'][$row_sales['varriety_id']]['pack_size'][$row_sales['pack_size']]['bonus_quantity_in_kg']=$row_sales['bonus_quantity_in_kg'];
-        $data_sales[$row_sales['crop_id']]['type'][$row_sales['product_type_id']]['variety'][$row_sales['varriety_id']]['pack_size'][$row_sales['pack_size']]['sales_return_quantity_in_kg']=$row_sales['sales_return_quantity_in_kg'];
-        //$data_sales[$row_sales['crop_name']][$row_sales['product_type']][$row_sales['varriety_name']][$row_sales['pack_size_name']]['product_type']=$row_sales['product_type'];
+        //$data_sales[]=$row_sales;
+        $data_sales[$row_sales['division_id']]['division_name']=$row_sales['division_name'];
+        $data_sales[$row_sales['division_id']]['zones'][$row_sales['zone_id']]['zone_name']=$row_sales['zone_name'];
+        $data_sales[$row_sales['division_id']]['zones'][$row_sales['zone_id']]['territories'][$row_sales['territory_id']]['territory_name']=$row_sales['territory_name'];
+        $data_sales[$row_sales['division_id']]['zones'][$row_sales['zone_id']]['territories'][$row_sales['territory_id']]['distributors'][$row_sales['distributor_id']]['distributor_name']=$row_sales['distributor_name'];
+        $data_sales[$row_sales['division_id']]['zones'][$row_sales['zone_id']]['territories'][$row_sales['territory_id']]['distributors'][$row_sales['distributor_id']]['crops'][$row_sales['crop_id']]['crop_name']=$row_sales['crop_name'];
+        $data_sales[$row_sales['division_id']]['zones'][$row_sales['zone_id']]['territories'][$row_sales['territory_id']]['distributors'][$row_sales['distributor_id']]['crops'][$row_sales['crop_id']]['product_types'][$row_sales['product_type_id']]['product_type_name']=$row_sales['product_type'];
+        $data_sales[$row_sales['division_id']]['zones'][$row_sales['zone_id']]['territories'][$row_sales['territory_id']]['distributors'][$row_sales['distributor_id']]['crops'][$row_sales['crop_id']]['product_types'][$row_sales['product_type_id']]['pack_sizes'][$row_sales['pack_size']]['pack_size_name']=$row_sales['pack_size_name'];
+        $data_sales[$row_sales['division_id']]['zones'][$row_sales['zone_id']]['territories'][$row_sales['territory_id']]['distributors'][$row_sales['distributor_id']]['crops'][$row_sales['crop_id']]['product_types'][$row_sales['product_type_id']]['pack_sizes'][$row_sales['pack_size']]['varieties'][]=
+        array
+        (
+            'price'=>$row_sales['price'],
+            'pack_size_name'=>$row_sales['pack_size_name'],
+            'variety_name'=>$row_sales['varriety_name'],
+            'sales_quantity'=>$row_sales['sales_quantity'],
+            'bonus_quantity'=>$row_sales['bonus_quantity']
+        );
     }
 }
 
@@ -242,97 +242,147 @@ if($db->open())
                 Product Type
             </th>
             <th style="width:5%">
-                Variety
-            </th>
-            <th style="width:5%">
                 Pack Size<br/>(gm)
             </th>
-            <th style="width:5%; text-align: center">
+            <th style="width:5%">
+                Variety
+            </th>
+            <th style="width:5%; text-align: right">
                 Price<br/>(Kg)
             </th>
-            <th style="width:5%; text-align: center">
+            <th style="width:5%; text-align: right">
                 Quantity<br/>(Kg)
             </th>
-            <th style="width:5%; text-align: center">
+            <th style="width:5%; text-align: right">
                 Bonus <br />Quantity
             </th>
-            <th style="width:5%; text-align: center">
+            <th style="width:5%; text-align: right">
                 Sales <br />Return(Kg)
             </th>
-            <th style="width:5%; text-align: center">
+            <th style="width:5%; text-align: right">
                 Total Sales<br/>(Kg)
             </th>
-            <th style="width:5%; text-align: center">
+            <th style="width:5%; text-align: right">
                 Actual Sales<br />(kg)
             </th>
-            <th style="width:5%; text-align: center">
-                Total Sales<br />(value)
+            <th style="width:5%; text-align: right">
+                Net Sales<br />(kg)
             </th>
         </tr>
         </thead>
         <?php
-        foreach($data_sales as $crop)
+        $grand_total_sale_quantity=0;
+        $grand_total_bonus_quantity=0;
+        $grand_total_sales_bonus_quantity=0;
+        $grand_total_sale_kg=0;
+        $grand_total_sale_value=0;
+        foreach($data_sales as $divisions)
         {
             ?>
             <tr>
-                <th title="Crop: <?php echo $crop['crop_name'];?>"><?php echo $crop['crop_name'];?></th>
-                <th colspan="21">&nbsp;</th>
+                <th><?php echo $divisions['division_name'];?></th>
+                <th colspan="13">&nbsp;</th>
             </tr>
+            <?php
+            foreach($divisions['zones'] as $zones)
+            {
+                ?>
+                <tr>
+                    <th>&nbsp;</th>
+                    <th><?php echo $zones['zone_name'];?></th>
+                    <th colspan="12">&nbsp;</th>
+                </tr>
                 <?php
-                foreach($crop['type'] as $product_type)
+                foreach($zones['territories'] as $territories)
                 {
                     ?>
                     <tr>
-                    <th colspan="">&nbsp;</th>
-                    <th title="Product Type: <?php echo $product_type['product_type'];?>"><?php echo $product_type['product_type'];?></th>
-                    <th colspan="21">&nbsp;</th>
+                        <th colspan="2">&nbsp;</th>
+                        <th><?php echo $territories['territory_name'];?></th>
+                        <th colspan="11">&nbsp;</th>
                     </tr>
                     <?php
-                    foreach($product_type['variety'] as $variety)
+                    foreach($territories['distributors'] as $distributors)
                     {
                         ?>
                         <tr>
-                            <th colspan="2">&nbsp;</th>
-                            <th title="Variety Name: <?php echo $variety['variety_name'];?>"><?php echo $variety['variety_name'];?></th>
-                            <th colspan="21">&nbsp;</th>
+                            <th colspan="3">&nbsp;</th>
+                            <th><?php echo $distributors['distributor_name'];?></th>
+                            <th colspan="10">&nbsp;</th>
                         </tr>
                         <?php
-                        $price_in_kg=0;
-                        $sales_quantity_in_kg=0;
-                        $bonus_quantity_in_kg=0;
-                        $sales_return_quantity_in_kg=0;
-                        $total_sales_in_kg=0;
-                        $actual_sales_in_kg=0;
-                        $net_sales_in_kg=0;
-                        foreach($variety['pack_size'] as $pack_size)
+                        foreach($distributors['crops'] as $crops)
                         {
-                            $price_in_kg=$pack_size['price_in_kg'];
-                            $sales_quantity_in_kg=$pack_size['sales_quantity_in_kg'];
-                            $bonus_quantity_in_kg=$pack_size['bonus_quantity_in_kg'];
-                            $sales_return_quantity_in_kg=$pack_size['sales_return_quantity_in_kg'];
-                            $total_sales_in_kg=(($sales_quantity_in_kg+$bonus_quantity_in_kg)-$sales_return_quantity_in_kg);
-                            $actual_sales_in_kg=($total_sales_in_kg-$sales_return_quantity_in_kg);
-                            $net_sales_in_kg=($actual_sales_in_kg*$price_in_kg);
                             ?>
                             <tr>
-                                <th colspan="3">&nbsp;</th>
-                                <th style="text-align: center;" title="Pack Size(gm) : <?php echo $pack_size['pack_size_name'];?>"><?php echo $pack_size['pack_size_name'];?></th>
-                                <th style="text-align: center;" title="Price(Kg): <?php echo number_format($price_in_kg, 2);?>"><?php echo number_format($price_in_kg, 2);?></th>
-                                <th style="text-align: center;" title="Quantity (Kg) : <?php echo number_format($sales_quantity_in_kg, 2);?>"><?php echo number_format($sales_quantity_in_kg, 2);?></th>
-                                <th style="text-align: center;" title="Bonus Quantity : <?php echo number_format($bonus_quantity_in_kg, 2);?>"><?php echo number_format($bonus_quantity_in_kg, 2);?></th>
-                                <th style="text-align: center;" title="Sales Return(Kg) : <?php echo number_format($sales_return_quantity_in_kg, 2);?>"><?php echo number_format($sales_return_quantity_in_kg, 2);?></th>
-                                <th style="text-align: center;" title="Total Sales(Kg) : <?php echo number_format($total_sales_in_kg, 2);?>"><?php echo number_format($total_sales_in_kg, 2);?></th>
-                                <th style="text-align: center;" title="Actual Sales(Kg) : <?php echo number_format($actual_sales_in_kg, 2);?>"><?php echo number_format($actual_sales_in_kg, 2);?></th>
-                                <th style="text-align: center;" title="Net Sales(Kg) : <?php echo number_format($net_sales_in_kg, 2);?>"><?php echo number_format($net_sales_in_kg, 2);?></th>
+                                <th colspan="4">&nbsp;</th>
+                                <th><?php echo $crops['crop_name'];?></th>
+                                <th colspan="9">&nbsp;</th>
                             </tr>
                             <?php
+                            foreach($crops['product_types'] as $product_types)
+                            {
+                                ?>
+                                <tr>
+                                    <th colspan="5">&nbsp;</th>
+                                    <th><?php echo $product_types['product_type_name'];?></th>
+                                    <th colspan="8">&nbsp;</th>
+                                </tr>
+                                <?php
+                                foreach($product_types['pack_sizes'] as $pack_sizes)
+                                {
+                                    ?>
+                                    <tr>
+                                        <th colspan="6">&nbsp;</th>
+                                        <th><?php echo $pack_sizes['pack_size_name'];?></th>
+                                        <th colspan="7">&nbsp;</th>
+                                    </tr>
+                                    <?php
+                                    $total_sale_bonus=0;
+                                    $total_sale_value=0;
+                                    $sales_kg=0;
+                                    for($i=0; $i<sizeof($pack_sizes['varieties']); $i++)
+                                    {
+                                        $total_sale_bonus=($pack_sizes['varieties'][$i]['sales_quantity']+$pack_sizes['varieties'][$i]['bonus_quantity']);
+                                        $total_sale_value=($pack_sizes['varieties'][$i]['price']*$pack_sizes['varieties'][$i]['sales_quantity']);
+                                        $sales_kg=($pack_sizes['varieties'][$i]['pack_size_name']*$total_sale_bonus)/1000;
+
+                                        $grand_total_sale_quantity+=$pack_sizes['varieties'][$i]['sales_quantity'];
+                                        $grand_total_bonus_quantity+=$pack_sizes['varieties'][$i]['bonus_quantity'];
+                                        $grand_total_sales_bonus_quantity+=$total_sale_bonus;
+                                        $grand_total_sale_value+=$total_sale_value;
+                                        $grand_total_sale_kg+=$sales_kg;
+
+
+                                        ?>
+                                        <tr>
+                                            <th colspan="7">&nbsp;</th>
+                                            <th><?php echo $pack_sizes['varieties'][$i]['variety_name'];?></th>
+                                            <th><?php echo $pack_sizes['varieties'][$i]['price'];?></th>
+                                            <th><?php echo $pack_sizes['varieties'][$i]['sales_quantity'];?></th>
+                                            <th><?php echo $pack_sizes['varieties'][$i]['bonus_quantity']?$pack_sizes['varieties'][$i]['bonus_quantity']:0;?></th>
+                                            <th><?php echo $total_sale_bonus;?></th>
+                                            <th><?php echo $sales_kg;?></th>
+                                            <th><?php echo $total_sale_value;?></th>
+                                        </tr>
+                                    <?php
+                                    }
+                                }
+                            }
                         }
                     }
                 }
-                ?>
-            <?php
+            }
         }
         ?>
+        <tr class="btn-danger">
+            <th colspan="9" style="text-align: right">Grand Total: </th>
+            <th><?php echo $grand_total_sale_quantity;?></th>
+            <th><?php echo $grand_total_bonus_quantity;?></th>
+            <th><?php echo $grand_total_sales_bonus_quantity;?></th>
+            <th><?php echo $grand_total_sale_kg;?></th>
+            <th><?php echo $grand_total_sale_value;?></th>
+        </tr>
     </table>
     <?php include_once '../../libraries/print_page/Print_footer.php'; ?>
 </div>
