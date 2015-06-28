@@ -27,6 +27,8 @@ $zone_id=$_POST['zone_id'];
 $territory_id=$_POST['territory_id'];
 $distributor_id=$_POST['distributor_id'];
 $warehouse_id=$_POST['warehouse_id'];
+$year_id=$_POST['year_id'];
+$zilla_id=$_POST['zilla_id'];
 
 $db_po_received=new Database();
 $valid_receipt_po = $db_po_received->single_data_w($tbl . 'product_purchase_order_challan_received', "invoice_id", "invoice_id='" . $invoice_id . "'");
@@ -38,6 +40,16 @@ if(empty($valid_receipt_po))
 if(empty($purchase_order_id))
 {
     echo "Purchase order number empty";
+    die();
+}
+if(empty($year_id))
+{
+    echo "Year is empty";
+    die();
+}
+if(empty($zilla_id))
+{
+    echo "District is empty";
     die();
 }
 if(empty($invoice_id))
@@ -66,7 +78,7 @@ if(empty($warehouse_id))
     die();
 }
 
-if(!empty($purchase_order_id) && !empty($invoice_id) && !empty($zone_id) && !empty($territory_id) && !empty($distributor_id) && !empty($warehouse_id))
+if(!empty($purchase_order_id) && !empty($invoice_id) && !empty($zone_id) && !empty($territory_id) && !empty($distributor_id) && !empty($warehouse_id) && !empty($year_id))
 {
     $count = count($_POST['id']);
     if($count>0)
@@ -80,7 +92,7 @@ if(!empty($purchase_order_id) && !empty($invoice_id) && !empty($zone_id) && !emp
             $varriety_id=$_POST["varriety_id"][$i];
             $pack_size=$_POST["pack_size"][$i];
 
-            $valid_product = $db_chkp->get_valid_product_stock_table($warehouse_id, $crop_id, $product_type_id, $varriety_id, $pack_size);
+            $valid_product = $db_chkp->get_valid_product_stock_table($year_id, $warehouse_id, $crop_id, $product_type_id, $varriety_id, $pack_size);
             if (!$valid_product)
             {
                 $all_product_status = FALSE;
@@ -111,9 +123,11 @@ if(!empty($purchase_order_id) && !empty($invoice_id) && !empty($zone_id) && !emp
                     'return_challan_id,' => "'" . $maxID . "',",
                     'purchase_order_id,' => "'" . $purchase_order_id . "',",
                     'invoice_id,' => "'" . $invoice_id . "',",
+                    'year_id,' => "'" . $year_id . "',",
                     'challan_date,' => "'" . $db->date_formate($_POST["challan_date"]) . "',",
                     'zone_id,' => "'" . $zone_id . "',",
                     'territory_id,' => "'" . $territory_id . "',",
+                    'zilla_id,' => "'" . $zilla_id . "',",
                     'distributor_id,' => "'" . $distributor_id . "',",
                     'crop_id,' => "'" . $crop_id . "',",
                     'product_type_id,' => "'" . $product_type_id . "',",
@@ -140,6 +154,7 @@ if(!empty($purchase_order_id) && !empty($invoice_id) && !empty($zone_id) && !emp
                 approved_quantity=approved_quantity-'" . $return_quantity . "',
                 total_price=total_price-'" . $per_product_price . "'
                 WHERE
+                    year_id='" . $year_id . "' AND
                     invoice_id='" . $invoice_id . "' AND
                     crop_id='" . $crop_id . "' AND
                     product_type_id='" . $product_type_id . "' AND
@@ -160,6 +175,7 @@ if(!empty($purchase_order_id) && !empty($invoice_id) && !empty($zone_id) && !emp
                 quantity=quantity-'" . $return_quantity . "',
                 total_price=total_price-'" . $per_product_price . "'
                 WHERE
+                    year_id='" . $year_id . "' AND
                     invoice_id='" . $invoice_id . "' AND
                     crop_id='" . $crop_id . "' AND
                     product_type_id='" . $product_type_id . "' AND
@@ -180,6 +196,7 @@ if(!empty($purchase_order_id) && !empty($invoice_id) && !empty($zone_id) && !emp
                 quantity=quantity-'" . $return_quantity . "',
                 total_price=total_price-'" . $per_product_price . "'
                 WHERE
+                    year_id='" . $year_id . "' AND
                     invoice_id='" . $invoice_id . "' AND
                     crop_id='" . $crop_id . "' AND
                     product_type_id='" . $product_type_id . "' AND
