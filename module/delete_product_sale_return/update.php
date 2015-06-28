@@ -66,6 +66,7 @@ if($db_return->open())
         $variety_id=$row_return['varriety_id'];
         $pack_size=$row_return['pack_size'];
         $distributor_id=$row_return['distributor_id'];
+        $year_id=$row_return['year_id'];
         $warehouse_id=$row_return['warehouse_id'];
         $invoice_id=$row_return['invoice_id'];
 
@@ -75,7 +76,7 @@ if($db_return->open())
             break;
         }
 
-        $valid_product = $db_chkp->get_valid_product_stock_table($warehouse_id, $crop_id, $product_type_id, $variety_id, $pack_size);
+        $valid_product = $db_chkp->get_valid_product_stock_table($year_id, $warehouse_id, $crop_id, $product_type_id, $variety_id, $pack_size);
         if (!$valid_product)
         {
             $all_product_status = FALSE;
