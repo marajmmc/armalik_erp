@@ -17,11 +17,11 @@ $employee_id = $_SESSION['employee_id'];
 $warehouse_id = $_SESSION['warehouse_id'];
 $year_id = $_POST['year_id'];
 
-if(empty($warehouse_id))
-{
-    echo "Not_Successfully_Delivery";
-    die();
-}
+//if(empty($warehouse_id))
+//{
+//    echo "Not_Successfully_Delivery";
+//    die();
+//}
 if(empty($_POST['warehouse_id']))
 {
     echo "Not_Successfully_Delivery";
@@ -86,5 +86,31 @@ $updatebonus = "UPDATE $tbl" . "product_purchase_order_bonus SET
 if ($dbbn->open()) {
     $result = $dbbn->query($updatebonus);
 }
+
+$rowfield = array
+(
+    'year_id,' => "'" . $year_id . "',",
+    'warehouse_id,' => "'" . $_POST['warehouse_id'] . "',",
+    'purchase_order_id,' => "'" . $_POST['purchase_order_id'] . "',",
+    'invoice_id,' => "'" . $_POST['invoice_id'] . "',",
+    'invoice_date,' => "'" . $db->date_formate($_POST["challan_date"]) . "',",
+    'zone_id,' => "'" . $_POST["zone_id"] . "',",
+    'territory_id,' => "'" . $_POST["territory_id"] . "',",
+    'zilla_id,' => "'" . $_POST["zilla_id"] . "',",
+    'distributor_id,' => "'" . $_POST["distributor_id"] . "',",
+    'invoice_post_date,' => "'" . $db->date_formate($_POST["invoice_post_date"]) . "',",
+    'invoice_post_no,' => "'" . $_POST["invoice_post_no"] . "',",
+    'courier_name,' => "'" . $_POST["courier_name"] . "',",
+    'booking_date,' => "'" . $db->date_formate($_POST["booking_date"]) . "',",
+    'courier_trac_no,' => "'" . $_POST["courier_trac_no"] . "',",
+    'remarks,' => "'" . $_POST["remarks"] . "',",
+    'status,' => "'Active',",
+    'del_status,' => "'0',",
+    'entry_by,' => "'$user_id',",
+    'entry_date' => "'" . $db->ToDayDate() . "'"
+);
+
+$db->data_insert($tbl . 'product_purchase_order_challan_status', $rowfield);
+$db->system_event_log('', $user_id, $employee_id, $maxID, '', $tbl . 'product_purchase_order_challan_status', 'Save', '');
 echo "Successfully Delivery";
 ?>

@@ -455,6 +455,87 @@ else
                             </table>
                         </div>
                     </div>
+
+
+                    <div class="form-horizontal no-margin">
+                        <div class="widget-body">
+                            <div class="control-group">
+                                <label class="control-label" for="invoice_date">
+                                    Date of invoice
+                                </label>
+                                <div class="controls">
+                                    <div class="input-append">
+                                        <input type="text" name="invoice_post_date" id="invoice_post_date" class="span9" placeholder="Date" value="" validate="Require" />
+                                        <span class="add-on" id="calcbtn_invoice_post_date">
+                                            <i class="icon-calendar"></i>
+                                        </span>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">
+                                    Invoice No
+                                </label>
+                                <div class="controls">
+                                    <input type="text" id="invoice_post_no" name="invoice_post_no" class="span5" placeholder="Invoice No." validate="Require">
+                                    <span class="help-inline">
+                                        *
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">
+                                    Courier Name
+                                </label>
+                                <div class="controls">
+                                    <input type="text" id="courier_name" name="courier_name" class="span5" placeholder="Courier Name." validate="Require">
+                                    <span class="help-inline">
+                                        *
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="invoice_date">
+                                    Booking Date
+                                </label>
+                                <div class="controls">
+                                    <div class="input-append">
+                                        <input type="text" name="booking_date" id="booking_date" class="span9" placeholder="Booking Date" value="" validate="Require" />
+                                        <span class="add-on" id="calcbtn_booking_date">
+                                            <i class="icon-calendar"></i>
+                                        </span>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">
+                                    Courier Trac. No.
+                                </label>
+                                <div class="controls">
+                                    <input type="text" id="courier_trac_no" name="courier_trac_no" class="span5" placeholder="Courier Trac No.." validate="Require">
+                                    <span class="help-inline">
+                                        *
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">
+                                    Remarks
+                                </label>
+                                <div class="controls">
+                                    <textarea id="remarks" name="remarks" class="span5" placeholder="Remarks" ></textarea>
+                                    <span class="help-inline">
+
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
                 </div>
             </div>
         </div>
@@ -467,7 +548,9 @@ else
             minuteStep:1
         });
         cal.manageFields("calcbtn_challan_date", "challan_date", "%d-%m-%Y");
-                                                                                                                                                            
+        cal.manageFields("calcbtn_invoice_post_date", "invoice_post_date", "%d-%m-%Y");
+        cal.manageFields("calcbtn_booking_date", "booking_date", "%d-%m-%Y");
+
     </script>
     <?php
 }
