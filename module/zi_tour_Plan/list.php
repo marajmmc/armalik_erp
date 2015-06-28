@@ -33,19 +33,22 @@ $tbl = _DB_PREFIX;
                                 <th style="width:5%">
                                     Sl.
                                 </th>
+                                <th style="width:15%">
+                                    Zone
+                                </th>
                                 <th style="width:20%">
                                     Territory
                                 </th>
-                                <th style="width:20%">
+                                <th style="width:10%">
                                     Date
                                 </th>
-                                <th style="width:20%">
+                                <th style="width:25%">
                                     Year
                                 </th>
-                                <th style="width:20%">
+                                <th style="width:10%">
                                     From Month
                                 </th>
-                                <th style="width:20%">
+                                <th style="width:10%">
                                     To Month
                                 </th>
                             </tr>
@@ -65,6 +68,7 @@ $tbl = _DB_PREFIX;
                                 ztp.division_id,
                                 ztp.zone_id,
                                 ztp.territory_id,
+                                azi.zone_name,
                                 ati.territory_name,
                                 ay.year_name,
                                 ztp.status
@@ -72,6 +76,7 @@ $tbl = _DB_PREFIX;
                                 FROM
                                 $tbl" . "zi_tour_plan ztp
 
+                                LEFT JOIN $tbl" . "zone_info azi ON azi.zone_id = ztp.zone_id
                                 LEFT JOIN $tbl" . "territory_info ati ON ati.territory_id = ztp.territory_id
                                 LEFT JOIN $tbl" . "year ay ON ay.year_id = ztp.year
 
@@ -98,6 +103,7 @@ $tbl = _DB_PREFIX;
                                             <td>
                                                 <?php echo $i; ?>
                                             </td>
+                                            <td><?php echo $result_array['zone_name']; ?></td>
                                             <td><?php echo $result_array['territory_name']; ?></td>
                                             <td><?php echo $result_array['entry_date']; ?></td>
                                             <td><?php echo $result_array['year_name']; ?></td>
