@@ -9,11 +9,13 @@ $tbl = _DB_PREFIX;
 $ttotal_price = "";
 $sql = "SELECT
             $tbl" . "product_purchase_order_invoice.id,
+            $tbl" . "product_purchase_order_invoice.year_id,
             $tbl" . "product_purchase_order_invoice.invoice_id,
             $tbl" . "product_purchase_order_invoice.warehouse_id,
             $tbl" . "product_purchase_order_invoice.purchase_order_id,
             $tbl" . "product_purchase_order_invoice.invoice_date,
             $tbl" . "product_purchase_order_invoice.zone_id,
+            $tbl" . "product_purchase_order_invoice.zilla_id,
             $tbl" . "product_purchase_order_invoice.territory_id,
             $tbl" . "product_purchase_order_invoice.distributor_id,
             $tbl" . "product_purchase_order_invoice.crop_id,
@@ -33,6 +35,8 @@ if ($db->open()) {
     while ($row = $db->fetchAssoc($result)) {
         $elm_id[] = $row['id'];
         $warehouse_id = $row['warehouse_id'];
+        $year_id = $row['year_id'];
+        $zilla_id = $row['zilla_id'];
         $invoice_id = $row['invoice_id'];
         $purchase_order_id = $row['purchase_order_id'];
         $status = $row['status'];
@@ -93,6 +97,22 @@ if ($db->open()) {
                         </div>
                     </div>
                     <div class="control-group">
+                        <label class="control-label">
+                            Year
+                        </label>
+                        <div class="controls">
+                            <select id="year_id" name="year_id" class="span5" validate="Require">
+                                <?php
+                                $db_fiscal_year=new Database();
+                                $db_fiscal_year->get_fiscal_year($year_id);
+                                ?>
+                            </select>
+                            <span class="help-inline">
+                                *
+                            </span>
+                        </div>
+                    </div>
+                    <div class="control-group">
                         <label class="control-label" for="zone_id">
                             Zone
                         </label>
@@ -122,6 +142,22 @@ if ($db->open()) {
                             <span class="help-inline">
                                 *
                             </span>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="">
+                            District
+                        </label>
+                        <div class="controls">
+                            <select id="zilla_id" name="zilla_id" class="span5" placeholder="" validate="Require" onchange="load_distributor_fnc()">
+                                <?php
+                                $db_zilla=new Database();
+                                $db_zilla->get_zone_assign_district($zilla_id, $zilla_id, $zone_id, $territory_id);
+                                ?>
+                            </select>
+                                <span class="help-inline">
+                                    *
+                                </span>
                         </div>
                     </div>
                     <div class="control-group">
