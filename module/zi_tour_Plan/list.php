@@ -62,6 +62,7 @@ $tbl = _DB_PREFIX;
                                 ztp.del_status,
                                 ztp.entry_by,
                                 ztp.entry_date,
+                                ztp.division_id,
                                 ztp.zone_id,
                                 ztp.territory_id,
                                 ati.territory_name,

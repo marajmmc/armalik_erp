@@ -10,19 +10,21 @@ $db = new Database();
 $tbl = _DB_PREFIX;
 $user_id = $_SESSION['user_id'];
 $employee_id = $_SESSION['employee_id'];
-$user_zone = $_SESSION['zone_id'];
+//$user_zone = $_SESSION['zone_id'];
 
 $postData = explode('~', $_POST['rowID']);
 $year = $postData[0];
-$zone_id = $postData[1];
-$start_month = $postData[2];
-$end_month = $postData[3];
+$division_id = $postData[1];
+$zone_id = $postData[2];
+$start_month = $postData[3];
+$end_month = $postData[4];
 
 // initial update
 $initial_update = array('status' => "'0'");
 
 $initial_where = array(
     'year' => "'$year'",
+    'division_id' => "'$division_id'",
     'zone_id' => "'$zone_id'",
     'start_month' => "'$start_month'",
     'end_month' => "'$end_month'"
@@ -79,7 +81,8 @@ foreach($planPost as $day=>$plan)
                             'end_month,' => "'" . $to_month . "',",
                             'week_day,' => "'" . $day . "',",
                             'day_time,' => "'" . $time . "',",
-                            'zone_id,' => "'" . $user_zone . "',",
+                            'division_id,' => "'" . $division_id . "',",
+                            'zone_id,' => "'" . $zone_id . "',",
                             'territory_id,' => "'" . $attribute['territory_id'] . "',",
                             'district_id,' => "'" . $attribute['district_id'] . "',",
                             'distributor_id,' => "'" . $distributor . "',",
