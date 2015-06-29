@@ -22,12 +22,11 @@ $tbl = _DB_PREFIX;
                         <i class="icon-list-alt" data-original-title="Share"> </i>
                     </a>
                 </span>
-
             </div>
+
             <div class="widget-body">
                 <div id="dt_example" class="example_alt_pagination">
                     <table class="table table-condensed table-striped table-hover table-bordered pull-left" id="data-table">
-
                         <thead>
                             <tr>
                                 <th style="width:5%">
@@ -80,7 +79,7 @@ $tbl = _DB_PREFIX;
                                 LEFT JOIN $tbl" . "territory_info ati ON ati.territory_id = ztp.territory_id
                                 LEFT JOIN $tbl" . "year ay ON ay.year_id = ztp.year
 
-                                WHERE ztp.zone_id ='".$_SESSION['zone_id']."' AND ztp.status=1
+                                WHERE ztp.status=1
                                 GROUP BY ztp.year, ztp.start_month, ztp.end_month, ztp.division_id, ztp.zone_id
                                 ";
 
@@ -100,9 +99,7 @@ $tbl = _DB_PREFIX;
                                     }
                                     ?>
                                         <tr class="<?php echo $rowcolor ?> pointer" id="tr_id<?php echo $i; ?>" onclick="get_rowID('<?php echo $result_array["year"].'~'. $result_array["division_id"].'~'.$result_array["zone_id"].'~'.$result_array["start_month"].'~'.$result_array["end_month"]?>', '<?php echo $i; ?>')" ondblclick="details_form();">
-                                            <td>
-                                                <?php echo $i; ?>
-                                            </td>
+                                            <td><?php echo $i; ?></td>
                                             <td><?php echo $result_array['zone_name']; ?></td>
                                             <td><?php echo $result_array['territory_name']; ?></td>
                                             <td><?php echo $result_array['entry_date']; ?></td>
@@ -122,15 +119,15 @@ $tbl = _DB_PREFIX;
                                             </td>
                                             <td>
                                                 <?php
-                                                $months = $db->get_month_array();
-                                                foreach($months as $val=>$month)
-                                                {
-                                                    if($val==$result_array['end_month'])
+                                                    $months = $db->get_month_array();
+                                                    foreach($months as $val=>$month)
                                                     {
-                                                        echo $month;
-                                                        break;
+                                                        if($val==$result_array['end_month'])
+                                                        {
+                                                            echo $month;
+                                                            break;
+                                                        }
                                                     }
-                                                }
                                                 ?>
                                             </td>
                                         </tr>

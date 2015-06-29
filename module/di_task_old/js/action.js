@@ -13,37 +13,45 @@ function list(){
             $("#list_rec").html(result);
             $(".mini-title").html('List');
             loader_close();
-            if($("#userLevel").val()=="Marketing")
-            {
-                MenuOffOn('off','off','on','on','on','on','on','off','on','on');
-            }
-            else
-            {
-                MenuOffOn('on','off','on','on','on','on','on','off','on','on');
-            }
+            MenuOffOn('on','off','on','on','on','on','on','off','on','on');
         }
     });
 }
-
 function Save_Rec()
 {
     validateResult=true;
     formValidate();
     if(validateResult){
         if (SaveStatus==1){
-            document.getElementById('frm_area').action = 'save.php';
-        }else{
-            document.getElementById('frm_area').action = 'update.php';
+            $.post("save.php",$("#frm_area").serialize(), function(result){
+                if (result){
+//                    $("#new_rec").html(result);
+                    list();
+                    loader_close();
+                    reset();
+                    alertify.set({
+                        delay: 3000
+                    });
+                    alertify.success("Data Save Successfully");
+                    return false;
+                }
+            });
+        }else if(SaveStatus==2){
+            $.post("update.php",$("#frm_area").serialize(), function(result){
+            
+                if (result){
+                    //$("#edit_rec").html(result);
+                    list();
+                    loader_close();
+                    reset();
+                    alertify.set({
+                        delay: 3000
+                    });
+                    alertify.success("Data Update Successfully");
+                    return false;
+                }
+            }); 
         }
-        $('#frm_area').submit();
-        reset();
-
-        alertify.set({
-            delay: 3000
-        });
-
-        alertify.success("Data Save Successfully");
-        return false;
     }
 }
 
@@ -84,7 +92,6 @@ function edit_form(){
         });
     }
 }
-
 function details_form(){
     if($("#rowID").val()==""){
         alertify.set({
@@ -108,6 +115,7 @@ function details_form(){
     }
 }
 
+
 function Existin_data(elm){
     $("#loader").remove();
     $.post("exist_data.php",{name:elm.value}, function(result){
@@ -130,28 +138,25 @@ function load_territory_by_zone()
 {
     $("#territory_id").html('');
     $.post("../../libraries/ajax_load_file/load_territory.php",
-    {
-        zone_id : $("#zone_id").val()
-    },
-
-    function(result)
-    {
-        if(result)
         {
-            $("#territory_id").append(result);
-        }
+            zone_id : $("#zone_id").val()
+        },
+
+        function(result)
+        {
+            if(result)
+            {
+                $("#territory_id").append(result);
+            }
     });
 }
 
 function load_district_by_territory()
 {
     $("#district_id").html('');
-
-    if(($("#territory_id").val()).length>0)
-    {
-        $.post("../../libraries/ajax_load_file/load_territory_assign_district.php",
+    $.post("../../libraries/ajax_load_file/load_territory_assign_district.php",
         {
-            zone_id: $("#zone_id").val(), territory_id: $("#territory_id").val()
+            zone_id : $("#zone_id").val(), territory_id: $("#territory_id").val()
         },
 
         function(result)
@@ -160,13 +165,7 @@ function load_district_by_territory()
             {
                 $("#district_id").append(result);
             }
-        });
-    }
-    else
-    {
-        $("#district_id").html('');
-    }
-
+    });
 }
 
 function load_distributor_by_district()
@@ -182,37 +181,6 @@ function load_distributor_by_district()
         if(result)
         {
             $("#distributor_id").append(result);
-        }
-    });
-}
-
-function load_po_and_collection()
-{
-    $("#purchase_order").html('');
-    $.post("../../libraries/ajax_load_file/load_purchase_order.php",
-    {
-        territory_id: $("#territory_id").val(), zilla_id: $("#district_id").val(), distributor_id: $("#distributor_id").val()
-    },
-
-    function(result)
-    {
-        if(result)
-        {
-            $("#purchase_order").append(result);
-        }
-    });
-
-    $("#collection").html('');
-    $.post("../../libraries/ajax_load_file/load_collection_amount.php",
-    {
-        territory_id: $("#territory_id").val(), zilla_id: $("#district_id").val(), distributor_id: $("#distributor_id").val()
-    },
-
-    function(result)
-    {
-        if(result)
-        {
-            $("#collection").append(result);
         }
     });
 }

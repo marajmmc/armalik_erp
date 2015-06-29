@@ -146,26 +146,52 @@ function load_territory_by_zone()
 function load_district_by_territory()
 {
     $("#district_id").html('');
-    $.post("../../libraries/ajax_load_file/load_territory_assign_district.php",
-    {
-        zone_id : $("#zone_id").val(), territory_id: $("#territory_id").val()
-    },
 
-    function(result)
+    if(($("#territory_id").val()).length>0)
     {
-        if(result)
+        $.post("../../libraries/ajax_load_file/load_territory_assign_district.php",
         {
-            $("#district_id").append(result);
-        }
-    });
+            zone_id: $("#zone_id").val(), territory_id: $("#territory_id").val()
+        },
+
+        function(result)
+        {
+            if(result)
+            {
+                $("#district_id").append(result);
+            }
+        });
+    }
+    else
+    {
+        $("#district_id").html('');
+    }
+
 }
 
-function load_distributor_by_district()
+//function load_distributor_by_district()
+//{
+//    $("#distributor_id").html('');
+//    $.post("../../libraries/ajax_load_file/load_distributor.php",
+//    {
+//        zone_id : $("#zone_id").val(), territory_id: $("#territory_id").val(), zilla_id: $("#district_id").val()
+//    },
+//
+//    function(result)
+//    {
+//        if(result)
+//        {
+//            $("#distributor_id").append(result);
+//        }
+//    });
+//}
+
+function load_distributor_by_tour_time()
 {
     $("#distributor_id").html('');
-    $.post("../../libraries/ajax_load_file/load_distributor.php",
+    $.post("../../libraries/ajax_load_file/load_distributor_by_tour_time.php",
     {
-        zone_id : $("#zone_id").val(), territory_id: $("#territory_id").val(), zilla_id: $("#district_id").val()
+        territory_id: $("#territory_id").val(), district_id: $("#district_id").val(), time_span: $("#time_id").val()
     },
 
     function(result)
@@ -182,7 +208,7 @@ function load_po_and_collection()
     $("#purchase_order").html('');
     $.post("../../libraries/ajax_load_file/load_purchase_order.php",
     {
-        territory_id: $("#territory_id").val(), zilla_id: $("#district_id").val(), distributor_id:$("#distributor_id").val()
+        territory_id: $("#territory_id").val(), zilla_id: $("#district_id").val(), distributor_id: $("#distributor_id").val()
     },
 
     function(result)
@@ -196,7 +222,7 @@ function load_po_and_collection()
     $("#collection").html('');
     $.post("../../libraries/ajax_load_file/load_collection_amount.php",
     {
-        territory_id: $("#territory_id").val(), zilla_id: $("#district_id").val(), distributor_id:$("#distributor_id").val()
+        territory_id: $("#territory_id").val(), zilla_id: $("#district_id").val(), distributor_id: $("#distributor_id").val()
     },
 
     function(result)

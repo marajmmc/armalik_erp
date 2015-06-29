@@ -16,6 +16,7 @@ $user_division = $user_division_query['division_id'];
 
 $territory_id = $_POST['territory_id'];
 $district_id = $_POST['district_id'];
+$day_time = $_POST['time_id'];
 $distributor_id = $_POST['distributor_id'];
 $purchase_order = $_POST['purchase_order'];
 $collection = $_POST['collection'];
@@ -51,6 +52,7 @@ $data = array(
     'zone_id' => "'$user_zone'",
     'territory_id' => "'$territory_id'",
     'district_id' => "'$district_id'",
+    'day_time' => "'$day_time'",
     'distributor_id' => "'$distributor_id'",
     'purchase_order' => "'$purchase_order'",
     'collection' => "'$collection'",

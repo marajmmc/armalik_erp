@@ -38,6 +38,7 @@ $user_zone = $_SESSION['zone_id'];
                                 echo $db->SelectList($sql);
                                 ?>
                             </select>
+                            <input type="hidden" name="zone_id" id="zone_id" value="<?php echo $user_zone;?>" />
                         </div>
                     </div>
 
@@ -46,11 +47,24 @@ $user_zone = $_SESSION['zone_id'];
                             District
                         </label>
                         <div class="controls">
-                            <select id="district_id" name="district_id" class="span5" onchange="load_distributor_by_district()">
+                            <select id="district_id" name="district_id" class="span5">
                                 <option value="">Select</option>
                                 <?php
 
                                 ?>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label">
+                            Tour Time Span
+                        </label>
+                        <div class="controls">
+                            <select id="time_id" name="time_id" class="span5" onchange="load_distributor_by_tour_time()">
+                                <option value="">Select</option>
+                                <option value="1">Morning</option>
+                                <option value="2">Evening</option>
                             </select>
                         </div>
                     </div>

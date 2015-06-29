@@ -51,7 +51,7 @@ $tbl = _DB_PREFIX;
                                     Variety
                                 </th>
                                 <th style="width:30%">
-                                    Farmer's Name
+                                    Farmer Name
                                 </th>
                             </tr>
                         </thead>
@@ -76,8 +76,6 @@ $tbl = _DB_PREFIX;
                             LEFT JOIN $tbl" . "product_type ptype ON ptype.product_type_id = zcf.product_type_id
                             LEFT JOIN $tbl" . "varriety_info variety ON variety.varriety_id = zcf.variety_id
                             LEFT JOIN $tbl" . "upazilla upa ON upa.upazilaid = zcf.upazilla_id AND upa.zillaid = zcf.district_id
-
-                            WHERE zcf.zone_id ='".$_SESSION['zone_id']."'
                             ";
 
                         if($db->open())

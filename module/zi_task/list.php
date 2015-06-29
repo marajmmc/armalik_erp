@@ -73,6 +73,7 @@ $tbl = _DB_PREFIX;
                             LEFT JOIN $tbl" . "zone_info azi ON azi.zone_id = azt.zone_id
                             LEFT JOIN $tbl" . "zilla az ON az.zillaid = azt.district_id
                             LEFT JOIN $tbl" . "distributor_info adi ON adi.distributor_id = azt.distributor_id
+                            WHERE azt.zone_id ='".$_SESSION['zone_id']."'
                         ";
                             if ($db->open()) {
                                 $result = $db->query($sql);

@@ -68,6 +68,19 @@ $editRow = $db->single_data($tbl . "zi_task", "*", "id", $_POST['rowID']);
 
                     <div class="control-group">
                         <label class="control-label">
+                            Tour Time Span
+                        </label>
+                        <div class="controls">
+                            <select id="time_id" name="time_id" class="span5" disabled>
+                                <option value="">Select</option>
+                                <option value="1" <?php if($editRow['day_time']==1){echo "selected";}?>>Morning</option>
+                                <option value="2" <?php if($editRow['day_time']==2){echo "selected";}?>>Evening</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label">
                             Distributor
                         </label>
                         <div class="controls">

@@ -22,8 +22,8 @@ $tbl = _DB_PREFIX;
                         <i class="icon-list-alt" data-original-title="Share"> </i>
                     </a>
                 </span>
-            </div>
 
+            </div>
             <div class="widget-body">
                 <div id="dt_example" class="example_alt_pagination">
                     <table class="table table-condensed table-striped table-hover table-bordered pull-left" id="data-table">
@@ -33,68 +33,45 @@ $tbl = _DB_PREFIX;
                                 <th style="width:5%">
                                     No
                                 </th>
+                                <th style="width:20%">
+                                    Designation Name [EN]
+                                </th>
+                                <th style="width:20%">
+                                    Designation Name [BN]
+                                </th>
                                 <th style="width:10%">
-                                    Zone
-                                </th>
-                                <th style="width:20%">
-                                    Territory
-                                </th>
-                                <th style="width:20%">
-                                    Distributor
-                                </th>
-
-                                <th style="width:7%">
-                                    Date
-                                </th>
-                                <th style="width:20%">
-                                    Activities
-                                </th>
-                                <th style="width:20%">
-                                    Problem
+                                    Status
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
                             $sql = "SELECT
-                                azt.*,
-                                ati.territory_name,
-                                azi.zone_name,
-                                az.zillanameeng,
-                                adi.distributor_name
+                                designation_id,
+                                designation_title_en,
+                                designation_title_bn,
+                                status                                
                             FROM
-                                $tbl" . "di_task azt
-                            LEFT JOIN $tbl" . "territory_info ati ON ati.territory_id = azt.territory_id
-                            LEFT JOIN $tbl" . "zone_info azi ON azi.zone_id = azt.zone_id
-                            LEFT JOIN $tbl" . "zilla az ON az.zillaid = azt.district_id
-                            LEFT JOIN $tbl" . "distributor_info adi ON adi.distributor_id = azt.distributor_id
-                            WHERE azt.division_id ='".$_SESSION['division_id']."'
-
+                                $tbl" . "employee_designation
+                            WHERE del_status='0'
                         ";
                             if ($db->open()) {
                                 $result = $db->query($sql);
                                 $i = 1;
-                                while ($result_array = $db->fetchAssoc())
-                                {
-                                    if ($i % 2 == 0)
-                                    {
+                                while ($result_array = $db->fetchAssoc()) {
+                                    if ($i % 2 == 0) {
                                         $rowcolor = "gradeC";
-                                    }
-                                    else
-                                    {
+                                    } else {
                                         $rowcolor = "gradeA success";
                                     }
                                     ?>
-                                    <tr class="<?php echo $rowcolor ?> pointer" id="tr_id<?php echo $i; ?>" onclick="get_rowID('<?php echo $result_array['id']; ?>', '<?php echo $i; ?>')" ondblclick="details_form();">
+                                    <tr class="<?php echo $rowcolor ?> pointer" id="tr_id<?php echo $i; ?>" onclick="get_rowID('<?php echo $result_array["designation_id"] ?>', '<?php echo $i; ?>')" ondblclick="details_form();">
                                         <td>
                                             <?php echo $i; ?>
                                         </td>
-                                        <td><?php echo $result_array['zone_name']; ?></td>
-                                        <td><?php echo $result_array['territory_name']; ?></td>
-                                        <td><?php echo $result_array['distributor_name']; ?></td>
-                                        <td><?php echo $result_array['task_entry_date']; ?></td>
-                                        <td><?php echo $result_array['activities']; ?></td>
-                                        <td><?php echo $result_array['problem']; ?></td>
+                                        <td><?php echo $result_array['designation_title_en']; ?></td>
+                                        <td><?php echo $result_array['designation_title_bn']; ?></td>
+                                        <td><?php echo $result_array['status']; ?></td>
                                     </tr>
                                     <?php
                                     ++$i;

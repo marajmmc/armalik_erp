@@ -45,7 +45,7 @@ $editRow = $db->single_data($tbl . "zi_task", "*", "id", $_POST['rowID']);
                             District
                         </label>
                         <div class="controls">
-                            <select id="district_id" name="district_id" class="span5" onchange="load_distributor_by_district()">
+                            <select id="district_id" name="district_id" class="span5">
                                 <option value="">Select</option>
                                 <?php
                                     $sql_user_group = "SELECT
@@ -68,10 +68,23 @@ $editRow = $db->single_data($tbl . "zi_task", "*", "id", $_POST['rowID']);
 
                     <div class="control-group">
                         <label class="control-label">
+                            Tour Time Span
+                        </label>
+                        <div class="controls">
+                            <select id="time_id" name="time_id" class="span5" onchange="load_distributor_by_tour_time()">
+                                <option value="">Select</option>
+                                <option value="1" <?php if($editRow['day_time']==1){echo "selected";}?>>Morning</option>
+                                <option value="2" <?php if($editRow['day_time']==2){echo "selected";}?>>Evening</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label">
                             Distributor
                         </label>
                         <div class="controls">
-                            <select id="distributor_id" name="distributor_id" class="span5">
+                            <select id="distributor_id" name="distributor_id" class="span5" onchange="load_po_and_collection()">
                                 <option value="">Select</option>
                                 <?php
                                     $sql = "select distributor_id as fieldkey, distributor_name as fieldtext from $tbl" . "distributor_info where status='Active' AND del_status='0' AND zone_id='$user_zone' AND territory_id='".$editRow['territory_id']."' AND zilla_id='".$editRow['district_id']."' order by distributor_name";
