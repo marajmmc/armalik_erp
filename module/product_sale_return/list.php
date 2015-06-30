@@ -59,7 +59,7 @@ else
                                     Sl No
                                 </th>
                                 <th style="width:5%">
-                                    PO No
+                                    PO No.
                                 </th>
                                 <th style="width:5%">
                                     Date
@@ -113,7 +113,7 @@ else
                                         <td>
                                             <?php echo $i; ?>
                                         </td>
-                                        <td><?php echo $result_array['invoice_id']; ?></td>
+                                        <td><?php echo substr($result_array['purchase_order_id'],3); ?></td>
                                         <td><?php echo $db->date_formate($result_array['invoice_date']); ?></td>
                                         <td><?php echo $result_array['distributor_name']; ?></td>
                                         <td><?php echo $result_array['approved_quantity']; ?></td>

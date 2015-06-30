@@ -35,67 +35,6 @@ $tbl = _DB_PREFIX;
                     include_once '../../libraries/search_box/warehouse_crop_type_variety_pack_size.php';
                     include_once '../../libraries/search_box/search_button.php';
                     ?>
-                    <!--                    <table class="table table-condensed table-striped table-hover table-bordered pull-left" id="data-table">-->
-                    <!--                        <thead>-->
-                    <!--                            <tr>-->
-                    <!--                                <th style="width:10%">-->
-                    <!--                                    Warehouse-->
-                    <!--                                </th>-->
-                    <!--                                <th style="width:10%">-->
-                    <!--                                    Crop-->
-                    <!--                                </th>-->
-                    <!--                                <th style="width:10%">-->
-                    <!--                                    Product Type-->
-                    <!--                                </th>-->
-                    <!--                                <th style="width:10%">-->
-                    <!--                                    Variety-->
-                    <!--                                </th>-->
-                    <!--                                <th style="width:10%">-->
-                    <!--                                    Pack Size(gm)-->
-                    <!--                                </th>-->
-                    <!--                                <th style="width:2%">-->
-                    <!--                                    &nbsp;-->
-                    <!--                                </th>-->
-                    <!--                            </tr>-->
-                    <!--                            <tr>-->
-                    <!--                                <td>-->
-                    <!--                                    <select id="warehouse_id" name="warehouse_id" class="span12" placeholder="Warehouse" >-->
-                    <!--                                        <option value="">Select</option>-->
-                    <!--                                        --><?php
-                    //
-                    //                                        ?>
-                    <!--                                    </select>-->
-                    <!--                                </td>-->
-                    <!--                                <td>-->
-                    <!--                                    <select id="crop_id" name="crop_id" class="span12" placeholder="Crop" validate="Require" onchange="load_product_type()">-->
-                    <!--                                        --><?php
-                    //                                        include_once '../../libraries/ajax_load_file/load_crop.php';
-                    //                                        ?>
-                    <!--                                    </select>-->
-                    <!--                                </td>-->
-                    <!--                                <td>-->
-                    <!--                                    <select id="product_type_id" name="product_type_id" class="span12" placeholder="Product Type" onchange="load_varriety_fnc()" validate="Require">-->
-                    <!--                                        <option value="">Select</option>-->
-                    <!--                                    </select>-->
-                    <!--                                </td>-->
-                    <!--                                <td>-->
-                    <!--                                    <select id="varriety_id" name="varriety_id" class="span12" placeholder="Select Variety" onchange="load_pack_size_fnc()">-->
-                    <!--                                        <option value="">Select</option>-->
-                    <!--                                    </select>-->
-                    <!--                                </td>-->
-                    <!--                                <td>-->
-                    <!--                                    <select id='pack_size' name='pack_size' class='span12' placeholder='Select Pack Size(gm)'>-->
-                    <!--                                        <option value=''>Select</option>-->
-                    <!--                                    </select>-->
-                    <!--                                </td>-->
-                    <!--                                <td style="text-align: right">-->
-                    <!--                                    <a class="btn btn-small btn-success" data-original-title="" onclick="show_report_fnc()">-->
-                    <!--                                        <i class="icon-print" data-original-title="Share"> </i> View-->
-                    <!--                                    </a>-->
-                    <!--                                </td>-->
-                    <!--                            </tr>-->
-                    <!--                        </thead>-->
-                    <!--                    </table>-->
                     <div class="clearfix"></div>
                 </div>
             </div>
