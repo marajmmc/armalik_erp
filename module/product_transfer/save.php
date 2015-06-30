@@ -89,6 +89,7 @@ $MaxID = "PT-" . $db->getMaxID_six_digit($tbl . 'product_transfer', 'transfer_id
 $rowfield = array(
     'transfer_id,' => "'" . $MaxID . "',",
     'transfer_date,' => "'" . $db->date_formate($_POST["transfer_date"]) . "',",
+    'year_id,' => "'" . $_POST["year_id"] . "',",
     'from_warehouse_id,' => "'" . $_POST["from_warehouse_id"] . "',",
     'to_warehouse_id,' => "'" . $_POST["to_warehouse_id"] . "',",
     'crop_id,' => "'" . $_POST["crop_id"] . "',",
@@ -111,6 +112,7 @@ if($pinfo['productid']<1)
     $maxID = "PI-" . $db->getMaxID_six_digit($tbl . 'product_info', 'product_id');
     $rowfield = array(
         'product_id,' => "'$maxID',",
+        'year_id,' => "'" . $_POST["year_id"] . "',",
         'warehouse_id,' => "'" . $_POST["to_warehouse_id"] . "',",
         'crop_id,' => "'" . $_POST["crop_id"] . "',",
         'product_type_id,' => "'" . $_POST["product_type_id"] . "',",
