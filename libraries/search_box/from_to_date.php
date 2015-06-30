@@ -29,12 +29,12 @@
     </thead>
 </table>
 <script>
-    var cal = Calendar.setup({
-        onSelect: function(cal) { cal.hide() },
-        fdow :0,
-        minuteStep:1
-    });
-    cal.manageFields("calcbtn_from_date", "from_date", "%d-%m-%Y");
-    cal.manageFields("calcbtn_to_date", "to_date", "%d-%m-%Y");
+//    var cal = Calendar.setup({
+//        onSelect: function(cal) { cal.hide() },
+//        fdow :0,
+//        minuteStep:1
+//    });
+//    cal.manageFields("calcbtn_from_date", "from_date", "%d-%m-%Y");
+//    cal.manageFields("calcbtn_to_date", "to_date", "%d-%m-%Y");
 
 </script>
