@@ -363,7 +363,7 @@ if($db->open())
             </tr>
         </thead>
         <tbody>
-            
+
         </tbody>
     </table>
     <?php include_once '../../libraries/print_page/Print_footer.php'; ?>
