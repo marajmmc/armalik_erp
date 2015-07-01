@@ -397,7 +397,6 @@ function load_current_stock_fnc(crop_id, product_type_id, varriety_id, pack_size
             if(stock<rp_qnty)
             {
                 $("#quantity_"+serial).css("background", "#FF4A4A");
-                
                 MenuOffOn('off','off','off','off','off','on','on','off','on','on');
                 reset();
                 alertify.set({

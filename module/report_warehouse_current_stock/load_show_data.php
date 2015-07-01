@@ -172,9 +172,9 @@ $sql = "SELECT
         GROUP BY
             pi.year_id, pi.crop_id, pi.product_type_id, pi.varriety_id, pi.pack_size
         ORDER BY
-            ait_crop_info.crop_id,
-            ait_product_type.product_type_id,
-            ait_product_pack_size.pack_size_id
+            ait_crop_info.order_crop,
+            ait_product_type.order_type,
+            ait_varriety_info.order_variety
             ";
 $data=array();
 $warehouse=array();
@@ -373,33 +373,40 @@ if($db->open())
     <table class="table table-condensed table-striped table-hover table-bordered pull-left report" id="data-table">
         <thead>
             <tr>
-                <th style="width:5%">
+                <th style="width:5%" rowspan="2">
                     Crop
                 </th>
-                <th style="width:5%">
+                <th style="width:5%" rowspan="2">
                     Product Type
                 </th>
-                <th style="width:5%">
+                <th style="width:5%" rowspan="2">
                     Variety
                 </th>
-                <th style="width:5%">
+                <th style="width:5%" rowspan="2">
                     Pack Size(gm)
                 </th>
-                <th style="width:5%; text-align: right">
+                <th style="width:5%; text-align: right" rowspan="2">
                     Opening Stock
                 </th>
-                <th style="width:5%; text-align: right">
+                <th style="width:5%; text-align: right" rowspan="2">
                     Purchase Qty
                 </th>
-                <th style="width:5%; text-align: right">
+                <th style="width:5%; text-align: right" rowspan="2">
                     Sold Qty
                 </th>
-                <th style="width:5%; text-align: right">
-                    Bonus Qty(pieces)
+                <th style="width:5%; text-align: right" rowspan="2">
+                    Bonus Qty
                 </th>
-                <th style="width:5%; text-align: right">
-                    Sample Qty(pieces)
+                <th style="width:5%; text-align: right" rowspan="2">
+                    Sample Qty
                 </th>
+                <th colspan="<?php echo sizeof($warehouses);?>" style="text-align: center">Current Stock</th>
+                <th style="width:5%; text-align: right" rowspan="2">Total Qty</th>
+                <th style="width:5%; text-align: right" rowspan="2">Sales Price</th>
+                <th style="width:5%; text-align: right" rowspan="2">Total Value</th>
+                <th style="width:5%; text-align: right" rowspan="2">Remark</th>
+            </tr>
+            <tr>
                 <?php
                 foreach($warehouses as $warehouse)
                 {
@@ -407,13 +414,9 @@ if($db->open())
                     <th style="width:5%; text-align: right">
                         <?php echo $warehouse['warehouse_name'];?>
                     </th>
-                    <?php
+                <?php
                 }
                 ?>
-                <th style="width:5%; text-align: right">Total Qty</th>
-                <th style="width:5%; text-align: right">Sales Price</th>
-                <th style="width:5%; text-align: right">Total Value</th>
-                <th style="width:5%; text-align: right">Remark</th>
             </tr>
         </thead>
         <tbody>
@@ -422,26 +425,26 @@ if($db->open())
         {
             ?>
             <tr>
-                <th><?php echo $crop['crop_name'];?></th>
-                <th colspan="21">&nbsp;</th>
+                <th title="Crop: <?php echo $crop['crop_name'];?>"><?php echo $crop['crop_name'];?></th>
+                <th title="Crop: <?php echo $crop['crop_name'];?>" colspan="21">&nbsp;</th>
             </tr>
             <?php
             foreach($crop['type'] as $type_ids=>$type)
             {
                 ?>
                 <tr>
-                    <th colspan="">&nbsp;</th>
-                    <th><?php echo $type['product_type'];?></th>
-                    <th colspan="21">&nbsp;</th>
+                    <th title="Product Type: <?php echo $type['product_type'];?>" colspan="">&nbsp;</th>
+                    <th title="Product Type: <?php echo $type['product_type'];?>"><?php echo $type['product_type'];?></th>
+                    <th title="Product Type: <?php echo $type['product_type'];?>" colspan="21">&nbsp;</th>
                 </tr>
                 <?php
                 foreach($type['variety'] as $variety_ids=>$variety)
                 {
                     ?>
                     <tr>
-                        <th colspan="2">&nbsp;</th>
-                        <th><?php echo $variety['variety_name'];?></th>
-                        <th colspan="21">&nbsp;</th>
+                        <th title="Variety: <?php echo $variety['variety_name'];?>" colspan="2">&nbsp;</th>
+                        <th title="Variety: <?php echo $variety['variety_name'];?>"><?php echo $variety['variety_name'];?></th>
+                        <th title="Variety: <?php echo $variety['variety_name'];?>" colspan="21">&nbsp;</th>
                     </tr>
                     <?php
                     $product_sale_price=0;
@@ -451,12 +454,12 @@ if($db->open())
                         ?>
                         <tr>
                             <th colspan="3">&nbsp;</th>
-                            <th><?php echo $pack_size['pack_size_name'];?></th>
-                            <th><?php echo $pack_size['total_opening_balance'];?></th>
-                            <th><?php echo $pack_size['total_product'];?></th>
-                            <th><?php echo $pack_size['total_delivery'];?></th>
-                            <th><?php echo $pack_size['total_bonus'];?></th>
-                            <th><?php echo $pack_size['total_sample_quantity'];?></th>
+                            <th title="Pack Size: <?php echo $pack_size['pack_size_name'];?>"><?php echo $pack_size['pack_size_name'];?></th>
+                            <th title="Opening Stock: <?php echo $pack_size['total_opening_balance'];?>"><?php echo $pack_size['total_opening_balance'];?></th>
+                            <th title="Purchase Qty: <?php echo $pack_size['total_product'];?>"><?php echo $pack_size['total_product'];?></th>
+                            <th title="Sold Qty: <?php echo $pack_size['total_delivery'];?>"><?php echo $pack_size['total_delivery'];?></th>
+                            <th title="Bonus Qty: <?php echo $pack_size['total_bonus'];?>"><?php echo $pack_size['total_bonus'];?></th>
+                            <th title="Sample Qty: <?php echo $pack_size['total_sample_quantity'];?>"><?php echo $pack_size['total_sample_quantity'];?></th>
                             <?php
                             $current_stock=0;
                             $total_current_stock=0;
@@ -490,16 +493,16 @@ if($db->open())
                                 $total_current_stock+=$current_stock;
                                 $total_value=($total_current_stock*$product_sale_price);
                                 ?>
-                                <th style="width:5%; text-align: right;">
+                                <th style="width:5%; text-align: right;" title="<?php echo $warehouse['warehouse_name'].": ".$current_stock;?>">
                                     <?php echo $current_stock;?>
                                 </th>
                             <?php
                             }
                             ?>
-                            <th><?php echo $total_current_stock;?></th>
-                            <th><?php echo $product_sale_price;?></th>
-                            <th><?php echo $total_value;?></th>
-                            <th></th>
+                            <th title="Total Qty: <?php echo $total_current_stock;?>"><?php echo $total_current_stock;?></th>
+                            <th title="Sales Price: <?php echo $product_sale_price;?>"><?php echo $product_sale_price;?></th>
+                            <th title="Total Value: <?php echo $total_value;?>"><?php echo $total_value;?></th>
+                            <th title="Remark: "></th>
                         </tr>
                         <?php
                     }
