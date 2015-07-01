@@ -29,6 +29,16 @@ $pack_size = $_POST['pack_size'];
             pi.varriety_id,
             pi.pack_size,
             (
+                SELECT SUM(ppi.opening_balance) FROM ait_product_purchase_info AS ppi
+                WHERE
+                ppi.year_id=pi.year_id AND
+                ppi.warehouse_id=pi.warehouse_id AND
+                ppi.crop_id=pi.crop_id AND
+                ppi.product_type_id = pi.product_type_id AND
+                ppi.varriety_id = pi.varriety_id AND
+                ppi.pack_size = pi.pack_size
+            ) AS Total_Opening_Balance,
+            (
                 SELECT SUM(ppi.quantity) FROM ait_product_purchase_info AS ppi
                 WHERE
                 ppi.year_id=pi.year_id AND
@@ -97,7 +107,27 @@ $pack_size = $_POST['pack_size'];
                 pinrq.product_type_id = pi.product_type_id AND
                 pinrq.varriety_id = pi.varriety_id AND
                 pinrq.pack_size = pi.pack_size
-            ) AS Total_RND_Quantity
+            ) AS Total_RND_Quantity,
+            (
+                SELECT SUM(fpt.quantity) FROM ait_product_transfer AS fpt
+                WHERE
+                fpt.year_id=pi.year_id AND
+                fpt.from_warehouse_id=pi.warehouse_id AND
+                fpt.crop_id=pi.crop_id AND
+                fpt.product_type_id = pi.product_type_id AND
+                fpt.varriety_id = pi.varriety_id AND
+                fpt.pack_size = pi.pack_size
+            ) AS From_Total_Transfer_Quantity,
+            (
+                SELECT SUM(tpt.quantity) FROM ait_product_transfer AS tpt
+                WHERE
+                tpt.year_id=pi.year_id AND
+                tpt.to_warehouse_id=pi.warehouse_id AND
+                tpt.crop_id=pi.crop_id AND
+                tpt.product_type_id = pi.product_type_id AND
+                tpt.varriety_id = pi.varriety_id AND
+                tpt.pack_size = pi.pack_size
+            ) AS To_Total_Transfer_Quantity
         FROM
             ait_product_info AS pi
             LEFT JOIN ait_warehouse_info ON ait_warehouse_info.warehouse_id = pi.warehouse_id
@@ -124,9 +154,8 @@ if($db->open())
 {
     $result = $db->query($sql);
     $row_result = $db->fetchAssoc($result);
-    $current_stock=(($row_result['Total_HQ_Purchase_Quantity']+$row_result['Total_Access_Quantity'])-($row_result['Total_Sales_Quantity']+$row_result['Total_Bonus_Quantity']+$row_result['Total_Short_Quantity']+$row_result['Total_Sample_Quantity']+$row_result['Total_RND_Quantity']));
+    $current_stock=($row_result['Total_Opening_Balance']+$row_result['Total_HQ_Purchase_Quantity']+$row_result['Total_Access_Quantity']+$row_result['To_Total_Transfer_Quantity'])-($row_result['Total_Sales_Quantity']+$row_result['Total_Bonus_Quantity']+$row_result['Total_Short_Quantity']+$row_result['Total_Sample_Quantity']+$row_result['Total_RND_Quantity']+$row_result['From_Total_Transfer_Quantity']);
     echo $current_stock?$current_stock:0;
 }
-
 
 ?>
