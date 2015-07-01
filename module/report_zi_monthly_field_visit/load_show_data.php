@@ -9,7 +9,7 @@ $tbl = _DB_PREFIX;
 
 if ($_POST['division_id'] != "")
 {
-    $division_id = "AND $tbl"."di_task.division_id='" . $_POST['division_id'] . "'";
+    $division_id = "AND $tbl"."zi_task.division_id='" . $_POST['division_id'] . "'";
 }
 else
 {
@@ -17,7 +17,7 @@ else
 }
 if ($_POST['zone_id'] != "")
 {
-    $zone_id = "AND $tbl"."di_task.zone_id='" . $_POST['zone_id'] . "'";
+    $zone_id = "AND $tbl"."zi_task.zone_id='" . $_POST['zone_id'] . "'";
 }
 else
 {
@@ -26,7 +26,7 @@ else
 
 if ($_POST['territory_id'] != "")
 {
-    $territory_id = "AND $tbl"."di_task.territory_id='" . $_POST['territory_id'] . "'";
+    $territory_id = "AND $tbl"."zi_task.territory_id='" . $_POST['territory_id'] . "'";
 }
 else
 {
@@ -34,7 +34,7 @@ else
 }
 if ($_POST['zilla_id'] != "")
 {
-    $district_id = "AND $tbl"."di_task.district_id='" . $_POST['zilla_id'] . "'";
+    $district_id = "AND $tbl"."zi_task.district_id='" . $_POST['zilla_id'] . "'";
 }
 else
 {
@@ -42,14 +42,14 @@ else
 }
 if ($_POST['distributor_id'] != "")
 {
-    $distributor_id = "AND $tbl"."di_task.distributor_id='" . $_POST['distributor_id'] . "'";
+    $distributor_id = "AND $tbl"."zi_task.distributor_id='" . $_POST['distributor_id'] . "'";
 }
 else
 {
     $distributor_id = "";
 }
 if ($_POST['from_date'] != "" && $_POST['to_date'] != "") {
-    $between = "AND $tbl"."di_task.task_entry_date BETWEEN '" . $db->date_formate($_POST['from_date']) . "' AND '" . $db->date_formate($_POST['to_date']) . "'";
+    $between = "AND $tbl"."zi_task.task_entry_date BETWEEN '" . $db->date_formate($_POST['from_date']) . "' AND '" . $db->date_formate($_POST['to_date']) . "'";
 } else {
     $between = "";
 }
@@ -81,7 +81,12 @@ if ($_POST['from_date'] != "" && $_POST['to_date'] != "") {
                 <th style="width:5%">
                     Distributor
                 </th>
-
+                <th style="width:5%">
+                    PO
+                </th>
+                <th style="width:5%">
+                    Collection
+                </th>
                 <th style="width:5%">
                     Activities
                 </th>
@@ -105,7 +110,7 @@ if ($_POST['from_date'] != "" && $_POST['to_date'] != "") {
             $zone_name='';
             $territory_name='';
             $sql="SELECT
-                $tbl"."di_task.*,
+                $tbl"."zi_task.*,
                 $tbl"."division_info.division_name,
                 $tbl"."zone_info.zone_name,
                 $tbl"."territory_info.territory_name,
@@ -113,14 +118,14 @@ if ($_POST['from_date'] != "" && $_POST['to_date'] != "") {
                 $tbl"."distributor_info.distributor_name
 
                 FROM
-                $tbl"."di_task
-                INNER JOIN $tbl"."zone_info ON $tbl"."zone_info.zone_id = $tbl"."di_task.zone_id
-                INNER JOIN $tbl"."division_info ON $tbl"."division_info.division_id = $tbl"."di_task.division_id
-                INNER JOIN $tbl"."territory_info ON $tbl"."territory_info.territory_id = $tbl"."di_task.territory_id
-                INNER JOIN $tbl"."zilla ON $tbl"."zilla.zillaid = $tbl"."di_task.district_id
-                INNER JOIN $tbl"."distributor_info ON $tbl"."distributor_info.distributor_id = $tbl"."di_task.distributor_id
+                $tbl"."zi_task
+                INNER JOIN $tbl"."zone_info ON $tbl"."zone_info.zone_id = $tbl"."zi_task.zone_id
+                INNER JOIN $tbl"."division_info ON $tbl"."division_info.division_id = $tbl"."zi_task.division_id
+                INNER JOIN $tbl"."territory_info ON $tbl"."territory_info.territory_id = $tbl"."zi_task.territory_id
+                INNER JOIN $tbl"."zilla ON $tbl"."zilla.zillaid = $tbl"."zi_task.district_id
+                INNER JOIN $tbl"."distributor_info ON $tbl"."distributor_info.distributor_id = $tbl"."zi_task.distributor_id
                 WHERE
-                $tbl"."di_task.status='1'
+                $tbl"."zi_task.status='1'
                 $division_id $zone_id $territory_id $district_id $distributor_id $between
 		        ";
 
@@ -146,6 +151,8 @@ if ($_POST['from_date'] != "" && $_POST['to_date'] != "") {
                         <td><?php echo $result_array['territory_name']; ?></td>
                         <td><?php echo $result_array['zillanameeng']; ?></td>
                         <td><?php echo $result_array['distributor_name']; ?></td>
+                        <td><?php echo $result_array['purchase_order']; ?></td>
+                        <td><?php echo $result_array['collection']; ?></td>
                         <td><?php echo $result_array['activities']; ?></td>
                         <td><?php echo $result_array['problem']; ?></td>
                         <td>
@@ -153,13 +160,13 @@ if ($_POST['from_date'] != "" && $_POST['to_date'] != "") {
                             if(isset($result_array['problem_image']) && strlen($result_array['problem_image'])>0)
                             {
                                 ?>
-                                <img height="70" width="70" src="../../system_images/di_task/<?php echo $result_array['problem_image']?>" />
+                                <img height="70" width="70" src="../../system_images/zi_task/<?php echo $result_array['problem_image']?>" />
                             <?php
                             }
                             else
                             {
                                 ?>
-                                <img height="70" width="70" src="../../system_images/di_task/no_image.jpg" />
+                                <img height="70" width="70" src="../../system_images/zi_task/no_image.jpg" />
                             <?php
                             }
                             ?>
