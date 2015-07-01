@@ -66,7 +66,7 @@ $editRow = $db->single_data($tbl . "zi_crop_farmer_setup", "*", "id", $_POST['ro
                             <select id="territory_id" name="territory_id" class="span5" onchange="load_district_by_territory()">
                                 <option value="">Select</option>
                                 <?php
-                                $sql = "select territory_id as fieldkey, territory_name as fieldtext from $tbl" . "territory_info where zone_id='$user_zone'";
+                                $sql = "select territory_id as fieldkey, territory_name as fieldtext from $tbl" . "territory_info where zone_id='".$editRow['zone_id']."'";
                                 echo $db->SelectList($sql, $editRow['territory_id']);
                                 ?>
                             </select>
@@ -78,7 +78,7 @@ $editRow = $db->single_data($tbl . "zi_crop_farmer_setup", "*", "id", $_POST['ro
                             District
                         </label>
                         <div class="controls">
-                            <select id="district_id" name="district_id" class="span5" onchange="load_distributor_by_district()">
+                            <select id="district_id" name="district_id" class="span5" onchange="load_upazilla_by_district()">
                                 <option value="">Select</option>
                                 <?php
                                 $sql_user_group = "SELECT
