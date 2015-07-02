@@ -18,7 +18,7 @@ else
 
 if(!empty($_POST['zone_id']))
 {
-    $zone="AND ait_product_purchase_order_challan_status.zone_id='".$_POST['zone_id']."'";
+    $zone="AND ait_product_purchase_order_invoice.zone_id='".$_POST['zone_id']."'";
 }
 else
 {
@@ -27,7 +27,7 @@ else
 
 if(!empty($_POST['territory_id']))
 {
-    $territory="AND ait_product_purchase_order_challan_status.territory_id='".$_POST['territory_id']."'";
+    $territory="AND ait_product_purchase_order_invoice.territory_id='".$_POST['territory_id']."'";
 }
 else
 {
@@ -36,7 +36,7 @@ else
 
 if(!empty($_POST['zilla_id']))
 {
-    $zilla="AND ait_product_purchase_order_challan_status.zilla_id='".$_POST['zilla_id']."'";
+    $zilla="AND ait_product_purchase_order_invoice.zilla_id='".$_POST['zilla_id']."'";
 }
 else
 {
@@ -45,11 +45,29 @@ else
 
 if(!empty($_POST['distributor_id']))
 {
-    $distributor="AND ait_product_purchase_order_challan_status.distributor_id='".$_POST['distributor_id']."'";
+    $distributor="AND ait_product_purchase_order_invoice.distributor_id='".$_POST['distributor_id']."'";
 }
 else
 {
     $distributor="";
+}
+
+if(!empty($_POST['from_date']) && !empty($_POST['to_date']))
+{
+    $between="AND ait_product_purchase_order_invoice.invoice_date BETWEEN '".$db->date_formate($_POST['from_date'])."' AND '".$db->date_formate($_POST['to_date'])."' ";
+}
+else
+{
+    $between="";
+}
+
+if(!empty($_POST['purchase_order_id']))
+{
+    $purchase_order_id="AND ait_product_purchase_order_invoice.purchase_order_id LIKE '%".$_POST['purchase_order_id']."%'";
+}
+else
+{
+    $purchase_order_id="";
 }
 ?>
 <a class="btn btn-small btn-success" data-original-title="" onclick="print_rpt()" style="float: right;">
@@ -94,35 +112,40 @@ else
                 Courier Trac. No.
             </th>
             <th style="width:5%;">
+                Status
+            </th>
+            <th style="width:5%;">
                 Remark
             </th>
         </tr>
         <?php
         $sql="SELECT
-                ait_zone_info.zone_name,
-                ait_division_info.division_name,
-                ait_territory_info.territory_name,
-                ait_distributor_info.distributor_name,
-                ait_product_purchase_order_challan_status.purchase_order_id,
-                ait_product_purchase_order_challan_status.invoice_date,
-                ait_product_purchase_order_challan_status.invoice_post_date,
-                ait_product_purchase_order_challan_status.invoice_post_no,
-                ait_product_purchase_order_challan_status.courier_name,
-                ait_product_purchase_order_challan_status.booking_date,
-                ait_product_purchase_order_challan_status.courier_trac_no,
-                ait_product_purchase_order_challan_status.remarks,
-                ait_zilla.zillanameeng
-            FROM
-                ait_product_purchase_order_challan_status
-                LEFT JOIN ait_zone_info ON ait_zone_info.zone_id = ait_product_purchase_order_challan_status.zone_id
-                LEFT JOIN ait_division_info ON ait_division_info.division_id = ait_zone_info.division_id
-                LEFT JOIN ait_territory_info ON ait_territory_info.territory_id = ait_product_purchase_order_challan_status.territory_id
-                LEFT JOIN ait_distributor_info ON ait_distributor_info.distributor_id = ait_product_purchase_order_challan_status.distributor_id
-                LEFT JOIN ait_zilla ON ait_zilla.zillaid = ait_product_purchase_order_challan_status.zilla_id
-            WHERE
-                ait_product_purchase_order_challan_status.status='Active'
-                AND ait_product_purchase_order_challan_status.del_status=0
-                $division $zone $territory $zilla $distributor
+                    ait_zone_info.zone_name,
+                    ait_division_info.division_name,
+                    ait_territory_info.territory_name,
+                    ait_distributor_info.distributor_name,
+                    ait_product_purchase_order_challan_status.purchase_order_id,
+                    ait_product_purchase_order_challan_status.invoice_date,
+                    ait_product_purchase_order_challan_status.invoice_post_date,
+                    ait_product_purchase_order_challan_status.invoice_post_no,
+                    ait_product_purchase_order_challan_status.courier_name,
+                    ait_product_purchase_order_challan_status.booking_date,
+                    ait_product_purchase_order_challan_status.courier_trac_no,
+                    ait_product_purchase_order_challan_status.remarks,
+                    ait_zilla.zillanameeng,
+                    ait_product_purchase_order_invoice.`status`
+                FROM
+                    ait_product_purchase_order_invoice
+                    LEFT JOIN ait_product_purchase_order_challan_status ON ait_product_purchase_order_challan_status.purchase_order_id = ait_product_purchase_order_invoice.purchase_order_id
+                    LEFT JOIN ait_zone_info ON ait_zone_info.zone_id = ait_product_purchase_order_invoice.zone_id
+                    LEFT JOIN ait_division_info ON ait_division_info.division_id = ait_zone_info.division_id
+                    LEFT JOIN ait_territory_info ON ait_territory_info.territory_id = ait_product_purchase_order_invoice.territory_id
+                    LEFT JOIN ait_distributor_info ON ait_distributor_info.distributor_id = ait_product_purchase_order_invoice.distributor_id
+                    LEFT JOIN ait_zilla ON ait_zilla.zillaid = ait_product_purchase_order_invoice.zilla_id
+                WHERE
+                    ait_product_purchase_order_invoice.del_status=0
+                    $division $zone $territory $zilla $distributor
+                    $between $purchase_order_id
         ";
         if($db->open())
         {
@@ -142,6 +165,7 @@ else
                     <td><?php echo $row['courier_name'];?></td>
                     <td><?php echo $db->date_formate($row['booking_date']);?></td>
                     <td><?php echo $row['courier_trac_no'];?></td>
+                    <td><?php echo $row['status'];?></td>
                     <td><?php echo $row['remarks'];?></td>
                 </tr>
                 <?php

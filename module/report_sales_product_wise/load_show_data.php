@@ -13,214 +13,160 @@ if(empty($year_id))
     echo "Please close fiscal year";
     die();
 }
+
+if ($_POST['crop_id'] != "")
+{
+    $crop_id = "AND ait_product_purchase_order_invoice.crop_id='" . $_POST['crop_id'] . "'";
+}
+else
+{
+    $crop_id = "";
+}
+if ($_POST['product_type_id'] != "")
+{
+    $product_type_id = "AND ait_product_purchase_order_invoice.product_type_id='" . $_POST['product_type_id'] . "'";
+}
+else
+{
+    $product_type_id = "";
+}
+if ($_POST['varriety_id'] != "")
+{
+    $varriety_id = "AND ait_product_purchase_order_invoice.varriety_id='" . $_POST['varriety_id'] . "'";
+}
+else
+{
+    $varriety_id = "";
+}
+if ($_POST['pack_size'] != "")
+{
+    $pack_size = "AND ait_product_purchase_order_invoice.pack_size='" . $_POST['pack_size'] . "'";
+}
+else
+{
+    $pack_size = "";
+}
+
 $crop_classification=array();
 $column=array();
-if(!empty($_POST['division_id']) && !empty($_POST['zone_id']))
+
+if(!empty($_POST['division_id']) && !empty($_POST['zone_id']) && !empty($_POST['territory_id']) && !empty($_POST['zilla_id']) && !empty($_POST['distributor_id']))
+{
+    $location_type='Customer';
+    $elm_id="distributor_id";
+    $elm_name="distributor_name";
+    $where="AND ait_product_purchase_order_invoice.zone_id='".$_POST['zone_id']."' AND ait_product_purchase_order_invoice.territory_id='".$_POST['territory_id']."' AND ait_product_purchase_order_invoice.zilla_id='".$_POST['zilla_id']."' AND ait_product_purchase_order_invoice.distributor_id='".$_POST['distributor_id']."' ";
+}
+else if(!empty($_POST['division_id']) && !empty($_POST['zone_id']) && !empty($_POST['territory_id']) && !empty($_POST['zilla_id']) && empty($_POST['distributor_id']))
+{
+    $location_type='Customer';
+    $elm_id="distributor_id";
+    $elm_name="distributor_name";
+    $where="AND ait_product_purchase_order_invoice.zone_id='".$_POST['zone_id']."' AND ait_product_purchase_order_invoice.territory_id='".$_POST['territory_id']."' AND ait_product_purchase_order_invoice.zilla_id='".$_POST['zilla_id']."' ";
+}
+else if(!empty($_POST['division_id']) && !empty($_POST['zone_id']) && !empty($_POST['territory_id']) && empty($_POST['zilla_id']) && empty($_POST['distributor_id']))
+{
+    $location_type='District';
+    $elm_id="zilla_id";
+    $elm_name="zillanameeng";
+    $where="AND ait_product_purchase_order_invoice.zone_id='".$_POST['zone_id']."' AND ait_product_purchase_order_invoice.territory_id='".$_POST['territory_id']."'";
+}
+else if(!empty($_POST['division_id']) && !empty($_POST['zone_id']) && empty($_POST['territory_id']) && empty($_POST['zilla_id']) && empty($_POST['distributor_id']))
+{
+    $location_type='Territory';
+    $elm_id="territory_id";
+    $elm_name="territory_name";
+    $where="AND ait_product_purchase_order_invoice.zone_id='".$_POST['zone_id']."'";
+}
+else if(!empty($_POST['division_id']) && empty($_POST['zone_id']) && empty($_POST['territory_id']) && empty($_POST['zilla_id']) && empty($_POST['distributor_id']))
 {
     $location_type='Zone';
-
-    $sql_distributor="SELECT
-                            ait_crop_info.crop_name,
-                            ait_product_type.product_type,
-                            ait_varriety_info.varriety_name,
-                            ait_product_purchase_order_invoice.crop_id,
-                            ait_product_purchase_order_invoice.product_type_id,
-                            ait_product_purchase_order_invoice.varriety_id,
-                            ait_product_purchase_order_invoice.zone_id,
-                            Sum((ait_product_pack_size.pack_size_name*ait_product_purchase_order_invoice.approved_quantity)/1000) AS sales_quantity,
-                            ait_product_purchase_order_invoice.distributor_id,
-                            ait_division_info.division_name,
-                            ait_zone_info.zone_name,
-                            ait_distributor_info.distributor_name,
-                            ait_division_info.division_id,
-                            (
-                                SELECT
-                                SUM((ait_product_purchase_order_bonus.quantity * ait_product_pack_size.pack_size_name)/1000)
-                                FROM ait_product_purchase_order_bonus
-                                LEFT JOIN ait_product_pack_size ON ait_product_pack_size.pack_size_id = ait_product_purchase_order_bonus.pack_size
-                                WHERE
-                                ait_product_purchase_order_bonus.year_id=ait_product_purchase_order_invoice.year_id
-                                AND ait_product_purchase_order_bonus.zone_id=ait_product_purchase_order_invoice.zone_id
-                                AND ait_product_purchase_order_bonus.territory_id=ait_product_purchase_order_invoice.territory_id
-                                AND ait_product_purchase_order_bonus.zilla_id=ait_product_purchase_order_invoice.zilla_id
-                                AND ait_product_purchase_order_bonus.distributor_id=ait_product_purchase_order_invoice.distributor_id
-                                AND ait_product_purchase_order_bonus.crop_id=ait_product_purchase_order_invoice.crop_id
-                                AND ait_product_purchase_order_bonus.product_type_id=ait_product_purchase_order_invoice.product_type_id
-                                AND ait_product_purchase_order_bonus.varriety_id=ait_product_purchase_order_invoice.varriety_id
-                                AND ait_product_purchase_order_bonus.pack_size=ait_product_purchase_order_invoice.pack_size
-                            ) AS product_bonus_quantity
-                        FROM
-                            ait_product_purchase_order_invoice
-                            LEFT JOIN ait_crop_info ON ait_crop_info.crop_id = ait_product_purchase_order_invoice.crop_id
-                            LEFT JOIN ait_product_type ON ait_product_type.product_type_id = ait_product_purchase_order_invoice.product_type_id
-                            LEFT JOIN ait_varriety_info ON ait_varriety_info.varriety_id = ait_product_purchase_order_invoice.varriety_id
-                            LEFT JOIN ait_zone_info ON ait_zone_info.zone_id = ait_product_purchase_order_invoice.zone_id
-                            LEFT JOIN ait_division_info ON ait_division_info.division_id = ait_zone_info.division_id
-                            LEFT JOIN ait_distributor_info ON ait_distributor_info.distributor_id = ait_product_purchase_order_invoice.distributor_id
-                            LEFT JOIN ait_product_pack_size ON ait_product_pack_size.pack_size_id = ait_product_purchase_order_invoice.pack_size
-                        WHERE
-                            ait_product_purchase_order_invoice.del_status=0
-                            AND ait_division_info.division_id='".$_POST['division_id']."'
-                            AND ait_product_purchase_order_invoice.zone_id='".$_POST['zone_id']."'
-                        GROUP BY
-                            ait_division_info.division_id,
-                            ait_product_purchase_order_invoice.zone_id,
-                            ait_product_purchase_order_invoice.distributor_id,
-                            ait_product_purchase_order_invoice.crop_id,
-                            ait_product_purchase_order_invoice.product_type_id,
-                            ait_product_purchase_order_invoice.varriety_id
-                        ";
-    $sales_quantity=0;
-    $db_distributor=new Database();
-    if($db_distributor->open())
-    {
-        $result_distributor=$db_distributor->query($sql_distributor);
-        while($row_distributor=$db_distributor->fetchAssoc($result_distributor))
-        {
-            $crop_classification[$row_distributor['crop_id']]['crop_name']=$row_distributor['crop_name'];
-            $crop_classification[$row_distributor['crop_id']]['type'][$row_distributor['product_type_id']]['product_type']=$row_distributor['product_type'];
-            $crop_classification[$row_distributor['crop_id']]['type'][$row_distributor['product_type_id']]['variety'][$row_distributor['varriety_id']]['variety_name']=$row_distributor['varriety_name'];
-            $crop_classification[$row_distributor['crop_id']]['type'][$row_distributor['product_type_id']]['variety'][$row_distributor['varriety_id']][$row_distributor['distributor_id']]['sales_quantity']=($row_distributor['sales_quantity']+$row_distributor['product_bonus_quantity']);
-
-            $column[$row_distributor['distributor_id']]['column_name']=$row_distributor['distributor_name'];
-        }
-    }
+    $elm_id="zone_id";
+    $elm_name="zone_name";
+    $where="AND ait_division_info.division_id='".$_POST['division_id']."'";
 }
-
-else if(!empty($_POST['division_id']) && empty($_POST['zone_id']))
+else if(empty($_POST['division_id']) && empty($_POST['zone_id']) && empty($_POST['territory_id']) && empty($_POST['zilla_id']) && empty($_POST['distributor_id']))
 {
     $location_type='Division';
-    $sql_distributor="SELECT
-                            ait_crop_info.crop_name,
-                            ait_product_type.product_type,
-                            ait_varriety_info.varriety_name,
-                            ait_product_purchase_order_invoice.crop_id,
-                            ait_product_purchase_order_invoice.product_type_id,
-                            ait_product_purchase_order_invoice.varriety_id,
-                            ait_product_purchase_order_invoice.zone_id,
-                            Sum((ait_product_pack_size.pack_size_name*ait_product_purchase_order_invoice.approved_quantity)/1000) AS sales_quantity,
-                            ait_product_purchase_order_invoice.distributor_id,
-                            ait_division_info.division_name,
-                            ait_zone_info.zone_name,
-                            ait_distributor_info.distributor_name,
-                            ait_division_info.division_id,
-                            (
-                                SELECT
-                                SUM((ait_product_purchase_order_bonus.quantity * ait_product_pack_size.pack_size_name)/1000)
-                                FROM ait_product_purchase_order_bonus
-                                LEFT JOIN ait_product_pack_size ON ait_product_pack_size.pack_size_id = ait_product_purchase_order_bonus.pack_size
-                                WHERE
-                                ait_product_purchase_order_bonus.year_id=ait_product_purchase_order_invoice.year_id
-                                AND ait_product_purchase_order_bonus.zone_id=ait_product_purchase_order_invoice.zone_id
-                                AND ait_product_purchase_order_bonus.territory_id=ait_product_purchase_order_invoice.territory_id
-                                AND ait_product_purchase_order_bonus.zilla_id=ait_product_purchase_order_invoice.zilla_id
-                                AND ait_product_purchase_order_bonus.distributor_id=ait_product_purchase_order_invoice.distributor_id
-                                AND ait_product_purchase_order_bonus.crop_id=ait_product_purchase_order_invoice.crop_id
-                                AND ait_product_purchase_order_bonus.product_type_id=ait_product_purchase_order_invoice.product_type_id
-                                AND ait_product_purchase_order_bonus.varriety_id=ait_product_purchase_order_invoice.varriety_id
-                                AND ait_product_purchase_order_bonus.pack_size=ait_product_purchase_order_invoice.pack_size
-                            ) AS product_bonus_quantity
-                        FROM
-                            ait_product_purchase_order_invoice
-                            LEFT JOIN ait_crop_info ON ait_crop_info.crop_id = ait_product_purchase_order_invoice.crop_id
-                            LEFT JOIN ait_product_type ON ait_product_type.product_type_id = ait_product_purchase_order_invoice.product_type_id
-                            LEFT JOIN ait_varriety_info ON ait_varriety_info.varriety_id = ait_product_purchase_order_invoice.varriety_id
-                            LEFT JOIN ait_zone_info ON ait_zone_info.zone_id = ait_product_purchase_order_invoice.zone_id
-                            LEFT JOIN ait_division_info ON ait_division_info.division_id = ait_zone_info.division_id
-                            LEFT JOIN ait_distributor_info ON ait_distributor_info.distributor_id = ait_product_purchase_order_invoice.distributor_id
-                            LEFT JOIN ait_product_pack_size ON ait_product_pack_size.pack_size_id = ait_product_purchase_order_invoice.pack_size
-                        WHERE
-                            ait_product_purchase_order_invoice.del_status=0
-                            AND ait_division_info.division_id='".$_POST['division_id']."'
-                        GROUP BY
-                            ait_division_info.division_id,
-                            ait_product_purchase_order_invoice.zone_id,
-                            ait_product_purchase_order_invoice.crop_id,
-                            ait_product_purchase_order_invoice.product_type_id,
-                            ait_product_purchase_order_invoice.varriety_id
-                        ";
-    $sales_quantity=0;
-    $db_distributor=new Database();
-    if($db_distributor->open())
-    {
-        $result_distributor=$db_distributor->query($sql_distributor);
-        while($row_distributor=$db_distributor->fetchAssoc($result_distributor))
-        {
-            $crop_classification[$row_distributor['crop_id']]['crop_name']=$row_distributor['crop_name'];
-            $crop_classification[$row_distributor['crop_id']]['type'][$row_distributor['product_type_id']]['product_type']=$row_distributor['product_type'];
-            $crop_classification[$row_distributor['crop_id']]['type'][$row_distributor['product_type_id']]['variety'][$row_distributor['varriety_id']]['variety_name']=$row_distributor['varriety_name'];
-            $crop_classification[$row_distributor['crop_id']]['type'][$row_distributor['product_type_id']]['variety'][$row_distributor['varriety_id']][$row_distributor['zone_id']]['sales_quantity']=($row_distributor['sales_quantity']+$row_distributor['product_bonus_quantity']);
-
-            $column[$row_distributor['zone_id']]['column_name']=$row_distributor['zone_name'];
-        }
-    }
+    $elm_id="division_id";
+    $elm_name="division_name";
+    $where="";
 }
-else if(empty($_POST['division_id']) && empty($_POST['zone_id']))
+
+$sql_distributor="SELECT
+                    ait_crop_info.crop_name,
+                    ait_product_type.product_type,
+                    ait_varriety_info.varriety_name,
+                    ait_product_purchase_order_invoice.crop_id,
+                    ait_product_purchase_order_invoice.product_type_id,
+                    ait_product_purchase_order_invoice.varriety_id,
+                    ait_division_info.division_id,
+                    ait_product_purchase_order_invoice.zone_id,
+                    ait_product_purchase_order_invoice.territory_id,
+                    ait_product_purchase_order_invoice.zilla_id,
+                    Sum((ait_product_pack_size.pack_size_name*ait_product_purchase_order_invoice.approved_quantity)/1000) AS sales_quantity,
+                    ait_product_purchase_order_invoice.distributor_id,
+                    ait_division_info.division_name,
+                    ait_zone_info.zone_name,
+                    ait_territory_info.territory_name,
+                    ait_distributor_info.distributor_name,
+                    ait_zilla.zillanameeng,
+                    (
+                        SELECT
+                        SUM((ait_product_purchase_order_bonus.quantity * ait_product_pack_size.pack_size_name)/1000)
+                        FROM ait_product_purchase_order_bonus
+                        LEFT JOIN ait_product_pack_size ON ait_product_pack_size.pack_size_id = ait_product_purchase_order_bonus.pack_size
+                        WHERE
+                        ait_product_purchase_order_bonus.year_id=ait_product_purchase_order_invoice.year_id
+                        AND ait_product_purchase_order_bonus.zone_id=ait_product_purchase_order_invoice.zone_id
+                        AND ait_product_purchase_order_bonus.territory_id=ait_product_purchase_order_invoice.territory_id
+                        AND ait_product_purchase_order_bonus.zilla_id=ait_product_purchase_order_invoice.zilla_id
+                        AND ait_product_purchase_order_bonus.distributor_id=ait_product_purchase_order_invoice.distributor_id
+                        AND ait_product_purchase_order_bonus.crop_id=ait_product_purchase_order_invoice.crop_id
+                        AND ait_product_purchase_order_bonus.product_type_id=ait_product_purchase_order_invoice.product_type_id
+                        AND ait_product_purchase_order_bonus.varriety_id=ait_product_purchase_order_invoice.varriety_id
+                        AND ait_product_purchase_order_bonus.pack_size=ait_product_purchase_order_invoice.pack_size
+                    ) AS product_bonus_quantity
+                FROM
+                    ait_product_purchase_order_invoice
+                    LEFT JOIN ait_crop_info ON ait_crop_info.crop_id = ait_product_purchase_order_invoice.crop_id
+                    LEFT JOIN ait_product_type ON ait_product_type.product_type_id = ait_product_purchase_order_invoice.product_type_id
+                    LEFT JOIN ait_varriety_info ON ait_varriety_info.varriety_id = ait_product_purchase_order_invoice.varriety_id
+                    LEFT JOIN ait_zone_info ON ait_zone_info.zone_id = ait_product_purchase_order_invoice.zone_id
+                    LEFT JOIN ait_territory_info ON ait_territory_info.territory_id = ait_product_purchase_order_invoice.territory_id
+                    LEFT JOIN ait_division_info ON ait_division_info.division_id = ait_zone_info.division_id
+                    LEFT JOIN ait_distributor_info ON ait_distributor_info.distributor_id = ait_product_purchase_order_invoice.distributor_id
+                    LEFT JOIN ait_product_pack_size ON ait_product_pack_size.pack_size_id = ait_product_purchase_order_invoice.pack_size
+                    LEFT JOIN ait_zilla ON ait_zilla.zillaid = ait_product_purchase_order_invoice.zilla_id
+                WHERE
+                    ait_product_purchase_order_invoice.del_status=0
+                    $where $crop_id $product_type_id $varriety_id $pack_size
+                GROUP BY
+                    ait_division_info.division_id,
+                    ait_product_purchase_order_invoice.zone_id,
+                    ait_product_purchase_order_invoice.territory_id,
+                    ait_product_purchase_order_invoice.zilla_id,
+                    ait_product_purchase_order_invoice.distributor_id,
+                    ait_product_purchase_order_invoice.crop_id,
+                    ait_product_purchase_order_invoice.product_type_id,
+                    ait_product_purchase_order_invoice.varriety_id
+                ";
+$sales_quantity=0;
+$db_distributor=new Database();
+if($db_distributor->open())
 {
-    $location_type='All';
-    $sql_distributor="SELECT
-                            ait_crop_info.crop_name,
-                            ait_product_type.product_type,
-                            ait_varriety_info.varriety_name,
-                            ait_product_purchase_order_invoice.crop_id,
-                            ait_product_purchase_order_invoice.product_type_id,
-                            ait_product_purchase_order_invoice.varriety_id,
-                            ait_product_purchase_order_invoice.zone_id,
-                            Sum((ait_product_pack_size.pack_size_name*ait_product_purchase_order_invoice.approved_quantity)/1000) AS sales_quantity,
-                            ait_product_purchase_order_invoice.distributor_id,
-                            ait_division_info.division_name,
-                            ait_zone_info.zone_name,
-                            ait_distributor_info.distributor_name,
-                            ait_division_info.division_id,
-                            (
-                                SELECT
-                                SUM((ait_product_purchase_order_bonus.quantity * ait_product_pack_size.pack_size_name)/1000)
-                                FROM ait_product_purchase_order_bonus
-                                LEFT JOIN ait_product_pack_size ON ait_product_pack_size.pack_size_id = ait_product_purchase_order_bonus.pack_size
-                                WHERE
-                                ait_product_purchase_order_bonus.year_id=ait_product_purchase_order_invoice.year_id
-                                AND ait_product_purchase_order_bonus.zone_id=ait_product_purchase_order_invoice.zone_id
-                                AND ait_product_purchase_order_bonus.territory_id=ait_product_purchase_order_invoice.territory_id
-                                AND ait_product_purchase_order_bonus.zilla_id=ait_product_purchase_order_invoice.zilla_id
-                                AND ait_product_purchase_order_bonus.distributor_id=ait_product_purchase_order_invoice.distributor_id
-                                AND ait_product_purchase_order_bonus.crop_id=ait_product_purchase_order_invoice.crop_id
-                                AND ait_product_purchase_order_bonus.product_type_id=ait_product_purchase_order_invoice.product_type_id
-                                AND ait_product_purchase_order_bonus.varriety_id=ait_product_purchase_order_invoice.varriety_id
-                                AND ait_product_purchase_order_bonus.pack_size=ait_product_purchase_order_invoice.pack_size
-                            ) AS product_bonus_quantity
-                        FROM
-                            ait_product_purchase_order_invoice
-                            LEFT JOIN ait_crop_info ON ait_crop_info.crop_id = ait_product_purchase_order_invoice.crop_id
-                            LEFT JOIN ait_product_type ON ait_product_type.product_type_id = ait_product_purchase_order_invoice.product_type_id
-                            LEFT JOIN ait_varriety_info ON ait_varriety_info.varriety_id = ait_product_purchase_order_invoice.varriety_id
-                            LEFT JOIN ait_zone_info ON ait_zone_info.zone_id = ait_product_purchase_order_invoice.zone_id
-                            LEFT JOIN ait_division_info ON ait_division_info.division_id = ait_zone_info.division_id
-                            LEFT JOIN ait_distributor_info ON ait_distributor_info.distributor_id = ait_product_purchase_order_invoice.distributor_id
-                            LEFT JOIN ait_product_pack_size ON ait_product_pack_size.pack_size_id = ait_product_purchase_order_invoice.pack_size
-                        WHERE
-                            ait_product_purchase_order_invoice.del_status=0
-                        GROUP BY
-                            ait_division_info.division_id,
-                            ait_product_purchase_order_invoice.crop_id,
-                            ait_product_purchase_order_invoice.product_type_id,
-                            ait_product_purchase_order_invoice.varriety_id
-                        ";
-    $sales_quantity=0;
-    $db_distributor=new Database();
-    if($db_distributor->open())
+    $result_distributor=$db_distributor->query($sql_distributor);
+    while($row_distributor=$db_distributor->fetchAssoc($result_distributor))
     {
-        $result_distributor=$db_distributor->query($sql_distributor);
-        while($row_distributor=$db_distributor->fetchAssoc($result_distributor))
-        {
-            $crop_classification[$row_distributor['crop_id']]['crop_name']=$row_distributor['crop_name'];
-            $crop_classification[$row_distributor['crop_id']]['type'][$row_distributor['product_type_id']]['product_type']=$row_distributor['product_type'];
-            $crop_classification[$row_distributor['crop_id']]['type'][$row_distributor['product_type_id']]['variety'][$row_distributor['varriety_id']]['variety_name']=$row_distributor['varriety_name'];
-            $crop_classification[$row_distributor['crop_id']]['type'][$row_distributor['product_type_id']]['variety'][$row_distributor['varriety_id']][$row_distributor['division_id']]['sales_quantity']=($row_distributor['sales_quantity']+$row_distributor['product_bonus_quantity']);
+        $crop_classification[$row_distributor['crop_id']]['crop_name']=$row_distributor['crop_name'];
+        $crop_classification[$row_distributor['crop_id']]['type'][$row_distributor['product_type_id']]['product_type']=$row_distributor['product_type'];
+        $crop_classification[$row_distributor['crop_id']]['type'][$row_distributor['product_type_id']]['variety'][$row_distributor['varriety_id']]['variety_name']=$row_distributor['varriety_name'];
+        $crop_classification[$row_distributor['crop_id']]['type'][$row_distributor['product_type_id']]['variety'][$row_distributor['varriety_id']][$row_distributor['distributor_id']]['sales_quantity']=($row_distributor['sales_quantity']+$row_distributor['product_bonus_quantity']);
 
-            $column[$row_distributor['division_id']]['column_name']=$row_distributor['division_name'];
-        }
+        $column[$row_distributor[$elm_id]]['column_name']=$row_distributor[$elm_name];
     }
 }
+
 //echo "<pre>";
 //print_r($crop_classification);
 //echo "</pre>";
@@ -235,15 +181,18 @@ else if(empty($_POST['division_id']) && empty($_POST['zone_id']))
     <table class="table table-condensed table-striped table-hover table-bordered pull-left report" id="data-table">
         <thead>
             <tr>
-                <th style="width:5%">
+                <th style="width:5%" rowspan="2">
                     Crop
                 </th>
-                <th style="width:5%">
+                <th style="width:5%" rowspan="2">
                     Product Type
                 </th>
-                <th style="width:5%">
+                <th style="width:5%" rowspan="2">
                     Variety
                 </th>
+                <th style="width:5%; text-align: center;" colspan="<?php echo sizeof($column)?>"><?php echo $location_type;?></th>
+            </tr>
+            <tr>
                 <?php
                 foreach($column as $column_name)
                 {
@@ -257,11 +206,18 @@ else if(empty($_POST['division_id']) && empty($_POST['zone_id']))
             foreach($crop_classification as $crop)
             {
                 ?>
-            <tr>
-                <th><?php echo $crop['crop_name'];?></th>
-                <th colspan="31">&nbsp;</th>
-            </tr>
+                <tr>
+                    <th><?php echo $crop['crop_name'];?></th>
+                    <th colspan="31">&nbsp;</th>
+                </tr>
                 <?php
+                $type_sub_total=0;
+                $sl=0;
+                foreach($column as $distributor_id=>$distributor)
+                {
+                    ++$sl;
+                    $type_sub_total.$sl=0;
+                }
                 foreach($crop['type'] as $product_type)
                 {
                     ?>
@@ -270,9 +226,9 @@ else if(empty($_POST['division_id']) && empty($_POST['zone_id']))
                         <th><?php echo $product_type['product_type'];?></th>
                         <th colspan="31">&nbsp;</th>
                     </tr>
-                <?php
-                foreach($product_type['variety'] as $variety)
-                {
+                    <?php
+                    foreach($product_type['variety'] as $variety)
+                    {
                     ?>
                     <tr>
                         <th colspan="2">&nbsp;</th>
@@ -284,6 +240,7 @@ else if(empty($_POST['division_id']) && empty($_POST['zone_id']))
                             if(isset($variety[$distributor_id]['sales_quantity']))
                             {
                                 $dis_qty=$variety[$distributor_id]['sales_quantity'];
+                                $type_sub_total.$distributor_id+=$variety[$distributor_id]['sales_quantity'];
                             }
                             ?>
                             <th><?php echo number_format($dis_qty,2);?></th>
@@ -293,6 +250,20 @@ else if(empty($_POST['division_id']) && empty($_POST['zone_id']))
                     </tr>
                     <?php
                     }
+                    ?>
+                    <tr>
+                        <th colspan="3" style="text-align: right;">Sub Total: </th>
+                        <?php
+                        foreach($column as $distributor_id=>$distributor)
+                        {
+                            //$type_sub_total.$distributor_id=0;
+                            ?>
+                            <th><?php echo $type_sub_total.$distributor_id;?></th>
+                            <?php
+                        }
+                        ?>
+                    </tr>
+                    <?php
                 }
                 ?>
             <?php

@@ -27,6 +27,7 @@ $tbl = _DB_PREFIX;
             <div class="widget-body">
                 <div id="dt_example" class="example_alt_pagination">
                     <?php require_once("../../libraries/search_box/division_zone_territory_district_customer.php") ?>
+                    <?php require_once("../../libraries/search_box/from_to_date.php") ?>
                     <table class="table table-condensed table-striped table-hover table-bordered pull-left" id="data-table" style="width: 25%; float: left;">
                         <thead>
                         <tr>
@@ -42,6 +43,20 @@ $tbl = _DB_PREFIX;
                                     $db_fiscal_year->get_fiscal_year();
                                     ?>
                                 </select>
+                            </td>
+                        </tr>
+                        </thead>
+                    </table>
+                    <table class="table table-condensed table-striped table-hover table-bordered pull-left" id="data-table" style="width: 25%; float: left;">
+                        <thead>
+                        <tr>
+                            <th style="width:10%">
+                                PO Number
+                            </th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="text" id="purchase_order_id" name="purchase_order_id" value="" class="span12" />
                             </td>
                         </tr>
                         </thead>

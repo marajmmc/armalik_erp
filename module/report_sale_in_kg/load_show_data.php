@@ -50,7 +50,6 @@ else
 {
     $pack_size = "";
 }
-
 if ($_POST['division_id'] != "")
 {
     $division_id = "AND ait_division_info.division_id='" . $_POST['division_id'] . "'";
@@ -234,6 +233,21 @@ if($db->open())
         <tr>
             <td colspan="21" class="right-align-text"><?php echo $show_date; ?></td>
         </tr>
+        <?php
+        if(!empty($_POST['distributor_id']))
+        {
+            ?>
+            <tr>
+                <th colspan="21" style="text-align: center">
+                    <?php
+                    $distributor=$db->single_data_w($tbl."distributor_info", "distributor_name", "distributor_id='".$_POST['distributor_id']."'");
+                    echo $distributor['distributor_name'];
+                    ?>
+                </th>
+            </tr>
+            <?php
+        }
+        ?>
         <tr>
             <th style="width:5%">
                 Crop
@@ -271,6 +285,13 @@ if($db->open())
         </tr>
         </thead>
         <?php
+        $grand_total_price_in_kg=0;
+        $grand_total_sales_quantity_in_kg=0;
+        $grand_total_bonus_quantity_in_kg=0;
+        $grand_total_sales_return_quantity_in_kg=0;
+        $grand_total_total_sales_in_kg=0;
+        $grand_total_actual_sales_in_kg=0;
+        $grand_total_net_sales_in_kg=0;
         foreach($data_sales as $crop)
         {
             ?>
@@ -279,6 +300,13 @@ if($db->open())
                 <th colspan="21">&nbsp;</th>
             </tr>
                 <?php
+                $type_total_price_in_kg=0;
+                $type_total_sales_quantity_in_kg=0;
+                $type_total_bonus_quantity_in_kg=0;
+                $type_total_sales_return_quantity_in_kg=0;
+                $type_total_total_sales_in_kg=0;
+                $type_total_actual_sales_in_kg=0;
+                $type_total_net_sales_in_kg=0;
                 foreach($crop['type'] as $product_type)
                 {
                     ?>
@@ -311,7 +339,7 @@ if($db->open())
                             $bonus_quantity_in_kg=$pack_size['bonus_quantity_in_kg'];
                             $sales_return_quantity_in_kg=$pack_size['sales_return_quantity_in_kg'];
                             $total_sales_in_kg=(($sales_quantity_in_kg+$bonus_quantity_in_kg)-$sales_return_quantity_in_kg);
-                            $actual_sales_in_kg=($total_sales_in_kg-$sales_return_quantity_in_kg);
+                            $actual_sales_in_kg=($total_sales_in_kg-$sales_return_quantity_in_kg)-$bonus_quantity_in_kg;
                             $net_sales_in_kg=($actual_sales_in_kg*$price_in_kg);
                             ?>
                             <tr>
@@ -326,13 +354,44 @@ if($db->open())
                                 <th style="text-align: center;" title="Net Sales(Kg) : <?php echo number_format($net_sales_in_kg, 2);?>"><?php echo number_format($net_sales_in_kg, 2);?></th>
                             </tr>
                             <?php
+                            $type_total_price_in_kg+=$price_in_kg;
+                            $type_total_sales_quantity_in_kg+=$sales_quantity_in_kg;
+                            $type_total_bonus_quantity_in_kg+=$bonus_quantity_in_kg;
+                            $type_total_sales_return_quantity_in_kg+=$sales_return_quantity_in_kg;
+                            $type_total_total_sales_in_kg+=$total_sales_in_kg;
+                            $type_total_actual_sales_in_kg+=$actual_sales_in_kg;
+                            $type_total_net_sales_in_kg+=$net_sales_in_kg;
+
+                            $grand_total_price_in_kg+=$price_in_kg;
+                            $grand_total_sales_quantity_in_kg+=$sales_quantity_in_kg;
+                            $grand_total_bonus_quantity_in_kg+=$bonus_quantity_in_kg;
+                            $grand_total_sales_return_quantity_in_kg+=$sales_return_quantity_in_kg;
+                            $grand_total_total_sales_in_kg+=$total_sales_in_kg;
+                            $grand_total_actual_sales_in_kg+=$actual_sales_in_kg;
+                            $grand_total_net_sales_in_kg+=$net_sales_in_kg;
                         }
                     }
                 }
                 ?>
+            <tr>
+                <th colspan="2" style="text-align: right;">Product Type (<?php echo $product_type['product_type'];?>) Sub Total: </th>
+                <th></th>
+                <th></th>
+                <th style="text-align: center;" ><?php echo number_format($type_total_price_in_kg, 2);?></th>
+                <th style="text-align: center;" ><?php echo number_format($type_total_sales_quantity_in_kg, 2);?></th>
+                <th style="text-align: center;" ><?php echo number_format($type_total_bonus_quantity_in_kg, 2);?></th>
+                <th style="text-align: center;" ><?php echo number_format($type_total_sales_return_quantity_in_kg, 2);?></th>
+                <th style="text-align: center;" ><?php echo number_format($type_total_total_sales_in_kg, 2);?></th>
+                <th style="text-align: center;" ><?php echo number_format($type_total_actual_sales_in_kg, 2);?></th>
+                <th style="text-align: center;" ><?php echo number_format($type_total_net_sales_in_kg, 2);?></th>
+            </tr>
             <?php
         }
         ?>
+        <tr>
+            <th colspan="10" style="text-align: right;">Grand Total: </th>
+            <th style="text-align: center;" ><?php echo number_format($grand_total_net_sales_in_kg, 2);?></th>
+        </tr>
     </table>
     <?php include_once '../../libraries/print_page/Print_footer.php'; ?>
 </div>

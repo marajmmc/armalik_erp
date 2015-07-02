@@ -6,6 +6,11 @@ require_once("../../libraries/lib/config.inc.php");
 require_once("../../libraries/lib/functions.inc.php");
 $db = new Database();
 $tbl = _DB_PREFIX;
+if ($_SESSION['warehouse_id'] == "") {
+    $warehouse = "";
+} else {
+    $warehouse = "AND warehouse_id='" . $_SESSION['warehouse_id'] . "'";
+}
 ?>
 <div class="row-fluid">
     <div class="span12">
@@ -26,10 +31,9 @@ $tbl = _DB_PREFIX;
             </div>
             <div class="widget-body">
                 <div id="dt_example" class="example_alt_pagination">
-                    <?php require_once("../../libraries/search_box/division_zone_territory_district_customer.php") ?>
+                    <?php require_once("../../libraries/search_box/division_zone_territory_district_upzilla.php") ?>
                     <?php require_once("../../libraries/search_box/crop_type_variety_pack_size.php") ?>
                     <?php require_once("../../libraries/search_box/search_button.php") ?>
-
                     <div class="clearfix"></div>
                 </div>
             </div>
@@ -37,25 +41,20 @@ $tbl = _DB_PREFIX;
         <div id="div_show_rpt"></div>
     </div>
 </div>
-
 <script>
-    $(document).ready(function(){
+    $(document).ready(function()
+    {
         session_load_fnc()
 
-        //        $("#zone_id").attr('onchange', '');
-        //
-        //        $("#territory_td_elm").hide();
-        //        $("#territory_th_caption").hide();
-        //
-        //        $("#zilla_td_elm").hide();
-        //        $("#zilla_th_caption").hide();
-        //
-        //        $("#upazilla_td_elm").hide();
-        //        $("#upazilla_th_caption").hide();
-        //
-        //        $("#varriety_id").attr('onchange', '');
-        //
-        //        $("#pack_size_th_caption").hide();
-        //        $("#pack_size_td_elm").hide();
+        $("#product_type_id").attr('onchange', '');
+
+        $("#variety_td_elm").hide();
+        $("#variety_th_caption").hide();
+
+        $("#pack_size_td_elm").hide();
+        $("#pack_size_th_caption").hide();
+
+
+
     });
 </script>
