@@ -28,6 +28,28 @@ $tbl = _DB_PREFIX;
             <div class="widget-body">
                 <div id="dt_example" class="example_alt_pagination">
                     <?php require_once("../../libraries/search_box/division_zone_territory_district_customer.php") ?>
+
+                    <table class="table table-condensed table-striped table-hover table-bordered pull-left" id="data-table"  style="border-right:0px; width: 30%; float: left;">
+                        <thead>
+                        <tr>
+                            <th style="width:5%">
+                                Criteria
+                            </th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="input-append">
+                                    <select name="criteria" class="span12">
+                                        <option value="">Select</option>
+                                        <option value="1">Activities</option>
+                                        <option value="2">Problem</option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                        </thead>
+                    </table>
+
                     <?php require_once("../../libraries/search_box/from_to_date.php") ?>
                     <?php require_once("../../libraries/search_box/search_button.php") ?>
                     <div class="clearfix"></div>

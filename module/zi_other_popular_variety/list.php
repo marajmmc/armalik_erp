@@ -103,7 +103,7 @@ $tbl = _DB_PREFIX;
                                     <td><?php echo $result_array['upazilanameeng']; ?></td>
                                     <td><?php echo $result_array['crop_name']; ?></td>
                                     <td><?php echo $result_array['product_type']; ?></td>
-                                    <td><?php echo $result_array['varriety_name']; ?></td>
+                                    <td><?php if(isset($result_array['varriety_name'])){echo $result_array['varriety_name'];}else{echo $result_array['variety_id'].' (Other)';} ?></td>
                                     <td><?php echo $result_array['farmer_name']; ?></td>
                                 </tr>
                                 <?php

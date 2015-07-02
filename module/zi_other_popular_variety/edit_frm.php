@@ -136,6 +136,10 @@ $editRow = $db->single_data($tbl . "zi_others_popular_variety", "*", "id", $_POS
                         </div>
                     </div>
 
+                    <?php
+                    if($editRow['other_popular']==0)
+                    {
+                    ?>
                     <div class="control-group">
                         <label class="control-label">
                             Variety
@@ -155,10 +159,28 @@ $editRow = $db->single_data($tbl . "zi_others_popular_variety", "*", "id", $_POS
                             <input type="hidden" name="variety_id" value="<?php echo $editRow['variety_id'];?>" />
                         </div>
                     </div>
+                    <?php
+                    }
+                    ?>
+
+                    <?php
+                    if($editRow['other_popular']==1)
+                    {
+                    ?>
+                    <div class="control-group other_variety">
+                        <label class="control-label">
+                            Other Variety
+                        </label>
+                        <div class="controls">
+                            <input type="text" name="other_variety" class="span5" disabled value="<?php echo $editRow['variety_id'];?>" />
+                        </div>
+                        <input type="hidden" name="other_variety" value="<?php echo $editRow['variety_id'];?>" />
+                    </div>
+                    <?php }?>
 
                     <div class="control-group">
                         <label class="control-label">
-                            Farmer Name
+                            Farmer Name/ Area
                         </label>
                         <div class="controls">
                             <input type="text" name="farmers_name" class="span5" value="<?php echo $editRow['farmer_name'];?>" disabled />
@@ -315,5 +337,18 @@ $editRow = $db->single_data($tbl . "zi_others_popular_variety", "*", "id", $_POS
         {
             $(this).closest('tr').remove();
         });
+
+        $(document).on("change","#variety_id",function()
+        {
+            if($(this).val().length>0)
+            {
+                $(".other_variety").hide();
+            }
+            else
+            {
+                $(".other_variety").show();
+            }
+        });
+
     });
 </script>

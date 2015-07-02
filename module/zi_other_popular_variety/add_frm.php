@@ -121,9 +121,18 @@ $user_division = $user_division_query['division_id'];
                         </div>
                     </div>
 
+                    <div class="control-group other_variety">
+                        <label class="control-label">
+                            Other Variety
+                        </label>
+                        <div class="controls">
+                            <input type="text" name="other_variety" class="span5" value="" />
+                        </div>
+                    </div>
+
                     <div class="control-group">
                         <label class="control-label">
-                            Farmer Name
+                            Farmer Name/ Area
                         </label>
                         <div class="controls">
                             <input type="text" name="farmers_name" id="farmers_name" class="span5" value="" onblur="check_farmer_existence()" />
@@ -249,10 +258,20 @@ $user_division = $user_division_query['division_id'];
 </script>
 
 <script>
-//    $(document).ready(function()
-//    {
-//
-//    });
+    $(document).ready(function()
+    {
+        $(document).on("change","#variety_id",function()
+        {
+            if($(this).val().length>0)
+            {
+                $(".other_variety").hide();
+            }
+            else
+            {
+                $(".other_variety").show();
+            }
+        });
+    });
 //
 //    var cal = Calendar.setup({
 //        onSelect: function(cal) { cal.hide() },

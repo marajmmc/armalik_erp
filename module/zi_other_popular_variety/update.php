@@ -24,9 +24,19 @@ $district_id = $_POST['district_id'];
 $upazilla_id = $_POST['upazilla_id'];
 $crop_id = $_POST['crop_id'];
 $type_id = $_POST['type_id'];
-$variety_id = $_POST['variety_id'];
-$farmer_name = $_POST['farmers_name'];
 
+if(isset($_POST['variety_id']) && strlen($_POST['variety_id'])>0)
+{
+    $variety_id = $_POST['variety_id'];
+    $other_popular = 0;
+}
+else
+{
+    $variety_id = $_POST['other_variety'];
+    $other_popular = 1;
+}
+
+$farmer_name = $_POST['farmers_name'];
 $incrementCount = sizeof($_POST['row_id']);
 
 $other_remarks_post = $_POST['other_remarks'];
@@ -71,6 +81,7 @@ for($i=0; $i<$incrementCount; $i++)
                 'picture_link' => "'$image_url'",
                 'remarks' => "'$remark'",
                 'picture_date' => "'$picture_date'",
+                'other_popular' => "'$other_popular'",
                 'del_status' => "'0'",
                 'entry_by' => "'$user_id'",
                 'entry_date' => "'" . $db->ToDayDate() . "'"
@@ -97,6 +108,7 @@ for($i=0; $i<$incrementCount; $i++)
                 'picture_link,' => "'$image_url',",
                 'remarks,' => "'$remark',",
                 'picture_date,' => "'$picture_date',",
+                'other_popular,' => "'$other_popular',",
                 'entry_by,' => "'$user_id',",
                 'entry_date' => "'" . $db->ToDayDate() . "'"
             );
@@ -124,6 +136,7 @@ for($i=0; $i<$incrementCount; $i++)
                 'farmer_name' => "'$farmer_name'",
                 'remarks' => "'$remark'",
                 'picture_date' => "'$picture_date'",
+                'other_popular' => "'$other_popular'",
                 'del_status' => "'0'",
                 'entry_by' => "'$user_id'",
                 'entry_date' => "'" . $db->ToDayDate() . "'"

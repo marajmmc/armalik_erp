@@ -15,6 +15,7 @@ else
 {
     $division_id = "";
 }
+
 if ($_POST['zone_id'] != "")
 {
     $zone_id = "AND $tbl"."di_task.zone_id='" . $_POST['zone_id'] . "'";
@@ -48,10 +49,27 @@ else
 {
     $distributor_id = "";
 }
-if ($_POST['from_date'] != "" && $_POST['to_date'] != "") {
+
+if($_POST['from_date'] != "" && $_POST['to_date'] != "")
+{
     $between = "AND $tbl"."di_task.task_entry_date BETWEEN '" . $db->date_formate($_POST['from_date']) . "' AND '" . $db->date_formate($_POST['to_date']) . "'";
-} else {
+}
+else
+{
     $between = "";
+}
+
+if($_POST['criteria'] == 1)
+{
+    $criteria = "AND ($tbl"."di_task.activities != '' OR $tbl"."di_task.activities_image != '')";
+}
+elseif($_POST['criteria'] == 2)
+{
+    $criteria = "AND ($tbl"."di_task.problem != '' OR $tbl"."di_task.problem_image != '')";
+}
+else
+{
+    $criteria = "";
 }
 ?>
 
@@ -81,10 +99,13 @@ if ($_POST['from_date'] != "" && $_POST['to_date'] != "") {
                 <th style="width:5%">
                     Distributor
                 </th>
-
                 <th style="width:5%">
-                    Activities
+                    Activities Text
                 </th>
+                <th style="width:5%">
+                    Activities Image
+                </th>
+
                 <th style="width:7%">
                     Problem Text
                 </th>
@@ -121,7 +142,7 @@ if ($_POST['from_date'] != "" && $_POST['to_date'] != "") {
                 INNER JOIN $tbl"."distributor_info ON $tbl"."distributor_info.distributor_id = $tbl"."di_task.distributor_id
                 WHERE
                 $tbl"."di_task.status='1'
-                $division_id $zone_id $territory_id $district_id $distributor_id $between
+                $division_id $zone_id $territory_id $district_id $distributor_id $between $criteria
 		        ";
 
             if ($db->open())
@@ -147,6 +168,22 @@ if ($_POST['from_date'] != "" && $_POST['to_date'] != "") {
                         <td><?php echo $result_array['zillanameeng']; ?></td>
                         <td><?php echo $result_array['distributor_name']; ?></td>
                         <td><?php echo $result_array['activities']; ?></td>
+                        <td>
+                            <?php
+                            if(isset($result_array['activities_image']) && strlen($result_array['activities_image'])>0)
+                            {
+                                ?>
+                                <img height="70" width="70" src="../../system_images/di_task/<?php echo $result_array['activities_image']?>" />
+                            <?php
+                            }
+                            else
+                            {
+                                ?>
+                                <img height="70" width="70" src="../../system_images/di_task/no_image.jpg" />
+                            <?php
+                            }
+                            ?>
+                        </td>
                         <td><?php echo $result_array['problem']; ?></td>
                         <td>
                             <?php

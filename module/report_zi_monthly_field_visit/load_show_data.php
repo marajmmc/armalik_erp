@@ -130,6 +130,8 @@ else
                 {
                     $rowcolor = "gradeA success";
                 }
+                if(is_array($results[0])>0)
+                {
                 ?>
                 <tr class="<?php echo $rowcolor; ?> pointer" id="tr_id<?php echo $i; ?>" >
                     <td>
@@ -179,7 +181,7 @@ else
                             else
                             {
                                 ?>
-                                <img style="padding: 10px;" height="140" width="140" src="../../system_images/zi_field_visit/no_image.jpg" />
+                                <img style="padding: 10px;" height="120" width="120" src="../../system_images/zi_field_visit/no_image.jpg" />
                             <?php
                             }
                         }
@@ -188,6 +190,7 @@ else
                     </td>
                 </tr>
                 <?php
+                }
             }
             ?>
         </tbody>
