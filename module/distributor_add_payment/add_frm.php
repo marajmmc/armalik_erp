@@ -138,6 +138,24 @@ $tbl = _DB_PREFIX;
                                 echo $db->SelectList($sql_uesr_group);
                                 ?>
                             </select>
+
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="bank_id">
+                            AR Malik Bank Account
+                        </label>
+                        <div class="controls">
+                            <select id="armalik_bank_id" name="armalik_bank_id" class="span5" placeholder="Zone" validate="Require">
+                                <option value="">Select</option>
+                                <?php
+                                $sql_uesr_group = "select bank_id as fieldkey, bank_name as fieldtext from $tbl" . "bank_info WHERE status='Active' AND channel=1 AND del_status='0'";
+                                echo $db->SelectList($sql_uesr_group);
+                                ?>
+                            </select>
+                            <span class="help-inline">
+                                *
+                            </span>
                         </div>
                     </div>
                 </div>

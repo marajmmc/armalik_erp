@@ -69,6 +69,14 @@ else
 {
     $purchase_order_id="";
 }
+if(!empty($_POST['invoice_id']))
+{
+    $invoice_id="AND ait_product_purchase_order_challan_status.invoice_post_no LIKE '%".$_POST['invoice_id']."%'";
+}
+else
+{
+    $invoice_id="";
+}
 ?>
 <a class="btn btn-small btn-success" data-original-title="" onclick="print_rpt()" style="float: right;">
     <i class="icon-print" data-original-title="Share"> </i> Print
@@ -145,7 +153,14 @@ else
                 WHERE
                     ait_product_purchase_order_invoice.del_status=0
                     $division $zone $territory $zilla $distributor
-                    $between $purchase_order_id
+                    $between $purchase_order_id $invoice_id
+                GROUP BY
+                    ait_product_purchase_order_invoice.purchase_order_id,
+                    ait_division_info.division_id,
+                    ait_product_purchase_order_invoice.zone_id,
+                    ait_product_purchase_order_invoice.territory_id,
+                    ait_product_purchase_order_invoice.zilla_id,
+                    ait_product_purchase_order_invoice.distributor_id
         ";
         if($db->open())
         {

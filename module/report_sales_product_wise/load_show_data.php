@@ -158,10 +158,11 @@ if($db_distributor->open())
     $result_distributor=$db_distributor->query($sql_distributor);
     while($row_distributor=$db_distributor->fetchAssoc($result_distributor))
     {
+        //echo $row_distributor['sales_quantity']+$row_distributor['product_bonus_quantity']."<br />";
         $crop_classification[$row_distributor['crop_id']]['crop_name']=$row_distributor['crop_name'];
         $crop_classification[$row_distributor['crop_id']]['type'][$row_distributor['product_type_id']]['product_type']=$row_distributor['product_type'];
         $crop_classification[$row_distributor['crop_id']]['type'][$row_distributor['product_type_id']]['variety'][$row_distributor['varriety_id']]['variety_name']=$row_distributor['varriety_name'];
-        $crop_classification[$row_distributor['crop_id']]['type'][$row_distributor['product_type_id']]['variety'][$row_distributor['varriety_id']][$row_distributor['distributor_id']]['sales_quantity']=($row_distributor['sales_quantity']+$row_distributor['product_bonus_quantity']);
+        $crop_classification[$row_distributor['crop_id']]['type'][$row_distributor['product_type_id']]['variety'][$row_distributor['varriety_id']][$row_distributor[$elm_id]]['sales_quantity']=($row_distributor['sales_quantity']+$row_distributor['product_bonus_quantity']);
 
         $column[$row_distributor[$elm_id]]['column_name']=$row_distributor[$elm_name];
     }
@@ -191,12 +192,15 @@ if($db_distributor->open())
                     Variety
                 </th>
                 <th style="width:5%; text-align: center;" colspan="<?php echo sizeof($column)?>"><?php echo $location_type;?></th>
+                <th style="width:5%; text-align: center;" rowspan="2">
+                    Total
+                </th>
             </tr>
             <tr>
                 <?php
                 foreach($column as $column_name)
                 {
-                    echo "<th>".$column_name['column_name']."</th>";
+                    echo "<th style='text-align: center;'>".$column_name['column_name']."</th>";
                 }
                 ?>
             </tr>
@@ -211,12 +215,12 @@ if($db_distributor->open())
                     <th colspan="31">&nbsp;</th>
                 </tr>
                 <?php
-                $type_sub_total=0;
+                $type_sub_total=array();
                 $sl=0;
                 foreach($column as $distributor_id=>$distributor)
                 {
                     ++$sl;
-                    $type_sub_total.$sl=0;
+                    $type_sub_total[$sl]=0;
                 }
                 foreach($crop['type'] as $product_type)
                 {
@@ -234,34 +238,43 @@ if($db_distributor->open())
                         <th colspan="2">&nbsp;</th>
                         <th><?php echo $variety['variety_name'];?></th>
                         <?php
+                        $sl=0;
+                        $total=0;
                         foreach($column as $distributor_id=>$distributor)
                         {
+                            ++$sl;
                             $dis_qty=0;
                             if(isset($variety[$distributor_id]['sales_quantity']))
                             {
                                 $dis_qty=$variety[$distributor_id]['sales_quantity'];
-                                $type_sub_total.$distributor_id+=$variety[$distributor_id]['sales_quantity'];
+                                $type_sub_total[$sl]+=$variety[$distributor_id]['sales_quantity'];
+                                $total+=$dis_qty;
                             }
                             ?>
-                            <th><?php echo number_format($dis_qty,2);?></th>
+                            <th style="text-align: center;"><?php echo number_format($dis_qty,2);?></th>
                             <?php
                         }
                         ?>
+                        <th style="text-align: center;"><?php echo number_format($total, 2);?></th>
                     </tr>
                     <?php
                     }
                     ?>
                     <tr>
-                        <th colspan="3" style="text-align: right;">Sub Total: </th>
+                        <th colspan="3" style="text-align: right;">Product Type Sub Total (<?php echo $product_type['product_type'];?>): </th>
                         <?php
+                        $sl=0;
+                        $type_sub_t_total=0;
                         foreach($column as $distributor_id=>$distributor)
                         {
-                            //$type_sub_total.$distributor_id=0;
+                            ++$sl;
+                            $type_sub_t_total+=$type_sub_total[$sl];
                             ?>
-                            <th><?php echo $type_sub_total.$distributor_id;?></th>
+                            <th style="text-align: center;"><?php echo number_format($type_sub_total[$sl], 2);?></th>
                             <?php
                         }
                         ?>
+                        <th style="text-align: center;"><?php echo number_format($type_sub_t_total, 2);?></th>
                     </tr>
                     <?php
                 }

@@ -166,12 +166,15 @@ if($db->open())
     {
         $arm_array[$row_arm['crop_id']]['crop_name']=$row_arm['crop_name'];
         $arm_array[$row_arm['crop_id']]['type'][$row_arm['product_type_id']]['product_type']=$row_arm['product_type'];
-        $arm_array[$row_arm['crop_id']]['type'][$row_arm['product_type_id']]['variety'][$row_arm['variety_id']][$elm_id]=$row_arm[$elm_id];
         $arm_array[$row_arm['crop_id']]['type'][$row_arm['product_type_id']]['variety'][$row_arm['variety_id']]['variety_name']=$row_arm['varriety_name'];
-        $arm_array[$row_arm['crop_id']]['type'][$row_arm['product_type_id']]['variety'][$row_arm['variety_id']]['sales_quantity']=$row_arm['sales_quantity'];
+        $arm_array[$row_arm['crop_id']]['type'][$row_arm['product_type_id']]['variety'][$row_arm['variety_id']][$row_arm[$elm_id]]['sales_quantity']=$row_arm['sales_quantity'];
         $th_elm[$row_arm[$elm_id]]['elm_name']=$row_arm[$elm_name];
     }
 }
+
+//echo "<pre>";
+//print_r($arm_array);
+//echo "</pre>";
 
 $sql_chk="SELECT
                 CONCAT_WS(' - ', ait_crop_info.crop_name, ait_product_type.product_type, ait_varriety_info.varriety_name, ait_varriety_info.company_name) AS arm_crop_classification,
@@ -230,9 +233,8 @@ if($db->open())
     {
         $chk_array[$row_arm['crop_id']]['crop_name']=$row_arm['crop_name'];
         $chk_array[$row_arm['crop_id']]['type'][$row_arm['product_type_id']]['product_type']=$row_arm['product_type'];
-        $chk_array[$row_arm['crop_id']]['type'][$row_arm['product_type_id']]['variety'][$row_arm['variety_id']][$elm_id]=$row_arm[$elm_id];
         $chk_array[$row_arm['crop_id']]['type'][$row_arm['product_type_id']]['variety'][$row_arm['variety_id']]['variety_name']=$row_arm['varriety_name'];
-        $chk_array[$row_arm['crop_id']]['type'][$row_arm['product_type_id']]['variety'][$row_arm['variety_id']]['sales_quantity']=$row_arm['sales_quantity'];
+        $chk_array[$row_arm['crop_id']]['type'][$row_arm['product_type_id']]['variety'][$row_arm['variety_id']][$row_arm[$elm_id]]['sales_quantity']=$row_arm['sales_quantity'];
         $chk_th_elm[$row_arm[$elm_id]]['elm_name']=$row_arm[$elm_name];
     }
 }
@@ -295,6 +297,13 @@ if($db->open())
                         <th colspan="21">&nbsp;</th>
                     </tr>
                     <?php
+                    $type_sub_total=array();
+                    $sl=0;
+                    foreach($th_elm as $elm_ids=>$elm)
+                    {
+                        ++$sl;
+                        $type_sub_total[$sl]=0;
+                    }
                     foreach($crop['type'] as $type)
                     {
                         ?>
@@ -313,19 +322,15 @@ if($db->open())
                                 <?php
                                 $sale_quantity=0;
                                 $arm_total_sale_quantity=0;
+                                $sl=0;
                                 foreach($th_elm as $elm_ids=>$elm)
                                 {
-                                    if($elm_ids==$variety[$elm_id])
-                                    {
-                                        $sale_quantity=$variety['sales_quantity'];
-                                    }
-                                    else
-                                    {
-                                        $sale_quantity=0;
-                                    }
+                                    ++$sl;
+                                    $sale_quantity=$variety[$elm_ids]['sales_quantity'];
                                     $arm_total_sale_quantity+=$sale_quantity;
+                                    $type_sub_total[$sl]+=$sale_quantity;
                                     ?>
-                                    <th style="text-align: center;"> <?php echo $sale_quantity?> </th>
+                                    <th style="text-align: center;"> <?php echo $sale_quantity;?> </th>
                                 <?php
                                 }
                                 ?>
@@ -334,6 +339,24 @@ if($db->open())
                         <?php
                         }
                     }
+                    ?>
+                    <tr>
+                        <th colspan="3" style="text-align: right">Type Sub Total (<?php echo $type['product_type'];?>): </th>
+                        <?php
+                        $sl=0;
+                        $type_sub_t_total=0;
+                        foreach($th_elm as $elm_ids=>$elm)
+                        {
+                            ++$sl;
+                            $type_sub_t_total+=$type_sub_total[$sl];
+                            ?>
+                            <th style="text-align: center;"><?php echo $type_sub_total[$sl];?></th>
+                            <?php
+                        }
+                        ?>
+                        <th style="text-align: center;"><?php echo $type_sub_t_total;?></th>
+                    </tr>
+                <?php
                 }
                 ?>
                 </thead>
@@ -392,6 +415,13 @@ if($db->open())
                         <th colspan="21">&nbsp;</th>
                     </tr>
                     <?php
+                    $chk_type_sub_total=array();
+                    $sl=0;
+                    foreach($th_elm as $elm_ids=>$elm)
+                    {
+                        ++$sl;
+                        $chk_type_sub_total[$sl]=0;
+                    }
                     foreach($crop['type'] as $type)
                     {
                         ?>
@@ -410,17 +440,13 @@ if($db->open())
                                 <?php
                                 $sale_quantity=0;
                                 $chk_total_sale_quantity=0;
+                                $sl=0;
                                 foreach($chk_th_elm as $elm_ids=>$elm)
                                 {
-                                    if($elm_ids==$variety[$elm_id])
-                                    {
-                                        $sale_quantity=$variety['sales_quantity'];
-                                    }
-                                    else
-                                    {
-                                        $sale_quantity=0;
-                                    }
+                                    ++$sl;
+                                    $sale_quantity=$variety[$elm_ids]['sales_quantity'];
                                     $chk_total_sale_quantity+=$sale_quantity;
+                                    $chk_type_sub_total[$sl]+=$sale_quantity;
                                     ?>
                                     <th style="text-align: center;"> <?php echo $sale_quantity?> </th>
                                 <?php
@@ -431,6 +457,24 @@ if($db->open())
                         <?php
                         }
                     }
+                    ?>
+                    <tr>
+                        <th colspan="3" style="text-align: right">Type Sub Total (<?php echo $type['product_type'];?>): </th>
+                        <?php
+                        $sl=0;
+                        $chk_type_sub_t_total=0;
+                        foreach($th_elm as $elm_ids=>$elm)
+                        {
+                            ++$sl;
+                            $chk_type_sub_t_total+=$chk_type_sub_total[$sl];
+                            ?>
+                            <th style="text-align: center;"><?php echo $chk_type_sub_total[$sl];?></th>
+                        <?php
+                        }
+                        ?>
+                        <th style="text-align: center;"><?php echo $chk_type_sub_t_total;?></th>
+                    </tr>
+                <?php
                 }
                 ?>
                 </thead>

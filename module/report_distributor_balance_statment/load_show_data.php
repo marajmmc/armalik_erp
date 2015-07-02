@@ -12,7 +12,14 @@ $zone=$_POST['zone_id'];
 $territory=$_POST['territory_id'];
 $zilla=$_POST['zilla_id'];
 $distributor=$_POST['distributor_id'];
-
+if(!empty($_POST['bank_id']))
+{
+    $bank_id="AND $tbl" . "distributor_add_payment.armalik_bank_id='".$_POST['bank_id']."'";
+}
+else
+{
+    $bank_id="";
+}
 if(!empty($division) && !empty($zone) && !empty($territory) && !empty($zilla) && !empty($distributor))
 {
     include_once 'load_individual_party_report.php';
@@ -49,6 +56,7 @@ else
         $group_field="GROUP BY $tbl" . "zone_info.division_id";
         $column_caption="Division";
     }
+
     ?>
     <a class="btn btn-small btn-success" data-original-title="" onclick="print_rpt()" style="float: right;">
         <i class="icon-print" data-original-title="Share"> </i> Print
@@ -109,6 +117,7 @@ else
                     FROM $tbl" . "distributor_add_payment
                     WHERE $tbl" . "distributor_add_payment.`status`='Active'
                     AND $tbl" . "distributor_add_payment.distributor_id = $tbl" . "distributor_balance.distributor_id
+                    $bank_id
                 ) AS total_paid_amt,
                 ait_division_info.division_name,
                 ait_division_info.division_id,

@@ -135,7 +135,7 @@ $sql="SELECT
             appoi.product_type_id,
             appoi.varriety_id,
             appoi.pack_size,
-            SUM((appoi.price/ait_product_pack_size.pack_size_name)*1000) AS price_in_kg,
+            ((appoi.price/ait_product_pack_size.pack_size_name)*1000) AS price_in_kg,
             SUM((appoi.approved_quantity * ait_product_pack_size.pack_size_name)/1000) AS sales_quantity_in_kg,
             (
             SELECT SUM((appob.quantity * ait_product_pack_size.pack_size_name)/1000)
@@ -377,7 +377,7 @@ if($db->open())
                 <th colspan="2" style="text-align: right;">Product Type (<?php echo $product_type['product_type'];?>) Sub Total: </th>
                 <th></th>
                 <th></th>
-                <th style="text-align: center;" ><?php echo number_format($type_total_price_in_kg, 2);?></th>
+                <th style="text-align: center;" ><?php //echo number_format($type_total_price_in_kg, 2);?></th>
                 <th style="text-align: center;" ><?php echo number_format($type_total_sales_quantity_in_kg, 2);?></th>
                 <th style="text-align: center;" ><?php echo number_format($type_total_bonus_quantity_in_kg, 2);?></th>
                 <th style="text-align: center;" ><?php echo number_format($type_total_sales_return_quantity_in_kg, 2);?></th>

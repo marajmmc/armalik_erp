@@ -21,6 +21,7 @@ $rowfield = array(
     'amount,' => "'" . $total_price . "',",
     'cheque_no,' => "'" . $_POST["cheque_no"] . "',",
     'bank_id,' => "'" . $_POST["bank_id"] . "',",
+    'armalik_bank_id,' => "'" . $_POST["armalik_bank_id"] . "',",
 //    'status,' => "'Payment',",
     'status,' => "'Active',",
     'del_status,' => "'0',",

@@ -53,10 +53,16 @@ $tbl = _DB_PREFIX;
                             <th style="width:10%">
                                 PO Number
                             </th>
+                            <th style="width:10%">
+                                Inv Number
+                            </th>
                         </tr>
                         <tr>
                             <td>
                                 <input type="text" id="purchase_order_id" name="purchase_order_id" value="" class="span12" />
+                            </td>
+                            <td>
+                                <input type="text" id="invoice_id" name="invoice_id" value="" class="span12" />
                             </td>
                         </tr>
                         </thead>

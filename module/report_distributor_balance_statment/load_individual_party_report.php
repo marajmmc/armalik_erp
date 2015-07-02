@@ -23,7 +23,7 @@ $sql_balance = "SELECT
                     $tbl" . "product_purchase_order_invoice.`status`='Delivery' AND
                     $tbl" . "product_purchase_order_invoice.del_status='0' AND
                     $tbl" . "product_purchase_order_invoice.distributor_id = $tbl" . "distributor_balance.distributor_id) AS sales_purchase_amt,
-                    (SELECT Sum($tbl" . "distributor_add_payment.amount) FROM $tbl" . "distributor_add_payment WHERE $tbl" . "distributor_add_payment.`status`='Active' AND $tbl" . "distributor_add_payment.distributor_id = $tbl" . "distributor_balance.distributor_id) AS total_paid_amt,
+                    (SELECT Sum($tbl" . "distributor_add_payment.amount) FROM $tbl" . "distributor_add_payment WHERE $tbl" . "distributor_add_payment.`status`='Active' AND $tbl" . "distributor_add_payment.distributor_id = $tbl" . "distributor_balance.distributor_id $bank_id) AS total_paid_amt,
                     ait_division_info.division_name,
                     ait_division_info.division_id
                 FROM $tbl" . "distributor_balance
@@ -148,6 +148,7 @@ if($db->open())
                                         ait_distributor_add_payment.`status`='Active'
                                         AND ait_distributor_add_payment.del_status=0
                                         AND ait_distributor_add_payment.distributor_id='$distributor'
+                                        $bank_id
                     ";
                     if($db->open())
                     {
