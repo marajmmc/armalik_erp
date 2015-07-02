@@ -85,7 +85,7 @@ else
 </a>
 <div id="PrintArea" style="background-color: white;" >
     <?php include_once '../../libraries/print_page/Print_header.php'; ?>
-    <table class="table table-condensed table-striped table-hover table-bordered pull-left report" id="data-table" style="overflow: auto;">
+    <table class="table table-condensed table-striped table-hover table-bordered pull-left report" id="data-table">
         <thead>
             <tr>
                 <th style="width:15%">
@@ -100,26 +100,10 @@ else
             <?php
 
             $sql = "SELECT
-                $tbl"."zi_monthly_field_visit_pictures.*,
-                $tbl"."division_info.division_name,
-                $tbl"."zone_info.zone_name,
-                $tbl"."territory_info.territory_name,
-                $tbl"."zilla.zillanameeng,
-                $tbl"."upazilla.upazilanameeng,
-                $tbl"."crop_info.crop_name,
-                $tbl"."varriety_info.varriety_name
+                $tbl"."zi_monthly_field_visit_pictures.*
 
                 FROM
                 $tbl"."zi_monthly_field_visit_pictures
-                LEFT JOIN $tbl"."zone_info ON $tbl"."zone_info.zone_id = $tbl"."zi_monthly_field_visit_pictures.zone_id
-                LEFT JOIN $tbl"."division_info ON $tbl"."division_info.division_id = $tbl"."zi_monthly_field_visit_pictures.division_id
-                LEFT JOIN $tbl"."territory_info ON $tbl"."territory_info.territory_id = $tbl"."zi_monthly_field_visit_pictures.territory_id
-                LEFT JOIN $tbl"."zilla ON $tbl"."zilla.zillaid = $tbl"."zi_monthly_field_visit_pictures.district_id
-
-                LEFT JOIN $tbl"."crop_info ON $tbl"."crop_info.crop_id = $tbl"."zi_monthly_field_visit_pictures.crop_id
-                LEFT JOIN $tbl"."varriety_info ON $tbl"."varriety_info.varriety_id = $tbl"."zi_monthly_field_visit_pictures.variety_id
-
-                LEFT JOIN $tbl"."upazilla ON $tbl"."upazilla.upazilaid = $tbl"."zi_monthly_field_visit_pictures.upazilla_id AND $tbl"."upazilla.zillaid = $tbl"."zi_monthly_field_visit_pictures.district_id
 
                 WHERE
                 $tbl"."zi_monthly_field_visit_pictures.del_status='0'
@@ -131,14 +115,6 @@ else
             $arranged_result = array();
             foreach($results as $result)
             {
-                $arranged_result['division_name'] = $result['division_name'];
-                $arranged_result['zone_name'] = $result['zone_name'];
-                $arranged_result['territory_name'] = $result['territory_name'];
-                $arranged_result['zillanameeng'] = $result['zillanameeng'];
-                $arranged_result['upazilanameeng'] = $result['upazilanameeng'];
-                $arranged_result['crop_name'] = $result['crop_name'];
-                $arranged_result['varriety_name'] = $result['varriety_name'];
-
                 $arranged_result['picture'][$result['farmer_id']][$result['picture_number']]['picture_link'] = $result['picture_link'];
                 $arranged_result['picture'][$result['farmer_id']][$result['picture_number']]['remarks'] = $result['remarks'];
                 $arranged_result['picture'][$result['farmer_id']][$result['picture_number']]['picture_date'] = $result['picture_date'];
@@ -155,26 +131,60 @@ else
                     $rowcolor = "gradeA success";
                 }
                 ?>
-                <tr class="<?php echo $rowcolor; ?> pointer" id="tr_id<?php echo $i; ?>">
-                    <td><?php echo $arranged_result['division_name'].'-'.$arranged_result['zone_name'].'-'.$arranged_result['territory_name'].'-'.$arranged_result['zillanameeng'].'-'.$arranged_result['upazilanameeng'].'-'.$arranged_result['crop_name'].'-'.$arranged_result['varriety_name']; ?></td>
+                <tr class="<?php echo $rowcolor; ?> pointer" id="tr_id<?php echo $i; ?>" >
                     <td>
+                        <?php
+                            $sql = "select *,
+                                $tbl"."division_info.division_name,
+                                $tbl"."zone_info.zone_name,
+                                $tbl"."territory_info.territory_name,
+                                $tbl"."zilla.zillanameeng,
+                                $tbl"."upazilla.upazilanameeng,
+                                $tbl"."crop_info.crop_name,
+                                $tbl"."varriety_info.varriety_name
+
+                                from $tbl" . "zi_monthly_field_visit_pictures
+
+                                LEFT JOIN $tbl"."zone_info ON $tbl"."zone_info.zone_id = $tbl"."zi_monthly_field_visit_pictures.zone_id
+                                LEFT JOIN $tbl"."division_info ON $tbl"."division_info.division_id = $tbl"."zi_monthly_field_visit_pictures.division_id
+                                LEFT JOIN $tbl"."territory_info ON $tbl"."territory_info.territory_id = $tbl"."zi_monthly_field_visit_pictures.territory_id
+                                LEFT JOIN $tbl"."zilla ON $tbl"."zilla.zillaid = $tbl"."zi_monthly_field_visit_pictures.district_id
+
+                                LEFT JOIN $tbl"."crop_info ON $tbl"."crop_info.crop_id = $tbl"."zi_monthly_field_visit_pictures.crop_id
+                                LEFT JOIN $tbl"."varriety_info ON $tbl"."varriety_info.varriety_id = $tbl"."zi_monthly_field_visit_pictures.variety_id
+
+                                LEFT JOIN $tbl"."upazilla ON $tbl"."upazilla.upazilaid = $tbl"."zi_monthly_field_visit_pictures.upazilla_id AND $tbl"."upazilla.zillaid = $tbl"."zi_monthly_field_visit_pictures.district_id
+                                where farmer_id='$i'";
+
+                            $detail = $db->return_result_array($sql);
+                            echo $detail[0]['division_name'].'<br/>'.$detail[0]['zone_name'].'<br/>'.$detail[0]['territory_name'].'<br/>'.$detail[0]['zillanameeng'].'<br/>'.$detail[0]['upazilanameeng'].'<br/>'.$detail[0]['crop_name'].'<br/>'.$detail[0]['varriety_name'];
+                        ?>
+                    </td>
+                    <td>
+                        <div style="
+                        width: 880px !important;
+                        height:160px;
+                        overflow-x: scroll;
+                        overflow-y: hidden;
+                        white-space: nowrap;">
                         <?php
                         foreach($farmer_picture as $number=>$picture)
                         {
                             if(isset($picture['picture_link']) && strlen($picture['picture_link'])>0)
                             {
                                 ?>
-                                <img data-toggle="tooltip" data-placement="left" title="Picture No: <?php echo $number;?> Remark: <?php echo $picture['remarks']?> Picture Date: <?php echo $picture['picture_date'];?>" style="padding: 10px;" height="70" width="70" src="../../system_images/zi_field_visit/<?php echo $picture['picture_link']?>" />
+                                <img data-toggle="tooltip" data-placement="left" title="Picture No: <?php echo $number;?> Remark: <?php echo $picture['remarks']?> Picture Date: <?php echo $db->date_formate($picture['picture_date']);?>" style="padding: 10px;" height="120" width="120" src="../../system_images/zi_field_visit/<?php echo $picture['picture_link']?>" />
                             <?php
                             }
                             else
                             {
                                 ?>
-                                <img style="padding: 10px;" height="70" width="70" src="../../system_images/zi_field_visit/no_image.jpg" />
+                                <img style="padding: 10px;" height="140" width="140" src="../../system_images/zi_field_visit/no_image.jpg" />
                             <?php
                             }
                         }
                         ?>
+                        </div>
                     </td>
                 </tr>
                 <?php
