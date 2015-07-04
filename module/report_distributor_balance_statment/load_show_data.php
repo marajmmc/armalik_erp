@@ -26,209 +26,218 @@ if(!empty($division) && !empty($zone) && !empty($territory) && !empty($zilla) &&
 }
 else
 {
-    if(!empty($division) && !empty($zone) && !empty($territory) && !empty($zilla) && empty($distributor))
+    if(!empty($division) && !empty($zone) && !empty($territory) && !empty($zilla) && !empty($distributor))
+    {
+        $where_field="AND $tbl" . "distributor_info.distributor_id='$distributor'";
+        $column_caption="Distributor";
+        $elm_id="distributor_id";
+        $elm_name="distributor_name";
+        $group_by="GROUP BY ";
+    }
+    else if(!empty($division) && !empty($zone) && !empty($territory) && !empty($zilla) && empty($distributor))
     {
         $where_field="AND $tbl" . "distributor_info.zilla_id='$zilla'";
-        $group_field="GROUP BY $tbl" . "distributor_info.zilla_id, $tbl" . "distributor_info.distributor_id";
         $column_caption="Distributor";
+        $elm_id="distributor_id";
+        $elm_name="distributor_name";
+        $group_by="";
     }
     else if(!empty($division) && !empty($zone) && !empty($territory) && empty($zilla) && empty($distributor))
     {
         $where_field="AND $tbl" . "distributor_info.territory_id='$territory'";
-        $group_field="GROUP BY $tbl" . "distributor_info.territory_id, $tbl" . "distributor_info.zilla_id";
         $column_caption="District";
+        $elm_id="zilla_id";
+        $elm_name="zillanameeng";
+        $group_by="";
     }
     else if(!empty($division) && !empty($zone) && empty($territory) && empty($zilla) && empty($distributor))
     {
         $where_field="AND $tbl" . "distributor_info.zone_id='$zone'";
-        $group_field="GROUP BY $tbl" . "distributor_info.zone_id, $tbl" . "distributor_info.territory_id";
         $column_caption="Territory";
+        $elm_id="territory_id";
+        $elm_name="territory_name";
+        $group_by="";
     }
     else if(!empty($division) && empty($zone) && empty($territory) && empty($zilla) && empty($distributor))
     {
-        $where_field="AND $tbl" . "zone_info.division_id='$division'";
-        $group_field="GROUP BY $tbl" . "zone_info.division_id, $tbl" . "distributor_info.zone_id";
+        $where_field="AND $tbl" . "division_info.division_id='$division'";
         $column_caption="Zone";
+        $elm_id="zone_id";
+        $elm_name="zone_name";
+        $group_by="GROUP BY
+        ait_distributor_add_payment.armalik_bank_id,
+        ait_division_info.division_id,
+        ait_distributor_info.zone_id";
     }
     else if(empty($division) && empty($zone) && empty($territory) && empty($zilla) && empty($distributor))
     {
         $where_field="";
-        $group_field="GROUP BY $tbl" . "zone_info.division_id";
         $column_caption="Division";
+        $elm_id="division_id";
+        $elm_name="division_name";
+        $group_by="GROUP BY
+        ait_distributor_add_payment.armalik_bank_id,
+        ait_division_info.division_id";
     }
+}
+$sql="SELECT
+            ait_division_info.division_id,
+            ait_division_info.division_name,
+            ait_distributor_info.zone_id,
+            ait_zone_info.zone_name,
+            ait_distributor_info.territory_id,
+            ait_territory_info.territory_name,
+            ait_distributor_info.zilla_id,
+            ait_zilla.zillanameeng,
+            ait_distributor_info.distributor_id,
+            ait_distributor_info.distributor_name,
+            ait_distributor_info.due_balance AS opening_balance,
+            ait_distributor_add_payment.armalik_bank_id,
+            SUM(ait_distributor_add_payment.amount) AS arm_bank_payment_amount,
+            (
+                SELECT SUM(ait_product_purchase_order_invoice.price * ait_product_purchase_order_invoice.approved_quantity)
+                FROM ait_product_purchase_order_invoice
+                    LEFT JOIN ait_distributor_info ON ait_distributor_info.distributor_id=ait_product_purchase_order_invoice.distributor_id
+                    LEFT JOIN ait_zone_info sale_azi ON sale_azi.zone_id=ait_product_purchase_order_invoice.zone_id
+                    LEFT JOIN ait_division_info sale_adi ON sale_adi.division_id=sale_azi.division_id
+                WHERE
+                    sale_adi.division_id=ait_division_info.division_id
+                    AND ait_product_purchase_order_invoice.zone_id=ait_distributor_info.zone_id
 
+            ) AS sales_amount
+        FROM
+            ait_distributor_info
+            LEFT JOIN ait_zone_info ON ait_zone_info.zone_id = ait_distributor_info.zone_id
+            LEFT JOIN ait_division_info ON ait_division_info.division_id = ait_zone_info.division_id
+            LEFT JOIN ait_territory_info ON ait_territory_info.territory_id = ait_distributor_info.territory_id
+            LEFT JOIN ait_zilla ON ait_zilla.zillaid = ait_distributor_info.zilla_id
+            INNER JOIN ait_distributor_add_payment ON ait_distributor_add_payment.distributor_id = ait_distributor_info.distributor_id
+        WHERE
+            ait_distributor_info.status='Active' AND ait_distributor_info.del_status=0
+            $where_field
+            $group_by";
+if($db->open())
+{
+    $result=$db->query($sql);
+    $records=array();
+    while($row=$db->fetchAssoc($result))
+    {
+        $records[$row[$elm_id]]['column_name']=$row[$elm_name];
+        $records[$row[$elm_id]]['opening_balance']=$row['opening_balance'];
+        $records[$row[$elm_id]]['sales_amount']=$row['sales_amount'];
+        $records[$row[$elm_id]]['armalik_bank_account'][$row['armalik_bank_id']]['arm_bank_payment_amount']=$row['arm_bank_payment_amount'];
+    }
+}
+
+$sql_bank="SELECT
+                ait_bank_info.bank_id,
+                ait_bank_info.bank_name
+            FROM
+                ait_bank_info
+            WHERE
+                ait_bank_info.status='Active'
+                AND ait_bank_info.del_status=0
+                AND ait_bank_info.channel=1
+";
+
+if($db->open())
+{
+    $result_bank=$db->query($sql_bank);
+    $banks=array();
+    while($row_bank=$db->fetchAssoc($sql_bank))
+    {
+        $banks[$row_bank['bank_id']]['bank_name']=$row_bank['bank_name'];
+    }
+}
+
+
+//echo "<pre>";
+//print_r($records);
+//echo "</pre>";
+//
+//die();
     ?>
-    <a class="btn btn-small btn-success" data-original-title="" onclick="print_rpt()" style="float: right;">
-        <i class="icon-print" data-original-title="Share"> </i> Print
-    </a>
-    <div id="PrintArea" style="background-color: white;" >
+<a class="btn btn-small btn-success" data-original-title="" onclick="print_rpt()" style="float: right;">
+    <i class="icon-print" data-original-title="Share"> </i> Print
+</a>
+<div id="PrintArea" style="background-color: white;" >
     <?php include_once '../../libraries/print_page/Print_header.php'; ?>
     <table class="table table-condensed table-striped table-hover table-bordered pull-left report" id="data-table">
-    <thead>
-    <tr>
-        <th style="width:5%">
-            Name of <?php echo $column_caption;?>
-        </th>
-        <th style="width:5%; text-align: right;">
-            Opening <br />Balance
-        </th>
-        <th style="width:5%; text-align: right;">
-            Sales
-        </th>
-        <th style="width:5%; text-align: right;">
-            Payment
-        </th>
-        <th style="width:5%; text-align: right;">
-            Balance
-        </th>
-        <th style="width:5%; text-align: right;">
-            Payment(%)of <br />Payment
-        </th>
-    </tr>
-    </thead>
-    <tbody>
-    <?php
-    $CL = '0';
-    $PA = '0';
-    $DA = '0';
-    $BA = '0';
-    $balance = '0';
-    $sql = "SELECT
-                $tbl" . "zone_info.zone_name,
-                $tbl" . "territory_info.territory_name,
-                CONCAT_WS(' - ', $tbl" . "distributor_info.distributor_id, $tbl" . "distributor_info.customer_code, $tbl" . "distributor_info.distributor_name) AS distributor_name_with_code,
-                $tbl" . "distributor_info.distributor_name,
-                $tbl" . "distributor_balance.id,
-                $tbl" . "distributor_balance.distributor_id,
-                $tbl" . "distributor_info.due_balance,
-                (
-                SELECT
-                    Sum($tbl" . "product_purchase_order_invoice.total_price)
-                    FROM $tbl" . "product_purchase_order_invoice
-                    WHERE
-                    $tbl" . "product_purchase_order_invoice.read_status='0' AND
-                    $tbl" . "product_purchase_order_invoice.`status`='Delivery' AND
-                    $tbl" . "product_purchase_order_invoice.del_status='0' AND
-                    $tbl" . "product_purchase_order_invoice.distributor_id = $tbl" . "distributor_balance.distributor_id
-                ) AS sales_purchase_amt,
-                (
-                SELECT
-                    Sum($tbl" . "distributor_add_payment.amount)
-                    FROM $tbl" . "distributor_add_payment
-                    WHERE $tbl" . "distributor_add_payment.`status`='Active'
-                    AND $tbl" . "distributor_add_payment.distributor_id = $tbl" . "distributor_balance.distributor_id
-                    $bank_id
-                ) AS total_paid_amt,
-                ait_division_info.division_name,
-                ait_division_info.division_id,
-                ait_zilla.zillanameeng
-            FROM $tbl" . "distributor_balance
-                LEFT JOIN ait_distributor_info ON ait_distributor_info.distributor_id = ait_distributor_balance.distributor_id
-                LEFT JOIN ait_zone_info ON ait_zone_info.zone_id = ait_distributor_info.zone_id
-                LEFT JOIN ait_territory_info ON ait_territory_info.territory_id = ait_distributor_info.territory_id
-                LEFT JOIN ait_division_info ON ait_division_info.division_id = ait_zone_info.division_id
-                LEFT JOIN ait_zilla ON ait_zilla.zillaid = ait_distributor_info.zilla_id
-            WHERE
-                $tbl" . "distributor_info.status='Active'
-                AND $tbl" . "distributor_balance.del_status='0'
-                $where_field
-            $group_field
-            ORDER BY
-                ait_division_info.division_name,
-                ait_zone_info.zone_name,
-                ait_territory_info.territory_name,
-                ait_distributor_info.distributor_name
-                ";
-//LEFT JOIN $tbl" . "product_purchase_order_invoice ON $tbl" . "product_purchase_order_invoice.distributor_id = $tbl" . "distributor_balance.distributor_id
-//LEFT JOIN $tbl" . "distributor_add_payment ON $tbl" . "distributor_add_payment.distributor_id = $tbl" . "distributor_balance.distributor_id
-    if ($db->open())
-    {
-        $result = $db->query($sql);
-        $i = 1;
-        while ($result_array = $db->fetchAssoc())
-        {
-            $CL = $CL + $result_array['due_balance'];
-            $PA = $PA + $result_array['sales_purchase_amt'];
-            $DA = $DA + $result_array['total_paid_amt'];
-            $balance = ($result_array['due_balance'] + $result_array['sales_purchase_amt']) - $result_array['total_paid_amt'];
-            $BA = $BA + $balance;
-            @$pay=(($result_array['total_paid_amt']-$result_array['due_balance'])/$result_array['sales_purchase_amt']);
-            $payment=($pay*100);
-
-            ?>
-            <tr class="pointer" id="tr_id" >
-                <?php
-                if(!empty($division) && !empty($zone) && !empty($territory) && !empty($zilla) && empty($distributor))
-                {
-                    $field_name= $result_array['distributor_name'];
-                }
-                else if(!empty($division) && !empty($zone) && !empty($territory) && empty($zilla) && empty($distributor))
-                {
-                    $field_name= $result_array['zillanameeng'];
-                }
-                else if(!empty($division) && !empty($zone) && empty($territory) && empty($zilla) && empty($distributor))
-                {
-                    $field_name= $result_array['territory_name'];
-                }
-                else if(!empty($division) && empty($zone) && empty($territory) && empty($zilla) && empty($distributor))
-                {
-                    $field_name= $result_array['zone_name'];
-                }
-                else if(empty($division) && empty($zone) && empty($territory) && empty($zilla) && empty($distributor))
-                {
-                    $field_name= $result_array['division_name'];
-                }
+        <thead>
+        <tr>
+            <th style="width:5%" rowspan="2">
+                Name of <?php echo $column_caption;?>
+            </th>
+            <th style="width:5%; text-align: center;" rowspan="2">
+                Opening <br />Balance
+            </th>
+            <th style="width:5%; text-align: center;" rowspan="2">
+                Sales
+            </th>
+            <th style="width:5%; text-align: center;" colspan="<?php echo sizeof($banks);?>">
+                ARM Bank Account
+            </th>
+            <th style="width:5%; text-align: center;" rowspan="2">
+                Payment
+            </th>
+            <th style="width:5%; text-align: center;" rowspan="2">
+                Balance
+            </th>
+            <th style="width:5%; text-align: center;" rowspan="2">
+                Percentage(%)of <br />Payment
+            </th>
+        </tr>
+        <tr>
+            <?php
+            foreach($banks as $bank)
+            {
                 ?>
-                <td><?php echo $field_name;?></td>
-                <td style="text-align: right;"><?php echo $result_array['due_balance']; ?>&nbsp;</td>
-                <td style="text-align: right;">
-                    <?php
-                    if ($result_array['sales_purchase_amt'] == "")
+            <th style="text-align: center;"><?php echo $bank['bank_name'];?></th>
+            <?php
+            }
+            ?>
+        </tr>
+        </thead>
+        <tbody>
+        <?php
+        $balance=0;
+        foreach($records as $data)
+        {
+            ?>
+            <tr>
+                <th><?php echo $data['column_name'];?></th>
+                <th style="text-align: center;"><?php echo $data['opening_balance'];?></th>
+                <th style="text-align: center;"><?php echo $data['sales_amount'];?></th>
+                <?php
+                $payment_amount=0;
+                $amr_bank_amount=0;
+                foreach($banks as $bank_id=>$bank)
+                {
+                    if(isset($data['armalik_bank_account'][$bank_id]['arm_bank_payment_amount']))
                     {
-                        echo "0";
+                        $amr_bank_amount=$data['armalik_bank_account'][$bank_id]['arm_bank_payment_amount'];
                     }
                     else
                     {
-                        echo $result_array['sales_purchase_amt'];
+                        $amr_bank_amount=0;
                     }
-                    ?>&nbsp;
-                </td>
-                <td style="text-align: right;">
+                    ?>
+                    <th style="text-align: center;"><?php echo $amr_bank_amount;?></th>
                     <?php
-                    if ($result_array['total_paid_amt'] == "")
-                    {
-                        echo "0";
-                    }
-                    else
-                    {
-                        echo $result_array['total_paid_amt'];
-                    }
-                    ?>&nbsp;
-                </td>
-                <td style="text-align: right;"><?php echo $balance; ?>&nbsp;</td>
-                <td style="text-align: right;"><?php echo number_format($payment, 2); ?>&nbsp;</td>
+                    $payment_amount+=$amr_bank_amount;
+                }
+
+                $balance=(($data['opening_balance']+$data['sales_amount'])-$payment_amount);
+
+                ?>
+                <th style="text-align: center;"><?php echo $payment_amount;?></th>
+                <th style="text-align: center;"><?php echo $balance;?></th>
+                <th style="text-align: center;"><?php echo $payment_amount;?></th>
             </tr>
             <?php
-            ++$i;
         }
-    }
-    ?>
-
-<?php
-}
-//include_once 'load_party_report.php';
-?>
-    <tfoot>
-<!--    <tr>-->
-<!--        <td colspan="4" style="text-align: right;">Total: </td>-->
-<!--        <td style="text-align: right;">--><?php //echo $CL; ?><!--</td>-->
-<!--        <td style="text-align: right;">--><?php //echo $PA; ?><!--</td>-->
-<!--        <td style="text-align: right;">--><?php //echo $DA; ?><!--</td>-->
-<!--        <td style="text-align: right;">--><?php //echo $BA; ?><!--</td>-->
-<!--        <td style="text-align: right;">&nbsp;</td>-->
-<!--    </tr>-->
-    </tfoot>
-    </tbody>
+        ?>
+        </tbody>
     </table>
-        <?php include_once '../../libraries/print_page/Print_footer.php'; ?>
-    </div>
+    <?php include_once '../../libraries/print_page/Print_footer.php'; ?>
+</div>

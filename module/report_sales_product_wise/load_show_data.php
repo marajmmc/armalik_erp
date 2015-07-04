@@ -46,7 +46,16 @@ else
 {
     $pack_size = "";
 }
-
+if(!empty($_POST['from_date']) && !empty($_POST['to_date']))
+{
+    $between="AND ait_product_purchase_order_invoice.invoice_date BETWEEN '".$db->date_formate($_POST['from_date'])."' AND '".$db->date_formate($_POST['to_date'])."'";
+    $between_bonus="AND ait_product_purchase_order_bonus.invoice_date BETWEEN '".$db->date_formate($_POST['from_date'])."' AND '".$db->date_formate($_POST['to_date'])."'";
+}
+else
+{
+    $between="";
+    $between_bonus="";
+}
 $crop_classification=array();
 $column=array();
 
@@ -56,6 +65,16 @@ if(!empty($_POST['division_id']) && !empty($_POST['zone_id']) && !empty($_POST['
     $elm_id="distributor_id";
     $elm_name="distributor_name";
     $where="AND ait_product_purchase_order_invoice.zone_id='".$_POST['zone_id']."' AND ait_product_purchase_order_invoice.territory_id='".$_POST['territory_id']."' AND ait_product_purchase_order_invoice.zilla_id='".$_POST['zilla_id']."' AND ait_product_purchase_order_invoice.distributor_id='".$_POST['distributor_id']."' ";
+    $group_by=", ait_division_info.division_id,
+                    ait_product_purchase_order_invoice.zone_id,
+                    ait_product_purchase_order_invoice.territory_id,
+                    ait_product_purchase_order_invoice.zilla_id,
+                    ait_product_purchase_order_invoice.distributor_id";
+    $b_sub="AND badi.division_id=ait_division_info.division_id
+                        AND ait_product_purchase_order_bonus.zone_id=ait_product_purchase_order_invoice.zone_id
+                        AND ait_product_purchase_order_bonus.territory_id=ait_product_purchase_order_invoice.territory_id
+                        AND ait_product_purchase_order_bonus.zilla_id=ait_product_purchase_order_invoice.zilla_id
+                        AND ait_product_purchase_order_bonus.distributor_id=ait_product_purchase_order_invoice.distributor_id";
 }
 else if(!empty($_POST['division_id']) && !empty($_POST['zone_id']) && !empty($_POST['territory_id']) && !empty($_POST['zilla_id']) && empty($_POST['distributor_id']))
 {
@@ -63,6 +82,17 @@ else if(!empty($_POST['division_id']) && !empty($_POST['zone_id']) && !empty($_P
     $elm_id="distributor_id";
     $elm_name="distributor_name";
     $where="AND ait_product_purchase_order_invoice.zone_id='".$_POST['zone_id']."' AND ait_product_purchase_order_invoice.territory_id='".$_POST['territory_id']."' AND ait_product_purchase_order_invoice.zilla_id='".$_POST['zilla_id']."' ";
+    $group_by=", ait_division_info.division_id,
+                    ait_product_purchase_order_invoice.zone_id,
+                    ait_product_purchase_order_invoice.territory_id,
+                    ait_product_purchase_order_invoice.zilla_id,
+                    ait_product_purchase_order_invoice.distributor_id";
+    $b_sub="AND badi.division_id=ait_division_info.division_id
+                        AND ait_product_purchase_order_bonus.zone_id=ait_product_purchase_order_invoice.zone_id
+                        AND ait_product_purchase_order_bonus.territory_id=ait_product_purchase_order_invoice.territory_id
+                        AND ait_product_purchase_order_bonus.zilla_id=ait_product_purchase_order_invoice.zilla_id
+                        AND ait_product_purchase_order_bonus.distributor_id=ait_product_purchase_order_invoice.distributor_id";
+
 }
 else if(!empty($_POST['division_id']) && !empty($_POST['zone_id']) && !empty($_POST['territory_id']) && empty($_POST['zilla_id']) && empty($_POST['distributor_id']))
 {
@@ -70,6 +100,14 @@ else if(!empty($_POST['division_id']) && !empty($_POST['zone_id']) && !empty($_P
     $elm_id="zilla_id";
     $elm_name="zillanameeng";
     $where="AND ait_product_purchase_order_invoice.zone_id='".$_POST['zone_id']."' AND ait_product_purchase_order_invoice.territory_id='".$_POST['territory_id']."'";
+    $group_by=", ait_division_info.division_id,
+                    ait_product_purchase_order_invoice.zone_id,
+                    ait_product_purchase_order_invoice.territory_id,
+                    ait_product_purchase_order_invoice.zilla_id";
+    $b_sub="AND badi.division_id=ait_division_info.division_id
+                        AND ait_product_purchase_order_bonus.zone_id=ait_product_purchase_order_invoice.zone_id
+                        AND ait_product_purchase_order_bonus.territory_id=ait_product_purchase_order_invoice.territory_id
+                        AND ait_product_purchase_order_bonus.zilla_id=ait_product_purchase_order_invoice.zilla_id";
 }
 else if(!empty($_POST['division_id']) && !empty($_POST['zone_id']) && empty($_POST['territory_id']) && empty($_POST['zilla_id']) && empty($_POST['distributor_id']))
 {
@@ -77,6 +115,12 @@ else if(!empty($_POST['division_id']) && !empty($_POST['zone_id']) && empty($_PO
     $elm_id="territory_id";
     $elm_name="territory_name";
     $where="AND ait_product_purchase_order_invoice.zone_id='".$_POST['zone_id']."'";
+    $group_by=", ait_division_info.division_id,
+                    ait_product_purchase_order_invoice.zone_id,
+                    ait_product_purchase_order_invoice.territory_id";
+    $b_sub="AND badi.division_id=ait_division_info.division_id
+                        AND ait_product_purchase_order_bonus.zone_id=ait_product_purchase_order_invoice.zone_id
+                        AND ait_product_purchase_order_bonus.territory_id=ait_product_purchase_order_invoice.territory_id";
 }
 else if(!empty($_POST['division_id']) && empty($_POST['zone_id']) && empty($_POST['territory_id']) && empty($_POST['zilla_id']) && empty($_POST['distributor_id']))
 {
@@ -84,6 +128,11 @@ else if(!empty($_POST['division_id']) && empty($_POST['zone_id']) && empty($_POS
     $elm_id="zone_id";
     $elm_name="zone_name";
     $where="AND ait_division_info.division_id='".$_POST['division_id']."'";
+    $group_by=", ait_division_info.division_id,
+                    ait_product_purchase_order_invoice.zone_id";
+    $b_sub="AND badi.division_id=ait_division_info.division_id
+                        AND ait_product_purchase_order_bonus.zone_id=ait_product_purchase_order_invoice.zone_id
+                        ";
 }
 else if(empty($_POST['division_id']) && empty($_POST['zone_id']) && empty($_POST['territory_id']) && empty($_POST['zilla_id']) && empty($_POST['distributor_id']))
 {
@@ -91,12 +140,16 @@ else if(empty($_POST['division_id']) && empty($_POST['zone_id']) && empty($_POST
     $elm_id="division_id";
     $elm_name="division_name";
     $where="";
+    $group_by=", ait_division_info.division_id";
+    $b_sub="AND badi.division_id=ait_division_info.division_id
+                        ";
 }
 
 $sql_distributor="SELECT
                     ait_crop_info.crop_name,
                     ait_product_type.product_type,
                     ait_varriety_info.varriety_name,
+                    ait_product_purchase_order_invoice.invoice_date,
                     ait_product_purchase_order_invoice.crop_id,
                     ait_product_purchase_order_invoice.product_type_id,
                     ait_product_purchase_order_invoice.varriety_id,
@@ -116,16 +169,16 @@ $sql_distributor="SELECT
                         SUM((ait_product_purchase_order_bonus.quantity * ait_product_pack_size.pack_size_name)/1000)
                         FROM ait_product_purchase_order_bonus
                         LEFT JOIN ait_product_pack_size ON ait_product_pack_size.pack_size_id = ait_product_purchase_order_bonus.pack_size
+                        LEFT JOIN ait_zone_info bazi on bazi.zone_id=ait_product_purchase_order_bonus.zone_id
+                        LEFT JOIN ait_division_info badi on badi.division_id = bazi.division_id
                         WHERE
                         ait_product_purchase_order_bonus.year_id=ait_product_purchase_order_invoice.year_id
-                        AND ait_product_purchase_order_bonus.zone_id=ait_product_purchase_order_invoice.zone_id
-                        AND ait_product_purchase_order_bonus.territory_id=ait_product_purchase_order_invoice.territory_id
-                        AND ait_product_purchase_order_bonus.zilla_id=ait_product_purchase_order_invoice.zilla_id
-                        AND ait_product_purchase_order_bonus.distributor_id=ait_product_purchase_order_invoice.distributor_id
+                        $b_sub
                         AND ait_product_purchase_order_bonus.crop_id=ait_product_purchase_order_invoice.crop_id
                         AND ait_product_purchase_order_bonus.product_type_id=ait_product_purchase_order_invoice.product_type_id
                         AND ait_product_purchase_order_bonus.varriety_id=ait_product_purchase_order_invoice.varriety_id
                         AND ait_product_purchase_order_bonus.pack_size=ait_product_purchase_order_invoice.pack_size
+                        $between_bonus
                     ) AS product_bonus_quantity
                 FROM
                     ait_product_purchase_order_invoice
@@ -141,15 +194,13 @@ $sql_distributor="SELECT
                 WHERE
                     ait_product_purchase_order_invoice.del_status=0
                     $where $crop_id $product_type_id $varriety_id $pack_size
+                    $between
                 GROUP BY
-                    ait_division_info.division_id,
-                    ait_product_purchase_order_invoice.zone_id,
-                    ait_product_purchase_order_invoice.territory_id,
-                    ait_product_purchase_order_invoice.zilla_id,
-                    ait_product_purchase_order_invoice.distributor_id,
                     ait_product_purchase_order_invoice.crop_id,
                     ait_product_purchase_order_invoice.product_type_id,
-                    ait_product_purchase_order_invoice.varriety_id
+                    ait_product_purchase_order_invoice.varriety_id,
+                    ait_product_purchase_order_invoice.pack_size
+                    $group_by
                 ";
 $sales_quantity=0;
 $db_distributor=new Database();

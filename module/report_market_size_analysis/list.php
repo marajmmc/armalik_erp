@@ -33,7 +33,28 @@ if ($_SESSION['warehouse_id'] == "") {
                 <div id="dt_example" class="example_alt_pagination">
                     <?php require_once("../../libraries/search_box/division_zone_territory_district_upzilla.php") ?>
                     <?php require_once("../../libraries/search_box/crop_type_variety_pack_size.php") ?>
+                    <table class="table table-condensed table-striped table-hover table-bordered pull-left" id="data-table" style="width: 25%; float: left;">
+                        <thead>
+                        <tr>
+                            <th style="width:10%">
+                                Select Year
+                            </th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <select id="pdo_year_id" name="pdo_year_id" class="span12" placeholder="" validate="Require">
+                                    <?php
+                                    echo "<option value=''>Select</option>";
+                                    $sql_uesr_group = "select pdo_year_id as fieldkey, pdo_year_name as fieldtext from $tbl" . "pdo_year where status='Active' ORDER BY $tbl"."pdo_year.pdo_year_name";
+                                    echo $db->SelectList($sql_uesr_group);
+                                    ?>
+                                </select>
+                            </td>
+                        </tr>
+                        </thead>
+                    </table>
                     <?php require_once("../../libraries/search_box/search_button.php") ?>
+
                     <div class="clearfix"></div>
                 </div>
             </div>
@@ -53,8 +74,6 @@ if ($_SESSION['warehouse_id'] == "") {
 
         $("#pack_size_td_elm").hide();
         $("#pack_size_th_caption").hide();
-
-
 
     });
 </script>

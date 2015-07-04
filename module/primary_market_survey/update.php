@@ -100,7 +100,6 @@ if(!empty($zone_id) && !empty($territory_id) && !empty($district_id) && !empty($
                         $db->system_event_log('', $user_id, $ei_id, $pms_maxID, '', $tbl . 'primary_market_survey_details', 'Save', '');
                     }
 
-
                     $ppc_chk=$db_ppc->single_data_w($tbl."pdo_product_characteristic", "market_survey_group_id", "crop_id='$crop_id'
                                 AND product_type_id='$product_type_id'
                                 AND variety_id='$variety_id'
