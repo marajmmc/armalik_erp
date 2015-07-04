@@ -44,14 +44,6 @@ $other_picture_date_post = $_POST['other_picture_date'];
 $otherFile = $_FILES["other_picture"];
 $editPost = $_POST["edit_id"];
 
-//$delSQL = "DELETE FROM $tbl"."zi_others_popular_variety WHERE `division_id`='$user_division' AND `zone_id`='$user_zone' AND `territory_id`='$territory_id' AND `district_id`=$district_id AND `upazilla_id`=$upazilla_id AND `crop_id`='$crop_id' AND `product_type_id`='$type_id' AND `variety_id`='$variety_id' AND `farmer_name`='$farmer_name'";
-//
-//if ($db->open())
-//{
-//    $db->query($delSQL);
-//    $db->freeResult();
-//}
-
 $whereFieldUpdate = array('division_id' => "'$user_division'", 'zone_id' => "'$user_zone'", 'territory_id' => "'$territory_id'", 'district_id' => "'$district_id'", 'upazilla_id' => "'$upazilla_id'", 'crop_id' => "'$crop_id'", 'product_type_id' => "'$type_id'", 'variety_id' => "'$variety_id'", 'farmer_name' => "'$farmer_name'");
 $update_data = array('del_status' => "'1'");
 $db->data_update($tbl . 'zi_others_popular_variety', $update_data, $whereFieldUpdate);

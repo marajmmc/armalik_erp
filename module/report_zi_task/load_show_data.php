@@ -15,6 +15,7 @@ else
 {
     $division_id = "";
 }
+
 if ($_POST['zone_id'] != "")
 {
     $zone_id = "AND $tbl"."zi_task.zone_id='" . $_POST['zone_id'] . "'";
@@ -32,6 +33,7 @@ else
 {
     $territory_id = "";
 }
+
 if ($_POST['zilla_id'] != "")
 {
     $district_id = "AND $tbl"."zi_task.district_id='" . $_POST['zilla_id'] . "'";
@@ -40,6 +42,7 @@ else
 {
     $district_id = "";
 }
+
 if ($_POST['distributor_id'] != "")
 {
     $distributor_id = "AND $tbl"."zi_task.distributor_id='" . $_POST['distributor_id'] . "'";
@@ -129,6 +132,7 @@ else
             $division_name='';
             $zone_name='';
             $territory_name='';
+
             $sql="SELECT
                 $tbl"."zi_task.*,
                 $tbl"."division_info.division_name,

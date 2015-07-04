@@ -38,22 +38,13 @@ else
 
 $farmer_name = $_POST['farmers_name'];
 
-if(isset($_POST['row_id']))
-{
-    $increment = sizeof($_POST['row_id']);
-    $incrementCount = $increment;
-    $incrementCount = $incrementCount+1;
-}
-else
-{
-    $incrementCount = 1;
-}
+$increment = sizeof($_POST['other_remarks']);
 
 $other_remarks_post = $_POST['other_remarks'];
 $other_picture_date_post = $_POST['other_picture_date'];
 $otherFile = $_FILES["other_picture"];
 
-for($i=0; $i<$incrementCount; $i++)
+for($i=0; $i<=$increment; $i++)
 {
     if(@$otherFile['name'][$i] != "")
     {

@@ -168,6 +168,7 @@ $user_division = $user_division_query['division_id'];
 
                             <td>
                                 <input type="file" class="span12" name="other_picture[]" id="other_picture" />
+                                <input type='hidden' id='row_id' name='row_id[]' value=''/>
                             </td>
 
                             <td>
@@ -222,14 +223,12 @@ $user_division = $user_division_query['division_id'];
         var cell1 = row.insertCell(2);
         cell1.innerHTML = "<label class=''>Remarks</label>";
         var cell1 = row.insertCell(3);
-        cell1.innerHTML = "<textarea  class='span12' name='other_remarks[]' id='other_remarks" + ExId + "'></textarea>" +
-            "<input type='hidden' id='other_remarks[]' name='other_remarks[]' value=''/>";
+        cell1.innerHTML = "<textarea  class='span12' name='other_remarks[]' id='other_remarks" + ExId + "'></textarea>";
 
         var cell1 = row.insertCell(4);
         cell1.innerHTML = "<label class=''>Date</label>";
         var cell1 = row.insertCell(5);
-        cell1.innerHTML = "<input type='text' value='<?php echo $db->date_formate($db->ToDayDate());?>' class='span12' name='other_picture_date[]' id='other_picture_date" + ExId + "' >" +
-            "<input type='hidden' id='other_picture_date[]' name='other_picture_date[]' value=''/>";
+        cell1.innerHTML = "<input type='text' value='<?php echo $db->date_formate($db->ToDayDate());?>' class='span12' name='other_picture_date[]' id='other_picture_date" + ExId + "' >";
 
         cell1 = row.insertCell(6);
         cell1.innerHTML = "<a class='btn btn-warning btn-rect' data-original-title='' onclick=\"RowDecrement('adding_elements','T" + ExId + "')\" >Delete</a>";
