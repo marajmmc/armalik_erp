@@ -115,25 +115,17 @@ else
             $arranged_result = array();
             foreach($results as $result)
             {
-                $arranged_result['picture'][$result['farmer_name']]['picture_link'] = $result['picture_link'];
-                $arranged_result['picture'][$result['farmer_name']]['remarks'] = $result['remarks'];
-                $arranged_result['picture'][$result['farmer_name']]['picture_date'] = $result['picture_date'];
+                $arranged_result['picture'][$result['farmer_name']][$result['picture_link']]['picture_link'] = $result['picture_link'];
+                $arranged_result['picture'][$result['farmer_name']][$result['picture_link']]['remarks'] = $result['remarks'];
+                $arranged_result['picture'][$result['farmer_name']][$result['picture_link']]['picture_date'] = $result['picture_date'];
             }
 
             foreach($arranged_result['picture'] as $farmer_name=>$farmer_picture)
             {
-                if ($i % 2 == 0)
-                {
-                    $rowcolor = "gradeC";
-                }
-                else
-                {
-                    $rowcolor = "gradeA success";
-                }
                 if(is_array($results[0])>0)
                 {
                 ?>
-                <tr class="<?php echo $rowcolor; ?> pointer" id="tr_id<?php echo $i; ?>" >
+                <tr class="pointer">
                     <td>
                         <?php
                             $sql = "select *,
@@ -175,13 +167,13 @@ else
                             if(isset($picture['picture_link']) && strlen($picture['picture_link'])>0)
                             {
                                 ?>
-                                <img data-toggle="tooltip" data-placement="left" title="Remark: <?php echo $picture['remarks']?> Picture Date: <?php echo $db->date_formate($picture['picture_date']);?>" style="padding: 10px;" height="120" width="120" src="../../system_images/zi_field_visit/<?php echo $picture['picture_link']?>" />
+                                <img data-toggle="tooltip" data-placement="left" title="Remark: <?php echo $picture['remarks']?> Picture Date: <?php echo $picture['picture_date'];?>" style="padding: 10px;" height="120" width="120" src="../../system_images/zi_others_popular/<?php echo $picture['picture_link']?>" />
                             <?php
                             }
                             else
                             {
                                 ?>
-                                <img style="padding: 10px;" height="120" width="120" src="../../system_images/zi_field_visit/no_image.jpg" />
+                                <img style="padding: 10px;" height="120" width="120" src="../../system_images/zi_others_popular/no_image.jpg" />
                             <?php
                             }
                         }
@@ -191,7 +183,6 @@ else
                 </tr>
                 <?php
                 }
-                ++$i;
             }
             ?>
         </tbody>
