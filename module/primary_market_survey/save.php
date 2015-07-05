@@ -82,6 +82,7 @@ if(!empty($zone_id) || !empty($territory_id) || !empty($district_id) || !empty($
         (
             'market_survey_group_id,' => "'$group_maxID',",
             'prodcut_characteristic_id,' => "'$ppc_maxID',",
+            'pdo_year_id,' => "'" . $pdo_year_id . "',",
             //'product_category,' => "'" . $_POST["type"][$y] . "',",
             'crop_id,' => "'" . $_POST["crop_id"][$y] . "',",
             'product_type_id,' => "'" . $_POST["product_type_id"][$y] . "',",

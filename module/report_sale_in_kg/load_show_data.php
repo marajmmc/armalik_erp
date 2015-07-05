@@ -92,15 +92,13 @@ else
 }
 if ($_POST['year_id'] != "")
 {
-    $year=$db->single_data_w($tbl.'year', 'start_date, end_date', "year_id='".$_POST['year_id']."'");
-    $fiscal_year_between = "AND appoi.invoice_date BETWEEN '" . $year['start_date'] . "' AND '" . $year['end_date'] . "'";
+    $fiscal_year_between = "AND appoi.year_id='" . $_POST['year_id'] . "'";
 }
 else
 {
     $fiscal_year_between = "";
 }
-@$fyear = $db->DB_date_convert_year($db->date_formate($_POST['from_date']));
-@$tyear = $db->DB_date_convert_year($db->date_formate($_POST['to_date']));
+
 if ($_POST['from_date'] != "" && $_POST['to_date'] != "")
 {
     $between = "AND appoi.invoice_date BETWEEN '" . $db->date_formate($_POST['from_date']) . "' AND '" . $db->date_formate($_POST['to_date']) . "'";
@@ -114,7 +112,101 @@ else
     //$year="";
 }
 
-$sql="SELECT
+if(!empty($_POST['division_id']) && !empty($_POST['zone_id']) && !empty($_POST['territory_id']) && !empty($_POST['zilla_id']) && !empty($_POST['distributor_id']))
+{
+    $group_by=", appoi.year_id,
+            ait_division_info.division_id,
+            appoi.zone_id,
+            appoi.territory_id,
+            appoi.zilla_id,
+            appoi.distributor_id";
+    $where_bq_sub_location="
+                AND bq_adi.division_id = ait_division_info.division_id
+                AND appob.zone_id=appoi.zone_id
+                AND appob.territory_id=appoi.territory_id
+                AND appob.zilla_id=appoi.zilla_id
+                AND appob.distributor_id=appoi.distributor_id";
+    $where_srq_sub_location="AND srq_adi.division_id = ait_division_info.division_id
+                AND ppocr.zone_id=appoi.zone_id
+                AND ppocr.territory_id=appoi.territory_id
+                AND ppocr.zilla_id=appoi.zilla_id
+                AND ppocr.distributor_id=appoi.distributor_id";
+}
+else if(!empty($_POST['division_id']) && !empty($_POST['zone_id']) && !empty($_POST['territory_id']) && !empty($_POST['zilla_id']) && empty($_POST['distributor_id']))
+{
+    $group_by=", appoi.year_id,
+            ait_division_info.division_id,
+            appoi.zone_id,
+            appoi.territory_id,
+            appoi.zilla_id";
+    $where_bq_sub_location="
+                AND bq_adi.division_id = ait_division_info.division_id
+                AND appob.zone_id=appoi.zone_id
+                AND appob.territory_id=appoi.territory_id
+                AND appob.zilla_id=appoi.zilla_id
+                AND appob.distributor_id=appoi.distributor_id
+                ";
+    $where_srq_sub_location="AND srq_adi.division_id = ait_division_info.division_id
+                AND ppocr.zone_id=appoi.zone_id
+                AND ppocr.territory_id=appoi.territory_id
+                AND ppocr.zilla_id=appoi.zilla_id
+                AND ppocr.distributor_id=appoi.distributor_id";
+}
+else if(!empty($_POST['division_id']) && !empty($_POST['zone_id']) && !empty($_POST['territory_id']) && empty($_POST['zilla_id']) && empty($_POST['distributor_id']))
+{
+    $group_by=", appoi.year_id,
+            ait_division_info.division_id,
+            appoi.zone_id,
+            appoi.territory_id";
+    $where_bq_sub_location="
+                AND bq_adi.division_id = ait_division_info.division_id
+                AND appob.zone_id=appoi.zone_id
+                AND appob.territory_id=appoi.territory_id
+                AND appob.zilla_id=appoi.zilla_id
+                ";
+    $where_srq_sub_location="AND srq_adi.division_id = ait_division_info.division_id
+                AND ppocr.zone_id=appoi.zone_id
+                AND ppocr.territory_id=appoi.territory_id
+                AND ppocr.zilla_id=appoi.zilla_id
+                ";
+}
+else if(!empty($_POST['division_id']) && !empty($_POST['zone_id']) && empty($_POST['territory_id']) && empty($_POST['zilla_id']) && empty($_POST['distributor_id']))
+{
+    $group_by=", appoi.year_id,
+            ait_division_info.division_id,
+            appoi.zone_id";
+    $where_bq_sub_location="
+                AND bq_adi.division_id = ait_division_info.division_id
+                AND appob.zone_id=appoi.zone_id
+                AND appob.territory_id=appoi.territory_id
+                ";
+    $where_srq_sub_location="AND srq_adi.division_id = ait_division_info.division_id
+                AND ppocr.zone_id=appoi.zone_id
+                AND ppocr.territory_id=appoi.territory_id
+                ";
+}
+else if(!empty($_POST['division_id']) && empty($_POST['zone_id']) && empty($_POST['territory_id']) && empty($_POST['zilla_id']) && empty($_POST['distributor_id']))
+{
+    $group_by=", appoi.year_id,
+            ait_division_info.division_id";
+    $where_bq_sub_location="
+                AND bq_adi.division_id = ait_division_info.division_id
+                AND appob.zone_id=appoi.zone_id
+                ";
+    $where_srq_sub_location="AND srq_adi.division_id = ait_division_info.division_id
+                AND ppocr.zone_id=appoi.zone_id
+                ";
+}
+else if(empty($_POST['division_id']) && empty($_POST['zone_id']) && empty($_POST['territory_id']) && empty($_POST['zilla_id']) && empty($_POST['distributor_id']))
+{
+    $group_by=", appoi.year_id";
+    $where_bq_sub_location="AND bq_adi.division_id = ait_division_info.division_id";
+    $where_srq_sub_location="AND srq_adi.division_id = ait_division_info.division_id
+                ";
+}
+
+
+ $sql="SELECT
             ait_division_info.division_name,
             ait_zone_info.zone_name,
             ait_territory_info.territory_name,
@@ -138,35 +230,33 @@ $sql="SELECT
             ((appoi.price/ait_product_pack_size.pack_size_name)*1000) AS price_in_kg,
             SUM((appoi.approved_quantity * ait_product_pack_size.pack_size_name)/1000) AS sales_quantity_in_kg,
             (
-            SELECT SUM((appob.quantity * ait_product_pack_size.pack_size_name)/1000)
-            FROM ait_product_purchase_order_bonus as appob
-						LEFT JOIN ait_product_pack_size ON ait_product_pack_size.pack_size_id = appob.pack_size
-            WHERE
-								appob.year_id=appoi.year_id
-                AND appob.zone_id=appoi.zone_id
-                AND appob.territory_id=appoi.territory_id
-								AND appob.zilla_id=appoi.zilla_id
-                AND appob.distributor_id=appoi.distributor_id
+                SELECT SUM((appob.quantity * ait_product_pack_size.pack_size_name)/1000)
+                FROM ait_product_purchase_order_bonus as appob
+                LEFT JOIN ait_product_pack_size ON ait_product_pack_size.pack_size_id = appob.pack_size
+                LEFT JOIN ait_zone_info bq_azi ON bq_azi.zone_id = appob.zone_id
+                LEFT JOIN ait_division_info bq_adi ON bq_adi.division_id = bq_azi.division_id
+                WHERE
+                appob.year_id=appoi.year_id
+                $where_bq_sub_location
                 AND appob.crop_id=appoi.crop_id
                 AND appob.product_type_id=appoi.product_type_id
                 AND appob.varriety_id=appoi.varriety_id
                 AND appob.pack_size=appoi.pack_size
             ) as bonus_quantity_in_kg,
-						(
-						SELECT SUM((ppocr.return_quantity*ait_product_pack_size.pack_size_name)/1000)
-						FROM ait_product_purchase_order_challan_return AS ppocr
-						LEFT JOIN ait_product_pack_size ON ait_product_pack_size.pack_size_id = ppocr.pack_size
-						WHERE
-								ppocr.year_id=appoi.year_id
-                AND ppocr.zone_id=appoi.zone_id
-                AND ppocr.territory_id=appoi.territory_id
-								AND ppocr.zilla_id=appoi.zilla_id
-                AND ppocr.distributor_id=appoi.distributor_id
+            (
+            SELECT SUM((ppocr.return_quantity*ait_product_pack_size.pack_size_name)/1000)
+            FROM ait_product_purchase_order_challan_return AS ppocr
+            LEFT JOIN ait_product_pack_size ON ait_product_pack_size.pack_size_id = ppocr.pack_size
+            LEFT JOIN ait_zone_info srq_azi ON srq_azi.zone_id = ppocr.zone_id
+            LEFT JOIN ait_division_info srq_adi ON srq_adi.division_id = srq_azi.division_id
+            WHERE
+                ppocr.year_id=appoi.year_id
+                $where_srq_sub_location
                 AND ppocr.crop_id=appoi.crop_id
                 AND ppocr.product_type_id=appoi.product_type_id
                 AND ppocr.varriety_id=appoi.varriety_id
                 AND ppocr.pack_size=appoi.pack_size
-						) AS sales_return_quantity_in_kg
+            ) AS sales_return_quantity_in_kg
         FROM
             ait_product_purchase_order_invoice as appoi
             LEFT JOIN ait_zone_info ON ait_zone_info.zone_id = appoi.zone_id
@@ -185,16 +275,17 @@ $sql="SELECT
             ".$db->get_zone_access($tbl. "zone_info")."
 
         GROUP BY
-            appoi.year_id,
-            ait_division_info.division_id,
-            appoi.zone_id,
-            appoi.territory_id,
-            appoi.zilla_id,
-            appoi.distributor_id,
+
             appoi.crop_id,
             appoi.product_type_id,
             appoi.varriety_id,
-            appoi.pack_size";
+            appoi.pack_size
+            $group_by
+        ORDER BY
+        ait_crop_info.order_crop,
+        ait_product_type.order_type,
+        ait_varriety_info.order_variety
+            ";
 if($db->open())
 {
     $data_sales=array();

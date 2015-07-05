@@ -76,7 +76,7 @@ else
 
 if($_POST['pdo_year_id']!="")
 {
-    $pdo_year_id=" AND $tbl"."primary_market_survey.pdo_year_id='".$_POST['pdo_year_id']."'";
+    $pdo_year_id=" AND $tbl"."pdo_product_characteristic.pdo_year_id='".$_POST['pdo_year_id']."'";
 }
 else
 {

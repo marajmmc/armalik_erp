@@ -102,6 +102,7 @@ if(!empty($zone_id) && !empty($territory_id) && !empty($district_id) && !empty($
 
                     $ppc_chk=$db_ppc->single_data_w($tbl."pdo_product_characteristic", "market_survey_group_id", "crop_id='$crop_id'
                                 AND product_type_id='$product_type_id'
+                                AND pdo_year_id='$pdo_year_id'
                                 AND variety_id='$variety_id'
                                 AND market_survey_group_id='$group_maxID'
                                 AND zone_id='$zone_id'
@@ -114,6 +115,7 @@ if(!empty($zone_id) && !empty($territory_id) && !empty($district_id) && !empty($
                                 sales_quantity='".$sale_quantity_other."'
                             WHERE
                                 crop_id='$crop_id'
+                                AND pdo_year_id='$pdo_year_id'
                                 AND product_type_id='$product_type_id'
                                 AND variety_id='$variety_id'
                                 AND market_survey_group_id='$group_maxID'
@@ -135,6 +137,7 @@ if(!empty($zone_id) && !empty($territory_id) && !empty($district_id) && !empty($
                         (
                             'market_survey_group_id,' => "'$group_maxID',",
                             'prodcut_characteristic_id,' => "'$ppc_maxID',",
+                            'pdo_year_id,' => "'" . $pdo_year_id . "',",
                             'crop_id,' => "'" . $crop_id . "',",
                             'product_type_id,' => "'" . $product_type_id . "',",
                             'variety_id,' => "'" . $variety_id . "',",

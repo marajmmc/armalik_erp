@@ -201,6 +201,10 @@ $sql_distributor="SELECT
                     ait_product_purchase_order_invoice.varriety_id,
                     ait_product_purchase_order_invoice.pack_size
                     $group_by
+                ORDER BY
+                    ait_crop_info.order_crop,
+                    ait_product_type.order_type,
+                    ait_varriety_info.order_variety
                 ";
 $sales_quantity=0;
 $db_distributor=new Database();
