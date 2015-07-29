@@ -192,6 +192,7 @@ function Existin_data(elm){
     {
         $(document).off("change", ".territory_id");
         $(document).off("change", ".district_id");
+        $(document).off("change", "#to_month");
     }
 
 

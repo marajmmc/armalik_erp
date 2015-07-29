@@ -20,22 +20,30 @@ $start_month = $postData[3];
 $end_month = $postData[4];
 
 // initial update
-$initial_update = array('status' => "'0'");
+//$initial_update = array('status' => "'0'");
 
-$initial_where = array(
-    'year' => "'$year'",
-    'division_id' => "'$division_id'",
-    'zone_id' => "'$zone_id'",
-    'start_month' => "'$start_month'",
-    'end_month' => "'$end_month'"
-);
+//$initial_where = array(
+//    'year' => "'$year'",
+//    'division_id' => "'$division_id'",
+//    'zone_id' => "'$zone_id'",
+//    'start_month' => "'$start_month'",
+//    'end_month' => "'$end_month'"
+//);
 
-$db->data_update($tbl . 'zi_tour_plan', $initial_update, $initial_where);
+$initial_update_query = "UPDATE ait_zi_tour_plan
+SET `status`=0
+WHERE `year`= '".$year."' AND `division_id`='".$division_id."' AND `zone_id`='".$zone_id."' AND `start_month`='".$start_month."' AND `end_month`='".$end_month."'";
+
+
+if($db->open())
+{
+    $db->query($initial_update_query);
+}
+
 
 $year = $_POST['year'];
 $from_month = $_POST['from_month'];
 $to_month = $_POST['to_month'];
-
 $planPost = $_POST['plan'];
 
 

@@ -286,7 +286,7 @@ $user_zone = $_SESSION['zone_id'];
         {
             $.post("../../libraries/ajax_load_file/check_existing_month_span.php",
             {
-                year:$("#year").val(), from_month: $("#from_month").val(), to_month: $(this).val()
+                year:$("#year").val(), zone_id: $("#zone_id").val(), from_month: $("#from_month").val(), to_month: $(this).val()
             },
             function(result)
             {

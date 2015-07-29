@@ -11,7 +11,7 @@ session_start();
 $year = $_POST['year'];
 $from_month = $_POST['from_month'];
 $to_month = $_POST['to_month'];
-$user_zone = $_SESSION['zone_id'];
+$user_zone = $_POST['zone_id'];
 
 $Query = "SELECT start_month, end_month FROM $tbl" . "zi_tour_plan WHERE year='$year' AND zone_id='$user_zone' AND status=1 GROUP BY start_month, end_month";
 $monthSpan = $db->return_result_array($Query);
