@@ -238,8 +238,14 @@ $end_month = $postData[4];
                                             $customers[] = $distributor['distributor_id'];
                                         }
 
-                                        $sql = "select distributor_id as fieldkey, distributor_name as fieldtext from $tbl" . "distributor_info where status='Active' AND del_status='0' AND zone_id='$zone_id' AND territory_id='".$territory['territory_id']."' AND zilla_id='".$district['district_id']."' order by distributor_name";
-                                        $distributorDropDownArray = $db->return_result_array($sql);
+                                        $sql1 = "select distributor_id as fieldkey, distributor_name as fieldtext from $tbl" . "distributor_info where status='Active' AND del_status='0' AND zone_id='$zone_id' AND territory_id='".$territory['territory_id']."' AND zilla_id='".$district['district_id']."' order by distributor_name";
+                                        $distributorDropDownArray1 = $db->return_result_array($sql1);
+
+                                        $sql2 = "select distributor_id as fieldkey, distributor_name as fieldtext from $tbl" . "other_distributor_info where status='Active' AND del_status='0' AND zone_id='$zone_id' AND territory_id='".$territory['territory_id']."' AND zilla_id='".$district['district_id']."' order by distributor_name";
+                                        $distributorDropDownArray2 = $db->return_result_array($sql2);
+
+                                        $distributorDropDownArray = array_merge($distributorDropDownArray1, $distributorDropDownArray2);
+
                                         foreach($distributorDropDownArray as $DropDown)
                                         {
                                         ?>
@@ -301,8 +307,14 @@ $end_month = $postData[4];
                                             $customers[] = $distributor['distributor_id'];
                                         }
 
-                                        $sql = "select distributor_id as fieldkey, distributor_name as fieldtext from $tbl" . "distributor_info where status='Active' AND del_status='0' AND zone_id='$zone_id' AND territory_id='".$territory['territory_id']."' AND zilla_id='".$district['district_id']."' order by distributor_name";
-                                        $distributorDropDownArray = $db->return_result_array($sql);
+                                        $sql1 = "select distributor_id as fieldkey, distributor_name as fieldtext from $tbl" . "distributor_info where status='Active' AND del_status='0' AND zone_id='$zone_id' AND territory_id='".$territory['territory_id']."' AND zilla_id='".$district['district_id']."' order by distributor_name";
+                                        $distributorDropDownArray1 = $db->return_result_array($sql1);
+
+                                        $sql2 = "select distributor_id as fieldkey, distributor_name as fieldtext from $tbl" . "other_distributor_info where status='Active' AND del_status='0' AND zone_id='$zone_id' AND territory_id='".$territory['territory_id']."' AND zilla_id='".$district['district_id']."' order by distributor_name";
+                                        $distributorDropDownArray2 = $db->return_result_array($sql2);
+
+                                        $distributorDropDownArray = array_merge($distributorDropDownArray1, $distributorDropDownArray2);
+
                                         foreach($distributorDropDownArray as $DropDown)
                                         {
                                             ?>

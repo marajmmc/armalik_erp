@@ -8,21 +8,27 @@ $db = new Database();
 $tbl = _DB_PREFIX;
 $zone_id='';
 $territory='';
-$editrow = $db->single_data($tbl . "distributor_info", "*", "distributor_id", $_POST['rowID']);
-if ($_SESSION['user_level'] == "Zone") {
+
+$editrow = $db->single_data($tbl . "other_distributor_info", "*", "distributor_id", $_POST['rowID']);
+
+if ($_SESSION['user_level'] == "Zone")
+{
     $zone_id = "AND zone_id='" . $_SESSION['zone_id'] . "'";
     $territory = '';
     $select = "<option value=''>Select</option>";
-} else if ($_SESSION['user_level'] == "Territory") {
+}
+else if ($_SESSION['user_level'] == "Territory")
+{
     $zone_id = "AND zone_id='" . $_SESSION['zone_id'] . "'";
     $territory = "AND territory_id='" . $_SESSION['territory_id'] . "'";
-} else {
+}
+else
+{
     $select = "<option value=''>Select</option>";
     $zone_id = "AND zone_id='" . $editrow['zone_id'] . "'";
     $territory = "AND territory_id='" . $editrow['territory_id'] . "'";
 }
 
-//echo $editrow['territory_id'];
 ?>
 <div class="row-fluid">
     <div class="span12">
@@ -81,11 +87,7 @@ if ($_SESSION['user_level'] == "Zone") {
                         </label>
                         <div class="controls">
                             <select id="zilla_id" name="zilla_id" class="span5" placeholder="" validate="Require">
-                                <!--                                <option value="">Select</option>-->
                                 <?php
-                                //$sql_uesr_group = "select zillaid as fieldkey, zillanameeng as fieldtext from $tbl" . "zilla where visible='0' ";
-                                //echo $db->SelectList($sql_uesr_group, $editrow['zilla_id']);
-
                                 echo "<option value=''>Select</option>";
                                 $sql_uesr_group = "SELECT
                                         $tbl" . "zilla.zillaid as fieldkey,
@@ -98,8 +100,8 @@ if ($_SESSION['user_level'] == "Zone") {
                                         AND $tbl" . "zilla.visible=0
                                         AND $tbl" . "territory_assign_district.status='Active'
                                         AND $tbl" . "territory_assign_district.territory_id='" . $editrow['territory_id'] . "'
-";
-                                echo $db->SelectList($sql_uesr_group,$editrow['zilla_id']);
+                                    ";
+                                echo $db->SelectList($sql_uesr_group, $editrow['zilla_id']);
                                 ?>
                             </select>
                             <span class="help-inline">
@@ -178,16 +180,17 @@ if ($_SESSION['user_level'] == "Zone") {
                             <select id="status" name="status" class="span5" placeholder="Group Name">
                                 <option value="">Select</option>
                                 <option value="Active" <?php
-                                if ($editrow['status'] == "Active") {
+                                if ($editrow['status'] == "Active")
+                                {
                                     echo "selected='selected'";
                                 }
                                 ?> >Active</option>
                                 <option value="In-Active" <?php
-                                        if ($editrow['status'] == "In-Active") {
-                                            echo "selected='selected'";
-                                        }
+                                if ($editrow['status'] == "In-Active")
+                                {
+                                    echo "selected='selected'";
+                                }
                                 ?> >In-Active</option>
-
                             </select>
                         </div>
                     </div>

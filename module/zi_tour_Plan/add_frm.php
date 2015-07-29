@@ -264,9 +264,9 @@ $user_zone = $_SESSION['zone_id'];
 
                 var location = $(this).parents().next(".distributor_td_elm").find(".distributor_id");
 
-                $.post("../../libraries/ajax_load_file/load_distributor.php",
+                $.post("../../libraries/ajax_load_file/load_all_distributor.php",
                 {
-                    zone_id:"", territory_id: territory_id, zilla_id: $(this).val()
+                    zone_id:$("#zone_id").val(), territory_id: territory_id, zilla_id: $(this).val()
                 },
                 function(result)
                 {
